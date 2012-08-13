@@ -70,6 +70,12 @@ public class IntelCamera {
     private static final String KEY_FOCUS_DISTANCES = "focus-distances";
     private static final String KEY_ANTIBANDING = "antibanding";
 
+    // continuous viewfinder
+    public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
+    public static final String KEY_BURST_START_INDEX = "burst-start-index";
+
+    private static final String TRUE = "true";
+    private static final String FALSE = "false";
 
     // Values for ae mode setting.
     /** @hide */
@@ -713,6 +719,45 @@ public class IntelCamera {
     }
 
     /**
+     * Gets start index for burst.
+     *
+     * @return burst mode capture length.
+     * @hide
+     */
+    public int getBurstStartIndex() {
+        return getInt(KEY_BURST_START_INDEX, 1);
+    }
+
+    /**
+     * Sets start index for burst
+     *
+     * @param value burst mode capture length.
+     * @hide
+     */
+    public void setBurstStartIndex(int value) {
+        mParameters.set(KEY_BURST_START_INDEX, value);
+    }
+
+    /**
+     * Gets the supported burst start indexes.
+     *
+     * @return a list of supported burst mode capure length. null if this feature
+     *         is not supported.
+     * @hide
+     */
+    public List<String> getSupportedBurstStartIndex() {
+        String str = mParameters.get(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * Sets state of Continuous Viewfinder feature
+     * @hide
+     */
+    public void setContinuousViewfinder(boolean toggle) {
+        mParameters.set(KEY_CONTINUOUS_VIEWFINDER, toggle ? TRUE : FALSE);
+    }
+    /**
      * Gets the current raw data format.
      *
      * @return current raw data format. null if this feature is not supported.
@@ -1006,6 +1051,15 @@ public class IntelCamera {
         while (tokenizer.hasMoreElements()) {
             String token = tokenizer.nextToken();
             output[index++] = Float.parseFloat(token);
+        }
+    }
+
+    // Returns the value of a integer parameter.
+    private int getInt(String key, int defaultValue) {
+        try {
+            return Integer.parseInt(mParameters.get(key));
+        } catch (NumberFormatException ex) {
+            return defaultValue;
         }
     }
 }
