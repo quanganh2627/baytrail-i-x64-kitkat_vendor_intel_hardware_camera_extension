@@ -12,7 +12,9 @@ LOCAL_SHARED_LIBRARIES := \
 	libutils \
 	libcamera_client
 LOCAL_C_INCLUDES += \
-	$(JNI_H_INCLUDES)
+	$(JNI_H_INCLUDES) \
+	$(LOCAL_PATH)/include \
+	frameworks/base/core/jni
 include $(BUILD_SHARED_LIBRARY)
 
 ################# MAKE_XML ############################

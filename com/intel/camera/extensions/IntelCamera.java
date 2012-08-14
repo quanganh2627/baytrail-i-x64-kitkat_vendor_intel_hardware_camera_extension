@@ -16,11 +16,15 @@
 
 package com.intel.camera.extensions;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -108,10 +112,21 @@ public class IntelCamera {
 
     private Camera mCameraDevice;
     private Parameters mParameters;
+    private EventHandler mEventHandler;
+    private SceneModeListener mSceneListener;
+    private boolean mSceneDetectionRunning = false;
+    private int mNativeContext; //accessed by native methods
 
     private static final String TAG = "com.intel.cameraext.Camera";
 
-    private native final boolean enableIntelCamera(Camera cameraDevice);
+    private native final void native_setup(Object camera_this, Camera cameraDevice);
+    private native final void native_release();
+    private native final boolean native_enableIntelCamera();
+    private native final void native_startSceneDetection();
+    private native final void native_stopSceneDetection();
+
+    // here need keep pace with native msgType
+    private static final int CAMERA_MSG_SCENE_DETECT = 0x2000;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -119,16 +134,131 @@ public class IntelCamera {
 
     public IntelCamera(int cameraId) {
         mCameraDevice = android.hardware.Camera.open(cameraId);
-        enableIntelCamera(mCameraDevice);
+        init();
     }
 
     public IntelCamera() {
         mCameraDevice = android.hardware.Camera.open();
-        enableIntelCamera(mCameraDevice);
+        init();
     }
+
+    public final void release() {
+        native_release();
+    }
+
+    private void init() {
+        native_setup(new WeakReference<IntelCamera>(this), mCameraDevice);
+
+        Looper looper;
+        if ((looper = Looper.myLooper()) != null) {
+            mEventHandler = new EventHandler(this, looper);
+        } else if ((looper = Looper.getMainLooper()) != null) {
+            mEventHandler = new EventHandler(this, looper);
+        } else {
+            mEventHandler = null;
+        }
+
+        native_enableIntelCamera();
+    }
+
 
     public Camera getCameraDevice() {
         return mCameraDevice;
+    }
+
+    private static void postEventFromNative(Object camera_ref,
+                                            int what, int arg1, int arg2, Object obj)
+    {
+        IntelCamera c = (IntelCamera)((WeakReference)camera_ref).get();
+        if (c == null)
+            return;
+
+        if (c.mEventHandler != null) {
+            Message m = c.mEventHandler.obtainMessage(what, arg1, arg2, obj);
+            c.mEventHandler.sendMessage(m);
+        }
+    }
+    private class EventHandler extends Handler
+    {
+        private IntelCamera mCamera;
+
+        public EventHandler(IntelCamera c, Looper looper) {
+            super(looper);
+            mCamera = c;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+            case CAMERA_MSG_SCENE_DETECT:
+                Log.v(TAG, "SceneListener");
+                if (mSceneListener != null) {
+                    mSceneListener.onSceneChange(msg.arg1, msg.arg2 == 0 ? false : true);
+                }
+                return;
+            default:
+                Log.e(TAG, "Unknown intel message type " + msg.what);
+                return;
+           }
+        }
+    }
+
+    public interface SceneModeListener
+    {
+        /**
+        * Notify the listener of the detected scene mode.
+        *
+        * @param scene The string constant of scene mode detected.
+        * The string provided is one of those being returned by getSceneMode()
+        * @param hdrHint The detected HDR state in current scene. True, if HDR
+        * is detected
+        * @see #getSceneMode()
+        */
+        void onSceneChange(int scene, boolean hdrHint);
+    };
+
+    /**
+    * @hide
+    * Registers a listener to be notified about the scene detected in the
+    * preview frames.
+    *
+    * @param listener the listener to notify
+    * @see #startSceneDetection()
+    */
+    public final void setSceneModeListener(SceneModeListener listener)
+    {
+        mSceneListener = listener;
+    }
+
+    /**
+     * @hide
+     * Starts the smart scene detection.
+     * After calling, the camera will notify {@link SceneModeListener} of the detected
+     * scene modes.
+     * Note that some scene modes (like "portrait") are not detected, unless
+     * {@link #startFaceDetection()} has been called by the application.
+     * If the scene detection has started, apps should not call this again
+     * before calling {@link #stopSceneDetection()}.
+     * @see #setSceneModeListener()
+     */
+    public final void startSceneDetection()
+    {
+        if (mSceneDetectionRunning) {
+            throw new RuntimeException("Scene detection is already running");
+        }
+        native_startSceneDetection();
+        mSceneDetectionRunning = true;
+    }
+
+    /**
+     * @hide
+     * Stops the smart scene detection.
+     * @see #startSceneDetection()
+     */
+    public final void stopSceneDetection()
+    {
+        native_stopSceneDetection();
+        mSceneDetectionRunning = false;
     }
 
     public Parameters getParameters() {

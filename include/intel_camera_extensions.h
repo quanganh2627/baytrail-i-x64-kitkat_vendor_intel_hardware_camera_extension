@@ -22,10 +22,19 @@
 #ifndef _INTEL_CAMERA_EXTENSIONS
 #define _INTEL_CAMERA_EXTENSIONS
 
+#include <system/camera.h>
 namespace android {
 
-#define CAMERA_CMD_ENABLE_INTEL_PARAMETERS 1000
+/** cmdType in sendCommand functions */
+enum {
+    CAMERA_CMD_ENABLE_INTEL_PARAMETERS  = 0x1000,
+    CAMERA_CMD_START_SCENE_DETECTION    = 0x1001,
+    CAMERA_CMD_STOP_SCENE_DETECTION     = 0x1002
+};
 
+enum {
+    CAMERA_MSG_SCENE_DETECT             = 0x2000
+};
 }; // namespace android
 
 #endif /* _INTEL_CAMERA_EXTENSIONS */
