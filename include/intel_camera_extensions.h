@@ -29,12 +29,27 @@ namespace android {
 enum {
     CAMERA_CMD_ENABLE_INTEL_PARAMETERS  = 0x1000,
     CAMERA_CMD_START_SCENE_DETECTION    = 0x1001,
-    CAMERA_CMD_STOP_SCENE_DETECTION     = 0x1002
+    CAMERA_CMD_STOP_SCENE_DETECTION     = 0x1002,
+    CAMERA_CMD_START_PANORAMA           = 0x1003,
+    CAMERA_CMD_STOP_PANORAMA            = 0x1004
 };
 
 enum {
-    CAMERA_MSG_SCENE_DETECT             = 0x2000
+    CAMERA_MSG_SCENE_DETECT             = 0x2000,
+    CAMERA_MSG_PANORAMA_METADATA        = 0x2001
 };
+
+/**
+ * Panorama metadata
+ */
+typedef struct camera_panorama_metadata {
+    // TODO: add live preview image
+    int32_t direction;               /* enum will be in ia_types.h */
+    int32_t horizontal_displacement; /* in pixels */
+    int32_t vertical_displacement;   /* in pixels */
+    bool    frame_stitched; // probably not needed, we can check from the live preview
+} camera_panorama_metadata_t;
+
 }; // namespace android
 
 #endif /* _INTEL_CAMERA_EXTENSIONS */

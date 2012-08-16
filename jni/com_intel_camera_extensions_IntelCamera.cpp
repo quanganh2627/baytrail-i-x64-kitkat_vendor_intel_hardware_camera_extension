@@ -109,7 +109,6 @@ static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *
     camera->sendCommand(CAMERA_CMD_START_SCENE_DETECTION, 0, 0);
 }
 
-
 static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *env, jobject thiz)
 {
     LOGV("stopSceneDetection");
@@ -121,6 +120,30 @@ static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *e
     }
 
     camera->sendCommand(CAMERA_CMD_STOP_SCENE_DETECTION, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_startPanorama(JNIEnv *env, jobject thiz)
+{
+    LOGV("startPanorama");
+    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
+    if (camera == NULL)
+        return;
+
+    if (camera->sendCommand(CAMERA_CMD_START_PANORAMA, 0, 0) != NO_ERROR) {
+        jniThrowRuntimeException(env, "start panorama failed");
+    }
+}
+
+static void com_intel_camera_extensions_IntelCamera_stopPanorama(JNIEnv *env, jobject thiz)
+{
+    LOGV("stopPanorama");
+    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
+    if (camera == NULL)
+        return;
+
+    if (camera->sendCommand(CAMERA_CMD_STOP_PANORAMA, 0, 0) != NO_ERROR) {
+        jniThrowRuntimeException(env, "stop panorama failed");
+    }
 }
 
 IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobject weak_this, jclass clazz)
@@ -160,7 +183,7 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
     case CAMERA_MSG_SCENE_DETECT:
         env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
         mCameraJObjectWeak, msgType, ext1, ext2, NULL);
-        break;;
+        break;
     default:
         if (mRealListener != NULL)
             mRealListener->notify(msgType, ext1, ext2);
@@ -196,7 +219,13 @@ static JNINativeMethod camMethods[] = {
       (void *)com_intel_camera_extensions_IntelCamera_startSceneDetection },
     { "native_stopSceneDetection",
       "()V",
-      (void *)com_intel_camera_extensions_IntelCamera_stopSceneDetection }
+      (void *)com_intel_camera_extensions_IntelCamera_stopSceneDetection },
+    { "native_startPanorama",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_startPanorama },
+    { "native_stopPanorama",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_stopPanorama },
 };
 
 int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)

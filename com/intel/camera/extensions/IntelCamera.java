@@ -121,6 +121,7 @@ public class IntelCamera {
     private EventHandler mEventHandler;
     private SceneModeListener mSceneListener;
     private boolean mSceneDetectionRunning = false;
+    private boolean mPanoramaRunning = false;
     private int mNativeContext; //accessed by native methods
 
     private static final String TAG = "com.intel.cameraext.Camera";
@@ -130,6 +131,8 @@ public class IntelCamera {
     private native final boolean native_enableIntelCamera();
     private native final void native_startSceneDetection();
     private native final void native_stopSceneDetection();
+    private native final void native_startPanorama();
+    private native final void native_stopPanorama();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2000;
@@ -265,6 +268,25 @@ public class IntelCamera {
     {
         native_stopSceneDetection();
         mSceneDetectionRunning = false;
+    }
+
+    /**
+    * @hide
+    */
+    public final void startPanorama() {
+        if(mPanoramaRunning) {
+            throw new RuntimeException("Panorama is already running");
+        }
+        native_startPanorama();
+        mPanoramaRunning = true;
+    }
+
+    /**
+    * @hide
+    */
+    public final void stopPanorama() {
+        native_stopPanorama();
+        mPanoramaRunning = false;
     }
 
     public Parameters getParameters() {
