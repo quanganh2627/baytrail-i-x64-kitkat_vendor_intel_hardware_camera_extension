@@ -15,7 +15,7 @@
 ** limitations under the License.
 */
 
-#define LOG_NDEBUG 0
+//#define LOG_NDEBUG 0
 #define LOG_TAG "IntelCamera-JNI"
 
 #include <camera/Camera.h>
@@ -38,6 +38,7 @@ public:
     void postData(int32_t msgType, const sp<IMemory>& dataPtr,
                   camera_frame_metadata_t *metadata) ;
     void postDataTimestamp(nsecs_t timestamp, int32_t msgType, const sp<IMemory>& dataPtr);
+    sp<Camera> getCamera() { return mRealListener->getCamera();}
     void release();
 
 private:
@@ -50,7 +51,6 @@ private:
 struct fields_t {
     jfieldID intel_listener;
     jmethodID post_event;
-    jobject camera_device;
 };
 
 static fields_t fields;
@@ -61,8 +61,6 @@ static void com_intel_camera_extensions_IntelCamera_native_setup(JNIEnv *env, jo
         jobject weak_this, jobject cameraDevice)
 {
     LOGV("native setup");
-    fields.camera_device = env->NewGlobalRef(cameraDevice);
-
     JNICameraContext* listener;
     sp<Camera> camera = get_native_camera(env, cameraDevice, &listener);
     if (camera == 0) return;
@@ -74,16 +72,10 @@ static void com_intel_camera_extensions_IntelCamera_native_setup(JNIEnv *env, jo
     env->SetIntField(thiz, fields.intel_listener, (int)l.get());
 }
 
-static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, jobject thiz, jint type)
+static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, jobject thiz)
 {
     LOGV("native_release");
-    if (fields.camera_device != NULL) {
-        env->DeleteGlobalRef(fields.camera_device);
-        fields.camera_device = NULL;
-    }
-
-    IntelCameraListener *intel_listener = NULL;
-    intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
     // Make sure we do not attempt to callback on a deleted Java object.
     env->SetIntField(thiz, fields.intel_listener, 0);
     if (intel_listener != NULL)
@@ -94,7 +86,8 @@ static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, 
 static bool com_intel_camera_extensions_IntelCamera_enableIntelCamera(JNIEnv *env, jobject thiz, jobject cameraDevice)
 {
     LOGV("enableIntelCamera");
-    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         LOGE("get camera handle failed");
         return false;
@@ -103,12 +96,11 @@ static bool com_intel_camera_extensions_IntelCamera_enableIntelCamera(JNIEnv *en
     return camera->sendCommand(CAMERA_CMD_ENABLE_INTEL_PARAMETERS, 0, 0);
 }
 
-static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *env, jobject thiz,
-        jint type)
+static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *env, jobject thiz)
 {
     LOGV("startSceneDetection");
-    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
-
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         LOGE("get camera handle failed");
         return;
@@ -121,8 +113,8 @@ static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *
 static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *env, jobject thiz)
 {
     LOGV("stopSceneDetection");
-    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
-
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         LOGE("get camera handle failed");
         return;
