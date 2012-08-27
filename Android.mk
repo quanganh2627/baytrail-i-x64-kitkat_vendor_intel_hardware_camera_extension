@@ -42,3 +42,14 @@ LOCAL_COPY_HEADERS_TO := cameralibs
 LOCAL_COPY_HEADERS := \
 	include/intel_camera_extensions.h
 include $(BUILD_COPY_HEADERS)
+
+################# burst capture sound ################
+include $(CLEAR_VARS)
+LOCAL_MODULE := fast_click.pcm
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_OWNER := intel
+# This will install the file in /system/media/audio/ui
+LOCAL_MODULE_PATH := $(TARGET_OUT)/media/audio/ui
+LOCAL_SRC_FILES := data/sounds/effects/$(LOCAL_MODULE)
+include $(BUILD_PREBUILT)
