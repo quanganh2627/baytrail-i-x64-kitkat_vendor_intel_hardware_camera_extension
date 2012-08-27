@@ -158,6 +158,78 @@ static void com_intel_camera_extensions_IntelCamera_stopPanorama(JNIEnv *env, jo
     }
 }
 
+static void com_intel_camera_extensions_IntelCamera_startSmileShutter(JNIEnv *env, jobject thiz)
+{
+    LOGV("startSmileShutter");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_START_SMILE_SHUTTER, 0, 0);
+}
+
+
+static void com_intel_camera_extensions_IntelCamera_stopSmileShutter(JNIEnv *env, jobject thiz)
+{
+    LOGV("stopSmileShutter");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_STOP_SMILE_SHUTTER, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_startBlinkShutter(JNIEnv *env, jobject thiz)
+{
+    LOGV("startBlinkShutter");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_START_BLINK_SHUTTER, 0, 0);
+}
+
+
+static void com_intel_camera_extensions_IntelCamera_stopBlinkShutter(JNIEnv *env, jobject thiz)
+{
+    LOGV("stopBlinkShutter");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_STOP_BLINK_SHUTTER, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_cancelTakePicture(JNIEnv *env, jobject thiz)
+{
+    LOGE("cancelTakePicture");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_CANCEL_TAKE_PICTURE, 0, 0);
+}
+
 IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobject weak_this, jclass clazz)
 {
     LOGV("new IntelCameraListener");
@@ -330,6 +402,21 @@ static JNINativeMethod camMethods[] = {
     { "native_stopPanorama",
       "()V",
       (void *)com_intel_camera_extensions_IntelCamera_stopPanorama },
+    { "native_startSmileShutter",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_startSmileShutter },
+    { "native_stopSmileShutter",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_stopSmileShutter },
+    { "native_startBlinkShutter",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_startBlinkShutter },
+    { "native_stopBlinkShutter",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_stopBlinkShutter },
+    { "native_cancelTakePicture",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_cancelTakePicture }
 };
 
 int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)

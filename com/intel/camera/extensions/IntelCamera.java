@@ -54,6 +54,10 @@ public class IntelCamera {
     private static final String KEY_HDR_SHARPENING = "hdr-sharpening";
     private static final String KEY_HDR_VIVIDNESS = "hdr-vividness";
     private static final String KEY_HDR_SAVE_ORIGINAL = "hdr-save-original";
+    private static final String KEY_SMILE_SHUTTER_THRESHOLD = "smile-shutter-threshold";
+    private static final String KEY_BLINK_SHUTTER_THRESHOLD = "blink-shutter-threshold";
+    private static final String KEY_SUPPORTED_SMILE_SHUTTER = "smile-shutter";
+    private static final String KEY_SUPPORTED_BLINK_SHUTTER = "blink-shutter";
 
     // for burst capture
     private static final String KEY_BURST_LENGTH = "burst-length";
@@ -125,6 +129,8 @@ public class IntelCamera {
     private PanoramaListener mPanoramaListener;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
+    private boolean mSmileShutterRunning = false;
+    private boolean mBlinkShutterRunning = false;
     private int mNativeContext; //accessed by native methods
 
     private static final String TAG = "com.intel.cameraext.Camera";
@@ -136,6 +142,11 @@ public class IntelCamera {
     private native final void native_stopSceneDetection();
     private native final void native_startPanorama();
     private native final void native_stopPanorama();
+    private native final void native_startSmileShutter();
+    private native final void native_stopSmileShutter();
+    private native final void native_startBlinkShutter();
+    private native final void native_stopBlinkShutter();
+    private native final void native_cancelTakePicture();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
@@ -346,6 +357,74 @@ public class IntelCamera {
         mPanoramaRunning = false;
     }
 
+    /**
+     * @hide
+     * Starts the smile detection Smart Shutter.
+     * After calling, the camera will trigger on smile when user presses shutter
+     * Note that smile detection doesnt work unless
+     * {@link #startFaceDetection()} has been called by the application.
+     * If the smile shutter has started, apps should not call this again
+     * before calling {@link #stopSmileShutter()}.
+     */
+    public final void startSmileShutter()
+    {
+        if (mSmileShutterRunning) {
+            throw new RuntimeException("Smile Shutter is already running");
+        }
+        native_startSmileShutter();
+        mSmileShutterRunning = true;
+    }
+
+    /**
+     * @hide
+     * Stops the smile shutter trigger.
+     * @see #startSmileShutter()
+     */
+    public final void stopSmileShutter()
+    {
+        native_stopSmileShutter();
+        mSmileShutterRunning = false;
+    }
+
+    /**
+     * @hide
+     * Starts the blink shutter.
+     * After calling, the camera will capture on eye blinking events
+     * when the user press and hold the camera shutter key.
+     * Note that this feasture is not working, unless
+     * {@link #startFaceDetection()} has been called by the application.
+     * If the blink shutter has started, apps should not call this again
+     * before calling {@link #stopBlinkShutter()}.
+     */
+    public final void startBlinkShutter()
+    {
+        if (mBlinkShutterRunning) {
+            throw new RuntimeException("Blink Shutter is already running");
+        }
+        native_startBlinkShutter();
+        mBlinkShutterRunning = true;
+    }
+
+    /**
+     * @hide
+     * Stops the blink shutter.
+     * @see #startBlinkShutter()
+     */
+    public final void stopBlinkShutter()
+    {
+        native_stopBlinkShutter();
+        mBlinkShutterRunning = false;
+    }
+
+    /**
+     * @hide
+     * Stops the smart shutter capture.
+     */
+    public final void cancelTakePicture()
+    {
+        native_cancelTakePicture();
+    }
+
     public Parameters getParameters() {
         mParameters = mCameraDevice.getParameters();
         return mParameters;
@@ -354,7 +433,6 @@ public class IntelCamera {
     public void setParameters(Parameters param) {
         mCameraDevice.setParameters(param);
     }
-
     /**
     * @hide
     */
@@ -1124,6 +1202,51 @@ public class IntelCamera {
     public void setPanoramaLivePreviewSize(int width, int height) {
         mParameters.set(KEY_PANORAMA_LIVE_PREVIEW_SIZE, "" + width + "x" + height);
     }
+
+    /**
+     * Sets the smile detection threshold for smile shutter.
+     *
+     * @param value for smile detection in smart shutter (0 = not-strict to 100 = strict)
+     * @hide
+     */
+    public void setSmileShutterThreshold(String value) {
+        mParameters.set(KEY_SMILE_SHUTTER_THRESHOLD, value);
+    }
+
+    /**
+     * Gets if the smile detection smart shutter is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedSmileShutter() {
+        String str = mParameters.get(KEY_SUPPORTED_SMILE_SHUTTER);
+        return split(str);
+    }
+
+    /**
+     * Sets the blink detection threshold for blink shutter.
+     *
+     * @param value for blink detection in smart shutter (0 = strict to 100 = not-strict)
+     * @hide
+     */
+    public void setBlinkShutterThreshold(String value) {
+        mParameters.set(KEY_BLINK_SHUTTER_THRESHOLD, value);
+    }
+
+    /**
+     * Gets if the blink detection smart shutter is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedBlinkShutter() {
+        String str = mParameters.get(KEY_SUPPORTED_BLINK_SHUTTER);
+        return split(str);
+    }
+
 
     /**
      * Splits a comma delimited string to an ArrayList of String.
