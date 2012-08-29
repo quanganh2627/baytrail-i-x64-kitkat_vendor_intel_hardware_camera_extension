@@ -34,20 +34,26 @@ enum {
     CAMERA_CMD_STOP_PANORAMA            = 0x1004
 };
 
+/**
+ * Messagetypes
+ *
+ */
 enum {
-    CAMERA_MSG_SCENE_DETECT             = 0x2000,
-    CAMERA_MSG_PANORAMA_METADATA        = 0x2001
+    // omitting 0x2000 because it has high probability of being used in the future by
+    // official Android messages
+    CAMERA_MSG_SCENE_DETECT             = 0x2001,
+    CAMERA_MSG_PANORAMA_METADATA        = 0x2002,
+    CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003
 };
 
 /**
  * Panorama metadata
  */
 typedef struct camera_panorama_metadata {
-    // TODO: add live preview image
     int32_t direction;               /* enum will be in ia_types.h */
     int32_t horizontal_displacement; /* in pixels */
     int32_t vertical_displacement;   /* in pixels */
-    bool    frame_stitched; // probably not needed, we can check from the live preview
+    bool    motion_blur;
 } camera_panorama_metadata_t;
 
 }; // namespace android

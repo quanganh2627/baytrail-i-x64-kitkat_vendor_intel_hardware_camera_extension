@@ -70,6 +70,8 @@ public class IntelCamera {
     private static final String KEY_FOCUS_DISTANCES = "focus-distances";
     private static final String KEY_ANTIBANDING = "antibanding";
 
+    private static final String KEY_PANORAMA_LIVE_PREVIEW_SIZE = "panorama-live-preview-size";
+
     // continuous viewfinder
     public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
@@ -120,6 +122,7 @@ public class IntelCamera {
     private Parameters mParameters;
     private EventHandler mEventHandler;
     private SceneModeListener mSceneListener;
+    private PanoramaListener mPanoramaListener;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
     private int mNativeContext; //accessed by native methods
@@ -135,7 +138,9 @@ public class IntelCamera {
     private native final void native_stopPanorama();
 
     // here need keep pace with native msgType
-    private static final int CAMERA_MSG_SCENE_DETECT = 0x2000;
+    private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
+    private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2002;
+    private static final int CAMERA_MSG_PANORAMA_SNAPSHOT = 0x2003;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -205,11 +210,63 @@ public class IntelCamera {
                     mSceneListener.onSceneChange(msg.arg1, msg.arg2 == 0 ? false : true);
                 }
                 return;
+            case CAMERA_MSG_PANORAMA_METADATA:
+                PanoramaMetadata metadata = (PanoramaMetadata) msg.obj;
+                if (mPanoramaListener != null)
+                    mPanoramaListener.onDisplacementChange(metadata);
+                break;
+            case CAMERA_MSG_PANORAMA_SNAPSHOT:
+                PanoramaSnapshot snapshot = (PanoramaSnapshot) msg.obj;
+                if (mPanoramaListener != null)
+                    mPanoramaListener.onSnapshotTaken(snapshot);
+                break;
             default:
                 Log.e(TAG, "Unknown intel message type " + msg.what);
                 return;
            }
         }
+    }
+
+    public static class PanoramaSnapshot
+    {
+        public PanoramaSnapshot()
+        {
+        }
+        public PanoramaMetadata metadataDuringSnap;
+        public byte[] snapshot;
+    }
+
+    public static class PanoramaMetadata
+    {
+        public PanoramaMetadata() {
+        }
+        public int direction = 0;
+        public int horizontalDisplacement = 0;
+        public int verticalDisplacement = 0;
+        public boolean motionBlur = false;
+    }
+
+    /**
+     * Sets the panorama listener
+     * @param listener the new PanoramaListener
+     */
+    public void setPanoramaListener(PanoramaListener listener)
+    {
+        mPanoramaListener = listener;
+    }
+
+    public interface PanoramaListener
+    {
+        /**
+         * Notify listener of the viewfinder moving during panorama capturing
+         * @param metadata of panorama displacement change
+         */
+        void onDisplacementChange(PanoramaMetadata metadata);
+
+        /**
+         * Notify listener of a snapshot during panorama capturing
+         */
+        void onSnapshotTaken(PanoramaSnapshot snapshot);
     }
 
     public interface SceneModeListener
@@ -1046,6 +1103,26 @@ public class IntelCamera {
     public List<String> getSupportedHDRSaveOriginal() {
         String str = mParameters.get(KEY_HDR_SAVE_ORIGINAL + SUPPORTED_VALUES_SUFFIX);
         return split(str);
+    }
+
+    private Camera.Size parseSize(String str) {
+        StringTokenizer tokenizer = new StringTokenizer(str, "x");
+        int width = 0, height = 0;
+        if (tokenizer.hasMoreElements())
+            width = Integer.parseInt(tokenizer.nextToken());
+        if (tokenizer.hasMoreElements())
+            height = Integer.parseInt(tokenizer.nextToken());
+
+        return mCameraDevice.new Size(width, height);
+    }
+
+    public Camera.Size getPanoramaLivePreviewSize() {
+        String str = mParameters.get(KEY_PANORAMA_LIVE_PREVIEW_SIZE);
+        return parseSize(str);
+    }
+
+    public void setPanoramaLivePreviewSize(int width, int height) {
+        mParameters.set(KEY_PANORAMA_LIVE_PREVIEW_SIZE, "" + width + "x" + height);
     }
 
     /**

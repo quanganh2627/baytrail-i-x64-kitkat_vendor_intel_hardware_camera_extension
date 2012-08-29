@@ -44,6 +44,8 @@ public:
 private:
     JNICameraContext* mRealListener;
     jobject mCameraJObjectWeak;
+    jclass mPanoramaMetadataClass;  // strong reference to PanoramaMetadata class
+    jclass mPanoramaSnapshotClass;  // strong reference to PanoramaSnapshot class
     jclass mCameraJClass;
 
 };
@@ -51,6 +53,14 @@ private:
 struct fields_t {
     jfieldID intel_listener;
     jmethodID post_event;
+    jmethodID panorama_metadata_constructor;
+    jfieldID panorama_metadata_h_displacement;
+    jfieldID panorama_metadata_v_displacement;
+    jfieldID panorama_metadata_direction;
+    jfieldID panorama_metadata_motion_blur;
+    jmethodID panorama_snapshot_constructor;
+    jfieldID panorama_snapshot_metadata;
+    jfieldID panorama_snapshot_snapshot;
 };
 
 static fields_t fields;
@@ -125,7 +135,8 @@ static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *e
 static void com_intel_camera_extensions_IntelCamera_startPanorama(JNIEnv *env, jobject thiz)
 {
     LOGV("startPanorama");
-    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL)
         return;
 
@@ -137,7 +148,8 @@ static void com_intel_camera_extensions_IntelCamera_startPanorama(JNIEnv *env, j
 static void com_intel_camera_extensions_IntelCamera_stopPanorama(JNIEnv *env, jobject thiz)
 {
     LOGV("stopPanorama");
-    sp<Camera> camera = get_native_camera(env, fields.camera_device, NULL);
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL)
         return;
 
@@ -153,6 +165,13 @@ IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobjec
     mRealListener = aRealListener;
     JNIEnv *env = AndroidRuntime::getJNIEnv();
     mCameraJClass = (jclass)env->NewGlobalRef(clazz);
+
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaMetadata");
+    mPanoramaMetadataClass = (jclass) env->NewGlobalRef(clazz);
+
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaSnapshot");
+    mPanoramaSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+
     mCameraJObjectWeak = env->NewGlobalRef(weak_this);
 }
 
@@ -164,6 +183,16 @@ void IntelCameraListener::release()
     if (mCameraJClass != NULL) {
         env->DeleteGlobalRef(mCameraJClass);
         mCameraJClass = NULL;
+    }
+
+    if (mPanoramaMetadataClass != NULL) {
+        env->DeleteGlobalRef(mPanoramaMetadataClass);
+        mPanoramaMetadataClass = NULL;
+    }
+
+    if (mPanoramaSnapshotClass != NULL) {
+        env->DeleteGlobalRef(mPanoramaSnapshotClass);
+        mPanoramaSnapshotClass = NULL;
     }
 
     if (mCameraJObjectWeak != NULL) {
@@ -194,8 +223,83 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
 void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                            camera_frame_metadata_t *metadata)
 {
-    if (mRealListener != NULL)
-        mRealListener->postData(msgType,dataPtr,metadata);
+    ssize_t offset;
+    size_t size;
+    sp<IMemoryHeap> heap = dataPtr->getMemory(&offset, &size);
+    uint8_t *heapBase = (uint8_t*)heap->base();
+
+    if (heapBase != NULL) {
+        const camera_panorama_metadata* pMetadata = reinterpret_cast<const camera_panorama_metadata*>(heapBase + offset);
+        const jbyte* pPic = NULL;
+        JNIEnv *env = AndroidRuntime::getJNIEnv();
+        switch (msgType) {
+        case CAMERA_MSG_PANORAMA_METADATA:
+            if (pMetadata == NULL)
+                ALOGE("metadata was null");
+            else {
+                jobject metadata = env->NewObject(mPanoramaMetadataClass, fields.panorama_metadata_constructor);
+                if (metadata != NULL) {
+                    env->SetIntField(metadata, fields.panorama_metadata_direction, pMetadata->direction);
+                    env->SetIntField(metadata, fields.panorama_metadata_h_displacement, pMetadata->horizontal_displacement);
+                    env->SetIntField(metadata, fields.panorama_metadata_v_displacement, pMetadata->vertical_displacement);
+                    env->SetBooleanField(metadata, fields.panorama_metadata_motion_blur, pMetadata->motion_blur);
+                    env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
+                                              mCameraJObjectWeak, msgType, 0, 0, metadata);
+                    env->DeleteLocalRef(metadata);
+                } else {
+                    ALOGE("Couldn't allocate metadata object");
+                    env->ExceptionClear();
+                }
+            }
+            break;
+        case CAMERA_MSG_PANORAMA_SNAPSHOT:
+            pPic = reinterpret_cast<jbyte *>(heapBase + offset + sizeof(camera_panorama_metadata));
+            if (pMetadata == NULL || pPic == NULL)
+                ALOGE("Null snaphost data. pMetadata %d pPic %d", (int) pMetadata, (int) pPic);
+            else {
+                size_t arraySize = size - sizeof(camera_panorama_metadata);
+                // construct metadata object
+                jobject metadata = env->NewObject(mPanoramaMetadataClass, fields.panorama_metadata_constructor);
+                jbyteArray array = env->NewByteArray(arraySize);
+                jobject panoramaSnapshot = env->NewObject(mPanoramaSnapshotClass, fields.panorama_snapshot_constructor);
+
+                if (metadata == NULL || panoramaSnapshot == NULL || array == NULL) {
+                    ALOGE("Couldn't allocate panorama snapshot objects");
+                    if (metadata)
+                        env->DeleteLocalRef(metadata);
+                    if (array)
+                        env->DeleteLocalRef(array);
+                    if (panoramaSnapshot)
+                        env->DeleteLocalRef(panoramaSnapshot);
+
+                    env->ExceptionClear();
+                    break;
+                }
+                env->SetIntField(metadata, fields.panorama_metadata_direction, pMetadata->direction);
+                env->SetIntField(metadata, fields.panorama_metadata_h_displacement, pMetadata->horizontal_displacement);
+                env->SetIntField(metadata, fields.panorama_metadata_v_displacement, pMetadata->vertical_displacement);
+                env->SetBooleanField(metadata, fields.panorama_metadata_motion_blur, pMetadata->motion_blur);
+
+                // set image data
+                env->SetByteArrayRegion(array, 0, arraySize, pPic);
+                // set callback object fields
+                env->SetObjectField(panoramaSnapshot, fields.panorama_snapshot_metadata, metadata);
+                env->SetObjectField(panoramaSnapshot, fields.panorama_snapshot_snapshot, array);
+
+                // finally, we are done constructing, so call the java class
+                env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
+                                          mCameraJObjectWeak, msgType, 0, 0, panoramaSnapshot);
+                env->DeleteLocalRef(metadata);
+                env->DeleteLocalRef(array);
+                env->DeleteLocalRef(panoramaSnapshot);
+            }
+            break;
+        default:
+            if (mRealListener != NULL)
+                mRealListener->postData(msgType,dataPtr,metadata);
+            break;
+        }
+    }
 }
 
 void IntelCameraListener::postDataTimestamp(nsecs_t timestamp, int32_t msgType, const sp<IMemory>& dataPtr)
@@ -237,8 +341,28 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
     fields.post_event = env->GetStaticMethodID(clazz, "postEventFromNative",
                                         "(Ljava/lang/Object;IIILjava/lang/Object;)V");
 
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaMetadata");
+    fields.panorama_metadata_direction = env->GetFieldID(clazz, "direction", "I");
+    fields.panorama_metadata_h_displacement = env->GetFieldID(clazz, "horizontalDisplacement", "I");
+    fields.panorama_metadata_v_displacement = env->GetFieldID(clazz, "verticalDisplacement", "I");
+    fields.panorama_metadata_motion_blur = env->GetFieldID(clazz, "motionBlur", "Z");
+    fields.panorama_metadata_constructor = env->GetMethodID(clazz, "<init>", "()V");
+    if (fields.panorama_metadata_constructor == NULL) {
+        ALOGE("Can't find com/intel/camera/extensions/IntelCamera$PanoramaMetadata.PanoramaMetadata()");
+        return -1;
+    }
+
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaSnapshot");
+    fields.panorama_snapshot_metadata = env->GetFieldID(clazz, "metadataDuringSnap", "Lcom/intel/camera/extensions/IntelCamera$PanoramaMetadata;");
+    fields.panorama_snapshot_snapshot = env->GetFieldID(clazz, "snapshot", "[B");
+    fields.panorama_snapshot_constructor = env->GetMethodID(clazz, "<init>", "()V");
+    if (fields.panorama_snapshot_constructor == NULL) {
+        ALOGE("Can't find com/intel/camera/extensions/IntelCamera$PanoramaSnapshot.PanoramaSnapshot()");
+        return -1;
+    }
+
     return AndroidRuntime::registerNativeMethods(env, "com/intel/camera/extensions/IntelCamera",
-                                                camMethods, NELEM(camMethods));
+                                                 camMethods, NELEM(camMethods));
 }
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
