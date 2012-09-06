@@ -151,6 +151,8 @@ public class IntelCamera {
     private native final void native_startBlinkShutter();
     private native final void native_stopBlinkShutter();
     private native final void native_cancelTakePicture();
+    private native final void native_startFaceRecognition();
+    private native final void native_stopFaceRecognition();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
@@ -527,6 +529,29 @@ public class IntelCamera {
     public final void cancelTakePicture()
     {
         native_cancelTakePicture();
+    }
+
+    /**
+     * @hide
+     * Starts face recognition.
+     * Before starting face recognition the application must start
+     * face detection by calling {@link #startFaceDetection()}.
+     * If face recognition has been started, application should not call
+     * this again before calling {@link #stopFaceRecognition()}.
+     */
+    public final void startFaceRecognition()
+    {
+        native_startFaceRecognition();
+    }
+
+    /**
+     * @hide
+     * Stops face recognition.
+     * @see #startFaceRecognition()
+     */
+    public final void stopFaceRecognition()
+    {
+        native_stopFaceRecognition();
     }
 
     public Parameters getParameters() {
