@@ -126,7 +126,7 @@ public class IntelCamera {
     /** @hide */
     public static final String FOCUS_MODE_TOUCH = "touch";
 
-    private Camera mCameraDevice;
+    private Camera mCameraDevice = null;
     private Parameters mParameters;
     private EventHandler mEventHandler;
     private SceneModeListener mSceneListener;
@@ -175,6 +175,10 @@ public class IntelCamera {
 
     public final void release() {
         native_release();
+        if (mCameraDevice != null) {
+            mCameraDevice.release();
+            mCameraDevice = null;
+        }
     }
 
     private void init() {
