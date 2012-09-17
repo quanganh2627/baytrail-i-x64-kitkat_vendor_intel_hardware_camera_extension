@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.List;
+
+/**
+ * The IntelCamera class is used for accessing Intel's camera extensions.
+ */
 public class IntelCamera {
     private static final String SUPPORTED_VALUES_SUFFIX = "-values";
     private static final String KEY_FOCUS_WINDOW = "focus-window";
@@ -238,44 +242,111 @@ public class IntelCamera {
         }
     }
 
+    /**
+     * The PanoramaSnapshot class is used to carry information in the PanoramaListener
+     * callbacks.
+     * @see IntelCamera.PanoramaListener
+     * @see #setPanoramaListener(PanoramaListener listener)
+     * @hide
+     */
     public static class PanoramaSnapshot
     {
         public PanoramaSnapshot()
         {
         }
+
+        /**
+         * Metadata during the panorama snapshot. This includes the displacement of the live
+         * preview image compared to the previous live preview image.
+         */
         public PanoramaMetadata metadataDuringSnap;
+
+        /**
+         * Snapshot holds the live preview image which is NV12 format. Size can be set with
+         * {@link #setPanoramaLivePreviewSize(int width, int height)}.
+         * <p>
+         * Note, that the live preview image size is typically small compared to the actual
+         * preview size.
+         */
         public byte[] snapshot;
     }
 
+    /**
+     * The PanoramaMetadata class carries metadata information during panorama mode via the
+     * callbacks of the PanoramaListener.
+     * @see #setPanoramaListener(PanoramaListener listener)
+     * @see IntelCamera.PanoramaListener
+     * @see IntelCamera.PanoramaSnapshot
+     * @hide
+     */
     public static class PanoramaMetadata
     {
         public PanoramaMetadata() {
         }
+        /**
+         * Direction tells what direction the panorama engine has selected for stitching
+         * based on initial movement after first snapshot. Values are:
+         * 1 - right
+         * 2 - left
+         * 3 - down
+         * 4 - up
+         */
         public int direction = 0;
+        /**
+         * Horizontal displacement as preview pixels compared to the preview location during
+         * previous panorama snapshot. Positive values are to the right, meaning the viewfinder
+         * is moved to right of the previous snapshot. Negative values similarly to the left.
+         */
         public int horizontalDisplacement = 0;
+        /**
+         * Vertical displacement as preview pixels compared to the preview location during
+         * previous panorama snapshot. Negative values are to up, meaning the viewfinder is
+         * moved upwards of the previous snapshot. Positive values similarly to down.
+         */
         public int verticalDisplacement = 0;
+        /**
+         * Motion blur indicates if the camera panning during panorama capturing is done too fast
+         * and the end result of taking a panorama snapshot would be blurred.
+         */
         public boolean motionBlur = false;
     }
 
     /**
-     * Sets the panorama listener
+     * Sets the panorama listener for receiving panorama displacement callbacks
+     * and live preview images.
      * @param listener the new PanoramaListener
+     * @hide
      */
     public void setPanoramaListener(PanoramaListener listener)
     {
         mPanoramaListener = listener;
     }
 
+    /**
+     * The PanoramaListener interface is for receiving panorama callbacks.
+     * @hide
+     */
     public interface PanoramaListener
     {
         /**
-         * Notify listener of the viewfinder moving during panorama capturing
-         * @param metadata of panorama displacement change
+         * The onDisplacementChangeNotify callback notifies of the viewfinder moving
+         * during panorama capturing. The displacement pixel information is given in actual
+         * viewfinder preview pixels.
+         * @param metadata about the panorama capturing
+         * @hide
          */
         void onDisplacementChange(PanoramaMetadata metadata);
 
         /**
-         * Notify listener of a snapshot during panorama capturing
+         * The onSnapshotTaken notifies of a snapshot during panorama capturing. It contains
+         * metadata of panorama displacement during time of snapshot and the NV12
+         * format live preview image.
+         * <p>
+         * Note, that the associated displacement pixel information
+         * is given in live preview image pixels to make it easier for the application to lay
+         * the live preview images on top of each other, if needed.
+         * @param snapshot live preview image of the snapshot and associated metadata
+         * @hide
          */
         void onSnapshotTaken(PanoramaSnapshot snapshot);
     }
@@ -339,8 +410,39 @@ public class IntelCamera {
     }
 
     /**
-    * @hide
-    */
+     * Starts the panorama mode. Preview must be started before you can call this function.
+     * <p>
+     * In panorama mode the takePicture API will behave differently. The first takePicture call
+     * will start the panorama capture sequence. During the capture sequence, images are captured
+     * automatically while the camera is turned. At the same time, PanoramaListener
+     * callbacks will be called for both giving displacement feedback during panning, and for the
+     * taken snapshots.
+     * <p>
+     * The capturing will either end automatically after reaching the maximum count
+     * of panorama snapshots, or by calling the takePicture API another time. At that point the
+     * final JPEG is returned through the normal PictureCallback given to takePicture.
+     * <p>
+     * Raw and postview callback types are not supported.
+     * <p>
+     * Face detection will be automatically stopped as soon as the first image for the panorama has
+     * been captured.
+     * <p>
+     * Flash will not fire during panorama regardless of the flash setting.
+     * <p>
+     * Exposure, focus and white balance should be locked by using setParameters before takePicture
+     * is called first time, to get best image quality.
+     * <p>
+     * Smart scene detection should be stopped with {@link #stopSceneDetection()} before calling
+     * takePicture first time.
+     * <p>
+     * If the panorama mode has been started, apps should not call this again
+     * before calling {@link #stopPanorama()}.
+     *
+     * @see #stopPanorama()
+     * @see #setPanoramaListener(PanoramaListener listener)
+     * @see #stopSceneDetection()
+     * @hide
+     */
     public final void startPanorama() {
         if(mPanoramaRunning) {
             throw new RuntimeException("Panorama is already running");
@@ -350,8 +452,10 @@ public class IntelCamera {
     }
 
     /**
-    * @hide
-    */
+     * Stops the panorama mode.
+     * @see #startPanorama()
+     * @hide
+     */
     public final void stopPanorama() {
         native_stopPanorama();
         mPanoramaRunning = false;
@@ -1194,11 +1298,22 @@ public class IntelCamera {
         return mCameraDevice.new Size(width, height);
     }
 
+    /**
+     * Returns the current panorama live preview size
+     * @return size of live preview images
+     * @hide
+     */
     public Camera.Size getPanoramaLivePreviewSize() {
         String str = mParameters.get(KEY_PANORAMA_LIVE_PREVIEW_SIZE);
         return parseSize(str);
     }
 
+    /**
+     * Sets the panorama live preview size. Live preview images are delivered via the
+     * PanoramaListener. The size of the live preview size must be among the list of
+     * resolutions in Camera.Parameters.getSupportedJpegThumbnailSizes
+     * @hide
+     */
     public void setPanoramaLivePreviewSize(int width, int height) {
         mParameters.set(KEY_PANORAMA_LIVE_PREVIEW_SIZE, "" + width + "x" + height);
     }
