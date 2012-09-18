@@ -1324,6 +1324,16 @@ public class IntelCamera {
     }
 
     /**
+     * Gets the supported panorama live preview sizes.
+     * @return a list of Size object.
+     * @hide
+     */
+    public List<Camera.Size> getSupportedPanoramaLivePreviewSizes() {
+        // live preview is implemented with postview image generation code (thumbnail)
+        return mParameters.getSupportedJpegThumbnailSizes();
+    }
+
+    /**
      * Returns the current panorama live preview size
      * @return size of live preview images
      * @hide
@@ -1336,7 +1346,7 @@ public class IntelCamera {
     /**
      * Sets the panorama live preview size. Live preview images are delivered via the
      * PanoramaListener. The size of the live preview size must be among the list of
-     * resolutions in Camera.Parameters.getSupportedJpegThumbnailSizes
+     * resolutions in {@link #getSupportedPanoramaLivePreviewSizes()}
      * @hide
      */
     public void setPanoramaLivePreviewSize(int width, int height) {
