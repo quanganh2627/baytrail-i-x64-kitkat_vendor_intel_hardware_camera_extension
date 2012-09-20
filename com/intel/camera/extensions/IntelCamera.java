@@ -438,8 +438,9 @@ public class IntelCamera {
      * Exposure, focus and white balance should be locked by using setParameters before takePicture
      * is called first time, to get best image quality.
      * <p>
-     * Smart scene detection should be stopped with {@link #stopSceneDetection()} before calling
-     * takePicture first time.
+     * Smart scene detection and smart shutter functionality should be stopped with
+     * {@link #stopSceneDetection()}, {@link #stopSmileShutter()} and {@link #stopBlinkShutter()}
+     * before calling takePicture for the first time.
      * <p>
      * If the panorama mode has been started, apps should not call this again
      * before calling {@link #stopPanorama()}.
