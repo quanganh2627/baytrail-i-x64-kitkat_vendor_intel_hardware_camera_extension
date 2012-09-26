@@ -32,6 +32,31 @@ import java.util.List;
 
 /**
  * The IntelCamera class is used for accessing Intel's camera extensions.
+
+ * This class allows user access to Intel camera features, such as Intel Parameters setting, smart scene detection,
+ * panorama, and so on.
+ * <p>
+ * IntelCamera is an extension of android.hardware.Camera. When user create an IntelCamera instance, a Camera instance
+ * will be opened, user can get it by calling IntelCamera.{@link #getCameraDevice()}. So in this case, don't calling Camera.open()
+ * to obtain a Camera instance.
+ * <p>
+ * Please release Intel camera by IntelCamera.{@link #release()} after using.
+ * <p>
+ * IntelCamera provide interface access to Intel parameters, user can get all existing parameters with
+ * IntelCamera.{@link #getParameters()}, modify Intel parameters with IntelCamera APIs, then update them with
+ * IntelCamera.{@link #setParameters(Parameters param)}.
+ * <p>
+ * To access the Intel camera device, user must declare the Intel camera extension library in Android project:
+ * <p>
+ * In Android.mk:
+ * <pre>
+      LOCAL_JAVA_LIBRARIES:=com.intel.camera.extensions
+ * </pre>
+ * In AndroidManifest.xml:
+ * <pre>
+       <CODE><</CODE>uses-library android:name="com.intel.camera.extensions" /<CODE>></CODE>
+ * </pre>
+ * <p>
  */
 public class IntelCamera {
     private static final String SUPPORTED_VALUES_SUFFIX = "-values";
