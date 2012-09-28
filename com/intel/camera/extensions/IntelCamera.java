@@ -952,6 +952,8 @@ public class IntelCamera {
 
     /**
      * Sets burst mode capture length.
+     * NOTE: after starting burst capturing, application must wait
+     * for all jpeg callbacks to return before starting preview.
      *
      * @param value burst mode capture length.
      * @hide
@@ -1093,6 +1095,8 @@ public class IntelCamera {
 
     /**
      * Sets the current capture bracket mode.
+     * NOTE: after starting capturing with bracketing, application must wait
+     * for all jpeg callbacks to return before starting preview.
      *
      * @param value new capture bracket mode
      * @hide
@@ -1297,6 +1301,8 @@ public class IntelCamera {
 
     /**
      * Sets the current HDR Save Original mode.
+     * NOTE: after starting HDR capturing with HDR Save Original on, application must wait
+     * for all jpeg callbacks to return before starting preview.
      *
      * @param value new HDR Save Original mode
      * @hide
