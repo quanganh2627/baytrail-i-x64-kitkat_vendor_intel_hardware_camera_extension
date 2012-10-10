@@ -125,6 +125,9 @@ public class IntelCamera {
     private static final String KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES = "panorama-live-preview-sizes";
     private static final String KEY_PANORAMA_MAX_SNAPSHOT_COUNT = "panorama-max-snapshot-count";
 
+    // preview keep alive
+    private static final String KEY_PREVIEW_KEEP_ALIVE = "preview-keep-alive";
+
     // continuous viewfinder
     public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
@@ -1101,6 +1104,16 @@ public class IntelCamera {
      */
     public List<String> getSupportedContinuousViewfinder() {
         return getSupportedValues(KEY_CONTINUOUS_VIEWFINDER + SUPPORTED_VALUES_SUFFIX);
+    }
+
+    /**
+     * Sets state of Preview keep alive feature
+     *
+     * @param toggle switch for feature on/off
+     * @hide
+     */
+    public void setPreviewKeepAlive(boolean toggle) {
+        mParameters.set(KEY_PREVIEW_KEEP_ALIVE, toggle ? TRUE : FALSE);
     }
 
     /**
