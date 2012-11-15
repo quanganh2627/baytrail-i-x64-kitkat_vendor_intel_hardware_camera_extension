@@ -79,24 +79,38 @@ public class IntelCamera {
     private static final String KEY_RAW_DATA_FORMAT = "raw-data-format";
     private static final String KEY_CAPTURE_BRACKET = "capture-bracket";
     private static final String KEY_ROTATION_MODE = "rotation-mode";
+
+    // HDR
     private static final String KEY_HDR_IMAGING = "hdr-imaging";
     private static final String KEY_HDR_SHARPENING = "hdr-sharpening";
     private static final String KEY_HDR_VIVIDNESS = "hdr-vividness";
     private static final String KEY_HDR_SAVE_ORIGINAL = "hdr-save-original";
-    private static final String KEY_SMILE_SHUTTER_THRESHOLD = "smile-shutter-threshold";
-    private static final String KEY_BLINK_SHUTTER_THRESHOLD = "blink-shutter-threshold";
-    private static final String KEY_SUPPORTED_SMILE_SHUTTER = "smile-shutter";
-    private static final String KEY_SUPPORTED_BLINK_SHUTTER = "blink-shutter";
 
-    // for burst capture
+    // panorama
+    private static final String KEY_PANORAMA = "panorama";
+
+    // face detection and recognition
+    private static final String KEY_FACE_DETECTION = "face-detection";
+    private static final String KEY_FACE_RECOGNITION = "face-recognition";
+
+    // scene detection
+    private static final String KEY_SCENE_DETECTION = "scene-detection";
+
+    // smart shutter
+    private static final String KEY_SMILE_SHUTTER = "smile-shutter";
+    private static final String KEY_SMILE_SHUTTER_THRESHOLD = "smile-shutter-threshold";
+    private static final String KEY_BLINK_SHUTTER = "blink-shutter";
+    private static final String KEY_BLINK_SHUTTER_THRESHOLD = "blink-shutter-threshold";
+
+    // burst capture
     private static final String KEY_BURST_LENGTH = "burst-length";
     private static final String KEY_BURST_FPS = "burst-fps";
 
-    //values for back light correction
+    // values for back light correction
     private static final String BACK_LIGHTING_CORRECTION_ON = "on";
     private static final String BACK_LIGHTING_CORRECTION_OFF = "off";
 
-    //values for af metering mode
+    // values for af metering mode
     private static final String AF_METERING_MODE_AUTO = "auto";
     private static final String AF_METERING_MODE_SPOT = "spot";
 
@@ -112,7 +126,7 @@ public class IntelCamera {
     private static final String TRUE = "true";
     private static final String FALSE = "false";
 
-    // Values for ae mode setting.
+    // values for ae mode setting.
     /** @hide */
     public static final String AE_MODE_AUTO = "auto";
     /** @hide */
@@ -996,6 +1010,10 @@ public class IntelCamera {
      */
     public List<String> getSupportedBurstLength() {
         String str = mParameters.get(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
         return split(str);
     }
 
@@ -1065,6 +1083,27 @@ public class IntelCamera {
      */
     public List<String> getSupportedBurstStartIndex() {
         String str = mParameters.get(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+        return split(str);
+    }
+
+    /**
+     * Gets the supported continuous viewfinder.
+     *
+     * @return a list of supported values for continuous vf. null if this feature
+     *         is not supported.
+     * @hide
+     */
+    public List<String> getSupportedContinuousViewfinder() {
+        String str = mParameters.get(KEY_CONTINUOUS_VIEWFINDER + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+
         return split(str);
     }
 
@@ -1247,6 +1286,10 @@ public class IntelCamera {
      */
     public List<String> getSupportedHDRImaging() {
         String str = mParameters.get(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
         return split(str);
     }
 
@@ -1360,6 +1403,70 @@ public class IntelCamera {
     }
 
     /**
+     * Gets if the scene detection (hdr hint) is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedSceneDetection() {
+        String str = mParameters.get(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+        return split(str);
+    }
+
+    /**
+     * Gets if the face detection is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedFaceDetection() {
+        String str = mParameters.get(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+        return split(str);
+    }
+
+    /**
+     * Gets if the face recognition is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedFaceRecognition() {
+        String str = mParameters.get(KEY_FACE_RECOGNITION + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+        return split(str);
+    }
+
+    /**
+     * Gets if the panorama mode is supported
+     *
+     * @return on or off if the feature is supported null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedPanorama() {
+        String str = mParameters.get(KEY_PANORAMA + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
+        return split(str);
+    }
+
+    /**
      * Gets the supported panorama live preview sizes.
      * @return a list of Size object.
      * @hide
@@ -1407,7 +1514,11 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedSmileShutter() {
-        String str = mParameters.get(KEY_SUPPORTED_SMILE_SHUTTER);
+        String str = mParameters.get(KEY_SMILE_SHUTTER + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
         return split(str);
     }
 
@@ -1429,7 +1540,11 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedBlinkShutter() {
-        String str = mParameters.get(KEY_SUPPORTED_BLINK_SHUTTER);
+        String str = mParameters.get(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX);
+        if (str.equals("")) {
+            Log.v(TAG, "Return null");
+            return null;
+        }
         return split(str);
     }
 
