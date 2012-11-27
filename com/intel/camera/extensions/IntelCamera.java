@@ -118,6 +118,7 @@ public class IntelCamera {
     private static final String KEY_ANTIBANDING = "antibanding";
 
     private static final String KEY_PANORAMA_LIVE_PREVIEW_SIZE = "panorama-live-preview-size";
+    private static final String KEY_PANORAMA_MAX_SNAPSHOT_COUNT = "panorama-max-snapshot-count";
 
     // continuous viewfinder
     public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
@@ -1474,6 +1475,15 @@ public class IntelCamera {
     public List<Camera.Size> getSupportedPanoramaLivePreviewSizes() {
         // live preview is implemented with postview image generation code (thumbnail)
         return mParameters.getSupportedJpegThumbnailSizes();
+    }
+
+    /**
+     * Gets the maximum panorama snapshot count.
+     * @return the max count
+     * @hide
+     */
+    public int getMaximumPanoramaSnapshotCount() {
+        return getInt(KEY_PANORAMA_MAX_SNAPSHOT_COUNT, 0);
     }
 
     /**
