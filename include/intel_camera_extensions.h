@@ -61,6 +61,8 @@ typedef struct camera_panorama_metadata {
     int32_t horizontal_displacement; /* in pixels */
     int32_t vertical_displacement;   /* in pixels */
     bool    motion_blur;
+    bool    finalization_started;    /* signals whether automatic finalization has started.
+                                        Only valid when associated with a snapshot */
 } camera_panorama_metadata_t;
 
 }; // namespace android

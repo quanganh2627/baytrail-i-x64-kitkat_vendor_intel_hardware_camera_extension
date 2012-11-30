@@ -355,6 +355,12 @@ public class IntelCamera {
          * and the end result of taking a panorama snapshot would be blurred.
          */
         public boolean motionBlur = false;
+        /**
+         * finalizationStarted signals the application whether finalization has begun automatically
+         * due to reaching the maximum number of panorama snapshots. Only valid when metadata is 
+         * carried with a onSnapshotTaken callback.
+         */
+        public boolean finalizationStarted = false;
     }
 
     /**

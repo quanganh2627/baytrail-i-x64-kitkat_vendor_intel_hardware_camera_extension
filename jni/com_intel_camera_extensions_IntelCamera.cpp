@@ -58,6 +58,7 @@ struct fields_t {
     jfieldID panorama_metadata_v_displacement;
     jfieldID panorama_metadata_direction;
     jfieldID panorama_metadata_motion_blur;
+    jfieldID panorama_metadata_finalization_started;
     jmethodID panorama_snapshot_constructor;
     jfieldID panorama_snapshot_metadata;
     jfieldID panorama_snapshot_snapshot;
@@ -344,6 +345,7 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                     env->SetIntField(metadata, fields.panorama_metadata_h_displacement, pMetadata->horizontal_displacement);
                     env->SetIntField(metadata, fields.panorama_metadata_v_displacement, pMetadata->vertical_displacement);
                     env->SetBooleanField(metadata, fields.panorama_metadata_motion_blur, pMetadata->motion_blur);
+                    env->SetBooleanField(metadata, fields.panorama_metadata_finalization_started, pMetadata->finalization_started);
                     env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
                                               mCameraJObjectWeak, msgType, 0, 0, metadata);
                     env->DeleteLocalRef(metadata);
@@ -380,6 +382,7 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->SetIntField(metadata, fields.panorama_metadata_h_displacement, pMetadata->horizontal_displacement);
                 env->SetIntField(metadata, fields.panorama_metadata_v_displacement, pMetadata->vertical_displacement);
                 env->SetBooleanField(metadata, fields.panorama_metadata_motion_blur, pMetadata->motion_blur);
+                env->SetBooleanField(metadata, fields.panorama_metadata_finalization_started, pMetadata->finalization_started);
 
                 // set image data
                 env->SetByteArrayRegion(array, 0, arraySize, pPic);
@@ -468,6 +471,7 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
     fields.panorama_metadata_h_displacement = env->GetFieldID(clazz, "horizontalDisplacement", "I");
     fields.panorama_metadata_v_displacement = env->GetFieldID(clazz, "verticalDisplacement", "I");
     fields.panorama_metadata_motion_blur = env->GetFieldID(clazz, "motionBlur", "Z");
+    fields.panorama_metadata_finalization_started = env->GetFieldID(clazz, "finalizationStarted", "Z");
     fields.panorama_metadata_constructor = env->GetMethodID(clazz, "<init>", "()V");
     if (fields.panorama_metadata_constructor == NULL) {
         ALOGE("Can't find com/intel/camera/extensions/IntelCamera$PanoramaMetadata.PanoramaMetadata()");
