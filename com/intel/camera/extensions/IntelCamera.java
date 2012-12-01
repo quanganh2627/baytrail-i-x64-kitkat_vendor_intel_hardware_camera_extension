@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * The IntelCamera class is used for accessing Intel's camera extensions.
@@ -118,6 +119,7 @@ public class IntelCamera {
     private static final String KEY_ANTIBANDING = "antibanding";
 
     private static final String KEY_PANORAMA_LIVE_PREVIEW_SIZE = "panorama-live-preview-size";
+    private static final String KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES = "panorama-live-preview-sizes";
     private static final String KEY_PANORAMA_MAX_SNAPSHOT_COUNT = "panorama-max-snapshot-count";
 
     // continuous viewfinder
@@ -1438,8 +1440,18 @@ public class IntelCamera {
      * @hide
      */
     public List<Camera.Size> getSupportedPanoramaLivePreviewSizes() {
-        // live preview is implemented with postview image generation code (thumbnail)
-        return mParameters.getSupportedJpegThumbnailSizes();
+        String str = mParameters.get(KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES);
+        ArrayList<String> sizeStrings = split(str);
+        List<Camera.Size> sizes = new ArrayList<Camera.Size>();
+        if (sizeStrings == null)
+            return sizes;
+
+        Iterator<String> it = sizeStrings.iterator();
+        while(it.hasNext()) {
+            String size = it.next();
+            sizes.add(parseSize(size));
+        }
+        return sizes;
     }
 
     /**
