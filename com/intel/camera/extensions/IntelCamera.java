@@ -1010,12 +1010,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedBurstLength() {
-        String str = mParameters.get(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1083,12 +1078,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedBurstStartIndex() {
-        String str = mParameters.get(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1099,13 +1089,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedContinuousViewfinder() {
-        String str = mParameters.get(KEY_CONTINUOUS_VIEWFINDER + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-
-        return split(str);
+        return getSupportedValues(KEY_CONTINUOUS_VIEWFINDER + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1286,12 +1270,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedHDRImaging() {
-        String str = mParameters.get(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1411,12 +1390,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedSceneDetection() {
-        String str = mParameters.get(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1427,12 +1401,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedFaceDetection() {
-        String str = mParameters.get(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1443,12 +1412,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedFaceRecognition() {
-        String str = mParameters.get(KEY_FACE_RECOGNITION + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_FACE_RECOGNITION + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1459,12 +1423,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedPanorama() {
-        String str = mParameters.get(KEY_PANORAMA + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_PANORAMA + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1524,12 +1483,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedSmileShutter() {
-        String str = mParameters.get(KEY_SMILE_SHUTTER + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_SMILE_SHUTTER + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
@@ -1550,12 +1504,7 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedBlinkShutter() {
-        String str = mParameters.get(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX);
-        if (str.equals("")) {
-            Log.v(TAG, "Return null");
-            return null;
-        }
-        return split(str);
+        return getSupportedValues(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX);
     }
 
 
@@ -1573,6 +1522,16 @@ public class IntelCamera {
             substrings.add(tokenizer.nextToken());
         }
         return substrings;
+    }
+
+    // Get supported values for a key
+    private List<String> getSupportedValues(String key) {
+        String str = mParameters.get(key);
+        if (str == null || str.equals("")) {
+            Log.v(TAG, "Return null for key:" + key);
+            return null;
+        }
+        return split(str);
     }
 
     // Splits a comma delimited string to an ArrayList of Float.
