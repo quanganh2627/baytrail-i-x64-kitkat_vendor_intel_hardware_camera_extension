@@ -103,6 +103,9 @@ public class IntelCamera {
     private static final String KEY_BLINK_SHUTTER = "blink-shutter";
     private static final String KEY_BLINK_SHUTTER_THRESHOLD = "blink-shutter-threshold";
 
+    // hw overlay rendering
+    private static final String KEY_HW_OVERLAY_RENDERING = "overlay-render";
+
     // burst capture
     private static final String KEY_BURST_LENGTH = "burst-length";
     private static final String KEY_BURST_FPS = "burst-fps";
@@ -1172,6 +1175,30 @@ public class IntelCamera {
     public List<String> getSupportedCaptureBracket() {
         String str = mParameters.get(KEY_CAPTURE_BRACKET + SUPPORTED_VALUES_SUFFIX);
         return split(str);
+    }
+
+    /**
+     * Get the supported hw overlay rendering modes.
+     *
+     * @return the supported hw overlay rendering modes. null if this feature
+     *         is not supported.
+     * @hide
+     */
+    public List<String> getSupportedHWOverlayRendering() {
+        return split(mParameters.get(KEY_HW_OVERLAY_RENDERING + SUPPORTED_VALUES_SUFFIX));
+    }
+
+    /**
+     * Set the hw overlay rendering mode.
+     * This can conly be set before the preview is started
+     * otherwise the command will be ignored. The application can check whether
+     * the value of the parameter KEY_HW_OVERLAY_RENDERING changed to check
+     * whether the command succeeded or not
+     * @param value new overlay rendering mode
+     * @hide
+     */
+    public void setHWOverlayRendering(String value) {
+        mParameters.set(KEY_HW_OVERLAY_RENDERING, value);
     }
 
     /**
