@@ -132,6 +132,9 @@ public class IntelCamera {
     public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
 
+    // high speed recording, slow motion playback
+    private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
+
     private static final String TRUE = "true";
     private static final String FALSE = "false";
 
@@ -173,6 +176,13 @@ public class IntelCamera {
 
     /** @hide */
     public static final String FOCUS_MODE_TOUCH = "touch";
+
+    /** @hide */
+    public static final String SLOW_MOTION_RATE_1x = "1x";
+    public static final String SLOW_MOTION_RATE_2x = "2x";
+    public static final String SLOW_MOTION_RATE_3x = "3x";
+    public static final String SLOW_MOTION_RATE_4x = "4x";
+
 
     private Camera mCameraDevice = null;
     private Parameters mParameters;
@@ -1571,6 +1581,34 @@ public class IntelCamera {
         return getSupportedValues(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX);
     }
 
+
+    /**
+     * Gets the current slow motion rate value.
+     *
+     * @hide
+     */
+    public String getSlowMotionRate() {
+        return mParameters.get(KEY_SLOW_MOTION_RATE);
+    }
+
+    /**
+     * Sets the slow motion rate value.
+     *
+     * @hide
+     */
+    public void setSlowMotionRate(String value) {
+        mParameters.set(KEY_SLOW_MOTION_RATE, value);
+    }
+
+    /**
+     * Gets the support list for slow motion value
+     *
+     * @hide
+     */
+    public List<String> getSupportedSlowMotionRate() {
+        String str = mParameters.get(KEY_SLOW_MOTION_RATE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
 
     /**
      * Splits a comma delimited string to an ArrayList of String.
