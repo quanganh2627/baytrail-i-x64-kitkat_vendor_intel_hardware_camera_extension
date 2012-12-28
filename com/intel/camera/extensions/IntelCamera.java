@@ -1024,7 +1024,13 @@ public class IntelCamera {
      * @hide
      */
     public List<String> getSupportedBurstLength() {
-        return getSupportedValues(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
+        String str = mParameters.get(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
+        if (str == null || str.equals("") || str.equals("1")) {
+            Log.v(TAG, "Return null for key:" + KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
+            return null;
+        } else {
+            return split(str);
+        }
     }
 
     /**
