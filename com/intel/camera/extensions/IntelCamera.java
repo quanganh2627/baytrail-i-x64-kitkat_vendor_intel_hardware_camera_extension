@@ -81,6 +81,10 @@ public class IntelCamera {
     private static final String KEY_CAPTURE_BRACKET = "capture-bracket";
     private static final String KEY_ROTATION_MODE = "rotation-mode";
 
+    private static final String KEY_CONTRAST_MODE = "contrast-mode";
+    private static final String KEY_SATURATION_MODE = "saturation-mode";
+    private static final String KEY_SHARPNESS_MODE = "sharpness-mode";
+
     // HDR
     private static final String KEY_HDR_IMAGING = "hdr-imaging";
     private static final String KEY_HDR_SHARPENING = "hdr-sharpening";
@@ -188,6 +192,29 @@ public class IntelCamera {
     public static final String SLOW_MOTION_RATE_3x = "3x";
     public static final String SLOW_MOTION_RATE_4x = "4x";
 
+    // value of contrast mode
+    /** @hide */
+    public static final String CONTRAST_MODE_NORMAL = "normal";
+    /** @hide */
+    public static final String CONTRAST_MODE_SOFT = "soft";
+    /** @hide */
+    public static final String CONTRAST_MODE_HARD = "hard";
+
+    // value of saturation mode
+    /** @hide */
+    public static final String SATURATION_MODE_NORMAL = "normal";
+    /** @hide */
+    public static final String SATURATION_MODE_LOW = "low";
+    /** @hide */
+    public static final String SATURATION_MODE_HIGH = "high";
+
+    // value of sharpness mode
+    /** @hide */
+    public static final String SHARPNESS_MODE_NORMAL = "normal";
+    /** @hide */
+    public static final String SHARPNESS_MODE_SOFT = "soft";
+    /** @hide */
+    public static final String SHARPNESS_MODE_HARD = "hard";
 
     private Camera mCameraDevice = null;
     private Parameters mParameters;
@@ -809,6 +836,72 @@ public class IntelCamera {
      */
     public List<String> getSupportedAEModes() {
         String str = mParameters.get(KEY_AE_MODE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * @hide
+     */
+    public String getContrastMode() {
+        return mParameters.get(KEY_CONTRAST_MODE);
+    }
+
+    /**
+     * @hide
+     */
+    public void setContrastMode(String value) {
+        mParameters.set(KEY_CONTRAST_MODE, value);
+    }
+
+    /**
+     * @hide
+     */
+    public List<String> getSupportedContrastModes() {
+        String str = mParameters.get(KEY_CONTRAST_MODE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * @hide
+     */
+    public String getSaturationMode() {
+        return mParameters.get(KEY_SATURATION_MODE);
+    }
+
+    /**
+     * @hide
+     */
+    public void setSaturationMode(String value) {
+        mParameters.set(KEY_SATURATION_MODE, value);
+    }
+
+    /**
+     * @hide
+     */
+    public List<String> getSupportedSaturationModes() {
+        String str = mParameters.get(KEY_SATURATION_MODE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * @hide
+     */
+    public String getSharpnessMode() {
+        return mParameters.get(KEY_SHARPNESS_MODE);
+    }
+
+    /**
+     * @hide
+     */
+    public void setSharpnessMode(String value) {
+        mParameters.set(KEY_SHARPNESS_MODE, value);
+    }
+
+    /**
+     * @hide
+     */
+    public List<String> getSupportedSharpnessModes() {
+        String str = mParameters.get(KEY_SHARPNESS_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
