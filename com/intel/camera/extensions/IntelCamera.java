@@ -204,8 +204,8 @@ public class IntelCamera {
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
-    private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2002;
     private static final int CAMERA_MSG_PANORAMA_SNAPSHOT = 0x2003;
+    private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2005;
 
     static {
         System.loadLibrary("intelcamera_jni");

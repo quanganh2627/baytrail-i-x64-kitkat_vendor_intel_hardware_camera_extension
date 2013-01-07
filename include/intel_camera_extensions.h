@@ -47,10 +47,12 @@ enum {
  */
 enum {
     // omitting 0x2000 because it has high probability of being used in the future by
-    // official Android messages
+    // official Android messages. Also, these need to be ODD, otherwise camera service
+    // will drop them (odd numbers include the bit for ERROR messages, which are
+    // allowed through by the camera service)
     CAMERA_MSG_SCENE_DETECT             = 0x2001,
-    CAMERA_MSG_PANORAMA_METADATA        = 0x2002,
-    CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003
+    CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003,
+    CAMERA_MSG_PANORAMA_METADATA        = 0x2005,
 };
 
 /**
