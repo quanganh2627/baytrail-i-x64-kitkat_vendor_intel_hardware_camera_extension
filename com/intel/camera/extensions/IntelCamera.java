@@ -135,6 +135,11 @@ public class IntelCamera {
     // high speed recording, slow motion playback
     private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
 
+    // Exif data
+    public static final String KEY_EXIF_MAKER = "exif-maker-name";
+    public static final String KEY_EXIF_MODEL = "exif-model-name";
+    public static final String KEY_EXIF_SOFTWARE = "exif-software-name";
+
     private static final String TRUE = "true";
     private static final String FALSE = "false";
 
@@ -871,6 +876,27 @@ public class IntelCamera {
     public List<String> getSupportedISO() {
         String str = mParameters.get(KEY_ISO + SUPPORTED_VALUES_SUFFIX);
        return split(str);
+    }
+
+    /**
+     * @hide
+     */
+    public void setExifMaker(String value) {
+        mParameters.set(KEY_EXIF_MAKER, value);
+    }
+
+    /**
+     * @hide
+     */
+    public void setExifModel(String value) {
+        mParameters.set(KEY_EXIF_MODEL, value);
+    }
+
+    /**
+     * @hide
+     */
+    public void setExifSoftware(String value) {
+        mParameters.set(KEY_EXIF_SOFTWARE, value);
     }
 
     /**
