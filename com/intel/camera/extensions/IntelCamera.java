@@ -91,6 +91,9 @@ public class IntelCamera {
     private static final String KEY_HDR_VIVIDNESS = "hdr-vividness";
     private static final String KEY_HDR_SAVE_ORIGINAL = "hdr-save-original";
 
+    // Ultra low light
+    private static final String KEY_ULL = "ull";
+
     // panorama
     private static final String KEY_PANORAMA = "panorama";
 
@@ -1437,6 +1440,50 @@ public class IntelCamera {
         }
         mParameters.set(KEY_FOCUS_WINDOW, "" + input[0]
             + "," + input[1] + "," + input[2] + "," + input[3]);
+    }
+
+    /**
+     * Gets the current Ultra-low light (ULL) status.
+     *
+     * @return current ULL status.
+     * @hide
+     */
+    public String getULL() {
+        return mParameters.get(KEY_ULL);
+    }
+
+    /**
+     * Sets the Ultra-low light (ULL) status.
+     *
+     * @param value new Ultra-low light mode
+     *
+     * The behavior differs upon the set parameter value:
+     * "on": forces ULL on, bypassing the 3A logic that normally would trigger the ULL processing.
+     * NOTE: If the value is set to "on" when preview has already been started, a preview re-start is triggered. (for testing)
+     * "off": ULL will not be used
+     * "auto": ULL shooting is determined and triggered by the 3A logic (this is the normal mode)
+     *
+     * When the ULL image is taken (parameter values "on" and "auto"), the application will receive 2 JPEG images:
+     * the first one is the normal snapshot via PictureCallback. Second one is the ULL image, received via the UllListener interface.
+     *
+     * @see IntelCamera.UllListener
+     * @see IntelCamera.UllSnapshot
+     * @hide
+     */
+    public void setULL(String value) {
+        mParameters.set(KEY_ULL, value);
+    }
+
+    /**
+     * Gets the supported Ultra-low light (ULL) values.
+     *
+     * @return supported ULL values.
+     *
+     * @see IntelCamera#setULL(String)
+     * @hide
+     */
+    public List<String> getSupportedULL() {
+        return getSupportedValues(KEY_ULL + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
