@@ -1,3 +1,4 @@
+ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))
 LOCAL_PATH:= $(call my-dir)
 
 ################# MAKE_LIB ############################
@@ -53,3 +54,4 @@ LOCAL_MODULE_OWNER := intel
 LOCAL_MODULE_PATH := $(TARGET_OUT)/media/audio/ui
 LOCAL_SRC_FILES := data/sounds/effects/$(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
+endif #ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))
