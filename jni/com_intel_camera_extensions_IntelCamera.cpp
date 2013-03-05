@@ -217,9 +217,9 @@ static void com_intel_camera_extensions_IntelCamera_stopBlinkShutter(JNIEnv *env
     camera->sendCommand(CAMERA_CMD_STOP_BLINK_SHUTTER, 0, 0);
 }
 
-static void com_intel_camera_extensions_IntelCamera_cancelTakePicture(JNIEnv *env, jobject thiz)
+static void com_intel_camera_extensions_IntelCamera_cancelSmartShutterPicture(JNIEnv *env, jobject thiz)
 {
-    LOGE("cancelTakePicture");
+    LOGV("cancelSmartShutterPicture");
     IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
     sp<Camera> camera = intel_listener->getCamera();
 
@@ -228,7 +228,21 @@ static void com_intel_camera_extensions_IntelCamera_cancelTakePicture(JNIEnv *en
         return;
     }
 
-    camera->sendCommand(CAMERA_CMD_CANCEL_TAKE_PICTURE, 0, 0);
+    camera->sendCommand(CAMERA_CMD_CANCEL_SMART_SHUTTER_PICTURE, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_forceSmartShutterPicture(JNIEnv *env, jobject thiz)
+{
+    LOGV("forceSmartShutterPicture");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_FORCE_SMART_SHUTTER_PICTURE, 0, 0);
 }
 
 static void com_intel_camera_extensions_IntelCamera_startFaceRecognition(JNIEnv *env, jobject thiz)
@@ -446,9 +460,12 @@ static JNINativeMethod camMethods[] = {
     { "native_stopBlinkShutter",
       "()V",
       (void *)com_intel_camera_extensions_IntelCamera_stopBlinkShutter },
-    { "native_cancelTakePicture",
+    { "native_cancelSmartShutterPicture",
       "()V",
-      (void *)com_intel_camera_extensions_IntelCamera_cancelTakePicture },
+      (void *)com_intel_camera_extensions_IntelCamera_cancelSmartShutterPicture },
+    { "native_forceSmartShutterPicture",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_forceSmartShutterPicture },
     { "native_startFaceRecognition",
       "()V",
       (void *)com_intel_camera_extensions_IntelCamera_startFaceRecognition },

@@ -240,7 +240,8 @@ public class IntelCamera {
     private native final void native_stopSmileShutter();
     private native final void native_startBlinkShutter();
     private native final void native_stopBlinkShutter();
-    private native final void native_cancelTakePicture();
+    private native final void native_cancelSmartShutterPicture();
+    private native final void native_forceSmartShutterPicture();
     private native final void native_startFaceRecognition();
     private native final void native_stopFaceRecognition();
 
@@ -625,11 +626,24 @@ public class IntelCamera {
 
     /**
      * @hide
-     * Stops the smart shutter capture.
+     * Cancel capture on smart shutter even when no smile are detected.
+     * !!! This must be used only when takePicture() has been initiated
+     * !!! during either smile or blink shutter is started.
      */
-    public final void cancelTakePicture()
+    public final void cancelSmartShutterPicture()
     {
-        native_cancelTakePicture();
+        native_cancelSmartShutterPicture();
+    }
+
+    /**
+     * @hide
+     * Force capture on smart shutter even when no smile are detected.
+     * !!! This must be used only when takePicture() has been initiated
+     * !!! during either smile or blink shutter is started.
+     */
+    public final void forceSmartShutterPicture()
+    {
+        native_forceSmartShutterPicture();
     }
 
     /**
