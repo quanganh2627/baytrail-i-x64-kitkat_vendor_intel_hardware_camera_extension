@@ -116,6 +116,8 @@ public class IntelCamera {
     // burst capture
     private static final String KEY_BURST_LENGTH = "burst-length";
     private static final String KEY_BURST_FPS = "burst-fps";
+    public static final String KEY_BURST_START_INDEX = "burst-start-index";
+    private static final String KEY_BURST_CONTINUOUS = "burst-continuous";
 
     // values for back light correction
     private static final String BACK_LIGHTING_CORRECTION_ON = "on";
@@ -132,12 +134,15 @@ public class IntelCamera {
     private static final String KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES = "panorama-live-preview-sizes";
     private static final String KEY_PANORAMA_MAX_SNAPSHOT_COUNT = "panorama-max-snapshot-count";
 
+    // preview update
+    public static final String KEY_PREVIEW_UPDATE_MODE = "preview-update-mode";
+    public static final String PREVIEW_UPDATE_MODE_STANDARD = "standard";
+    public static final String PREVIEW_UPDATE_MODE_DURING_CAPTURE = "during-capture";
+    public static final String PREVIEW_UPDATE_MODE_CONTINUOUS = "continuous";
+
     // preview keep alive
     private static final String KEY_PREVIEW_KEEP_ALIVE = "preview-keep-alive";
 
-    // continuous viewfinder
-    public static final String KEY_CONTINUOUS_VIEWFINDER = "continuous-viewfinder";
-    public static final String KEY_BURST_START_INDEX = "burst-start-index";
 
     // high speed recording, slow motion playback
     private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
@@ -1287,6 +1292,50 @@ public class IntelCamera {
     }
 
     /**
+     * Gets burst continuous state
+     *
+     * @see setBurstContinuous()
+     * @return burst mode state.
+     * @hide
+     */
+    public boolean getBurstContinuous() {
+        if (mParameters.get(KEY_BURST_CONTINUOUS) == TRUE)
+            return true;
+        return false;
+    }
+
+    /**
+     * Sets continuous burst mode state
+     *
+     * When enabled, HAL can enable performance optimizations to
+     * speed up successive calls to takePicture(). For example
+     * HAL may trigger another picture capture while encoding
+     * the compressed frame for the previous frame.
+     *
+     * This mode does not change Android camera API semantics.
+     * Any pipelined actions will be cancelled automatically
+     * in case preview is restarted.
+     *
+     * @param value continuous burst mode state
+     * @hide
+     */
+    public void setBurstContinuous(boolean toggle) {
+        mParameters.set(KEY_BURST_CONTINUOUS, toggle ? TRUE : FALSE);
+    }
+
+    /**
+     * Gets the supported list for burst continuous.
+     *
+     * @return a list of supported values for burst continuous. null if this feature
+     *         is not supported.
+     * @hide
+     */
+    public List<String> getSupportedBurstcontinuous() {
+        String str = mParameters.get(KEY_BURST_CONTINUOUS + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
      * Gets start index for burst.
      *
      * @return burst mode capture length.
@@ -1318,33 +1367,71 @@ public class IntelCamera {
     }
 
     /**
-     * Gets the supported continuous viewfinder.
-     *
-     * @return a list of supported values for continuous vf. null if this feature
-     *         is not supported.
+     * Deprecated (TODO: remove)
      * @hide
      */
     public List<String> getSupportedContinuousViewfinder() {
-        return getSupportedValues(KEY_CONTINUOUS_VIEWFINDER + SUPPORTED_VALUES_SUFFIX);
+        return null;
     }
 
     /**
-     * Sets state of Preview keep alive feature
+     * Deprecated (TODO: remove)
+     * @hide
+     */
+    public void setContinuousViewfinder(boolean value) {}
+
+    /**
+     * Gets the supported values of preview update mode.
      *
-     * @param toggle switch for feature on/off
+     * Note: Even if supported by the platform, continuous preview
+     * mode may not be available with all parameter combinations (e.g. it
+     * may not work with all picture-sizes).
+     *
+     * @return a list of supported values for preview update mode. null if this feature
+     *         is not supported.
      * @hide
      */
-    public void setPreviewKeepAlive(boolean toggle) {
-        mParameters.set(KEY_PREVIEW_KEEP_ALIVE, toggle ? TRUE : FALSE);
+    public List<String> getSupportedPreviewUpdateMode() {
+        return getSupportedValues(KEY_PREVIEW_UPDATE_MODE + SUPPORTED_VALUES_SUFFIX);
     }
 
     /**
-     * Sets state of Continuous Viewfinder feature
+     * Gets the current preview update mode.
+     *
+     * @see setPreviewUpdateMode()
+     * @return current preview update mode (@see setPreviewUpdateMode())
      * @hide
      */
-    public void setContinuousViewfinder(boolean toggle) {
-        mParameters.set(KEY_CONTINUOUS_VIEWFINDER, toggle ? TRUE : FALSE);
+    public String getPreviewUpdateMode() {
+        return mParameters.get(KEY_PREVIEW_UPDATE_MODE);
     }
+
+    /**
+     * Sets the preview update mode
+     *
+     * When set to PREVIEW_UPDATE_MODE_STANDARD, standard camera API semantics
+     * are followed. Preview updates will stop when takePicture() is
+     * called.
+     *
+     * When set to PREVIEW_UPDATE_MODE_DURING_CAPTURE, preview will continue
+     * to be updated during the take picture process, but preview frame
+     * rate may drop. Application must not reset the preview window,
+     * and must not assume preview to be automatically stopped after
+     * takePicture(), as happens with default Camera API.
+     *
+     * When set to PREVIEW_UPDATE_MODE_CONTINUOUS, preview will continue to be
+     * updated during take picture process (like "update-during-capture""), and
+     * priority will be given to preview processing. This option may
+     * produce a higher and more stable preview frame rate during
+     * capture, but may negatively impact the time it takes to get
+     * the output pictures.
+     *
+     * @hide
+     */
+    public void setPreviewUpdateMode(String value) {
+        mParameters.set(KEY_PREVIEW_UPDATE_MODE, value);
+    }
+
     /**
      * Gets the current raw data format.
      *
