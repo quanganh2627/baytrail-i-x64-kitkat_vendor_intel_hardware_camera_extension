@@ -46,6 +46,7 @@ private:
     jobject mCameraJObjectWeak;
     jclass mPanoramaMetadataClass;  // strong reference to PanoramaMetadata class
     jclass mPanoramaSnapshotClass;  // strong reference to PanoramaSnapshot class
+    jclass mUllSnapshotClass;  // strong reference to PanoramaSnapshot class
     jclass mCameraJClass;
 
 };
@@ -62,6 +63,9 @@ struct fields_t {
     jmethodID panorama_snapshot_constructor;
     jfieldID panorama_snapshot_metadata;
     jfieldID panorama_snapshot_snapshot;
+    // Ultra-low light
+    jmethodID ull_snapshot_constructor;
+    jfieldID ull_snapshot_snapshot;
 };
 
 static fields_t fields;
@@ -288,6 +292,9 @@ IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobjec
     clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaSnapshot");
     mPanoramaSnapshotClass = (jclass) env->NewGlobalRef(clazz);
 
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
+    mUllSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+
     mCameraJObjectWeak = env->NewGlobalRef(weak_this);
 }
 
@@ -309,6 +316,11 @@ void IntelCameraListener::release()
     if (mPanoramaSnapshotClass != NULL) {
         env->DeleteGlobalRef(mPanoramaSnapshotClass);
         mPanoramaSnapshotClass = NULL;
+    }
+
+    if (mUllSnapshotClass != NULL) {
+        env->DeleteGlobalRef(mUllSnapshotClass);
+        mUllSnapshotClass = NULL;
     }
 
     if (mCameraJObjectWeak != NULL) {
@@ -412,6 +424,39 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->DeleteLocalRef(panoramaSnapshot);
             }
             break;
+        case CAMERA_MSG_ULL_SNAPSHOT:
+            pPic = reinterpret_cast<jbyte *>(heapBase + offset);
+            if (pPic == NULL)
+                ALOGE("Null ULL snaphost data. pPic %d", (int)pPic);
+            else {
+                size_t arraySize = size; //TODO: no need for another var now?
+                jbyteArray array = env->NewByteArray(arraySize);
+                jobject ullSnapshot = env->NewObject(mUllSnapshotClass, fields.ull_snapshot_constructor);
+
+                if (ullSnapshot == NULL || array == NULL) {
+                    ALOGE("Couldn't allocate ULL snapshot object. ullSnapshot (%p), array (%p)", ullSnapshot, array);
+                    if (array)
+                        env->DeleteLocalRef(array);
+                    if (ullSnapshot)
+                        env->DeleteLocalRef(ullSnapshot);
+
+                    env->ExceptionClear();
+                    break;
+                }
+
+                // set image data
+                env->SetByteArrayRegion(array, 0, arraySize, pPic);
+                // set callback object fields
+                env->SetObjectField(ullSnapshot, fields.ull_snapshot_snapshot, array);
+
+                // done constructing, so call the java class
+                env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
+                                          mCameraJObjectWeak, msgType, 0, 0, ullSnapshot);
+
+                env->DeleteLocalRef(array);
+                env->DeleteLocalRef(ullSnapshot);
+            }
+            break;
         default:
             if (mRealListener != NULL)
                 mRealListener->postData(msgType,dataPtr,metadata);
@@ -501,6 +546,14 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
     fields.panorama_snapshot_constructor = env->GetMethodID(clazz, "<init>", "()V");
     if (fields.panorama_snapshot_constructor == NULL) {
         ALOGE("Can't find com/intel/camera/extensions/IntelCamera$PanoramaSnapshot.PanoramaSnapshot()");
+        return -1;
+    }
+
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
+    fields.ull_snapshot_snapshot = env->GetFieldID(clazz, "snapshot", "[B");
+    fields.ull_snapshot_constructor = env->GetMethodID(clazz, "<init>", "()V");
+    if (fields.ull_snapshot_constructor == NULL) {
+        ALOGE("Can't find com/intel/camera/extensions/IntelCamera$UllSnapshot.UllSnapshot()");
         return -1;
     }
 

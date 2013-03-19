@@ -54,6 +54,7 @@ enum {
     CAMERA_MSG_SCENE_DETECT             = 0x2001,
     CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003,
     CAMERA_MSG_PANORAMA_METADATA        = 0x2005,
+    CAMERA_MSG_ULL_SNAPSHOT             = 0x2007
 };
 
 /**

@@ -224,6 +224,7 @@ public class IntelCamera {
     private EventHandler mEventHandler;
     private SceneModeListener mSceneListener;
     private PanoramaListener mPanoramaListener;
+    private UllListener mUllListener;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
     private boolean mSmileShutterRunning = false;
@@ -252,6 +253,7 @@ public class IntelCamera {
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
     private static final int CAMERA_MSG_PANORAMA_SNAPSHOT = 0x2003;
     private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2005;
+    private static final int CAMERA_MSG_ULL_SNAPSHOT = 0x2007;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -335,6 +337,12 @@ public class IntelCamera {
                 if (mPanoramaListener != null)
                     mPanoramaListener.onSnapshotTaken(snapshot);
                 break;
+            case CAMERA_MSG_ULL_SNAPSHOT:
+                Log.d(TAG, "ULL snapshot data");
+                UllSnapshot ullSnapshot = (UllSnapshot) msg.obj;
+                if (mUllListener != null) {
+                    mUllListener.onSnapshotTaken(ullSnapshot);
+                }
             default:
                 Log.e(TAG, "Unknown intel message type " + msg.what);
                 return;
@@ -455,6 +463,46 @@ public class IntelCamera {
          * @hide
          */
         void onSnapshotTaken(PanoramaSnapshot snapshot);
+    }
+
+    /**
+     * The UllSnapshot class is used to encapsulate the information carried
+     * to the application via UllListener callbacks
+     * @see IntelCamera.UllListener
+     * @see #setUllListener(UllListener listener)
+     * @hide
+     */
+    public static class UllSnapshot
+    {
+        public UllSnapshot()
+        {
+        }
+
+        /**
+         * JPEG encoded Ultra Low Light snapshot data
+         */
+        public byte[] snapshot;
+
+        // TODO: Additional ULL metadata needed?
+    }
+
+    /**
+     * Sets the ultra-low light listener for receiving ULL snapshots.
+     * @param listener the new UllListener
+     * @hide
+     */
+    public void setUllListener(UllListener listener)
+    {
+        mUllListener = listener;
+    }
+
+    /**
+     * The UllListener interface is used for receiving Ultra-low light callbacks.
+     * @hide
+     */
+    public interface UllListener
+    {
+        void onSnapshotTaken(UllSnapshot snapshot);
     }
 
     public interface SceneModeListener
