@@ -254,6 +254,7 @@ public class IntelCamera {
     private static final int CAMERA_MSG_PANORAMA_SNAPSHOT = 0x2003;
     private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2005;
     private static final int CAMERA_MSG_ULL_SNAPSHOT = 0x2007;
+    private static final int CAMERA_MSG_ULL_TRIGGERED = 0x2009;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -343,6 +344,11 @@ public class IntelCamera {
                 if (mUllListener != null) {
                     mUllListener.onSnapshotTaken(ullSnapshot);
                 }
+            case CAMERA_MSG_ULL_TRIGGERED:
+                if (mUllListener != null) {
+                    mUllListener.onUllTriggered(msg.arg1);
+                }
+                break;
             default:
                 Log.e(TAG, "Unknown intel message type " + msg.what);
                 return;
@@ -479,6 +485,11 @@ public class IntelCamera {
         }
 
         /**
+         * ID to identify to Ultra Low Light snapshot taken
+         */
+        public int id;
+
+        /**
          * JPEG encoded Ultra Low Light snapshot data
          */
         public byte[] snapshot;
@@ -502,6 +513,17 @@ public class IntelCamera {
      */
     public interface UllListener
     {
+        /**
+          * Triggered when the ULL activation is detected by the hardware
+          * @param id Identifier for the ULL snapshot for which the detection has
+          * been made. The snapshot will be later provided with onSnapshotTaken() callback
+          * with the same identifier.
+          */
+        void onUllTriggered(int id);
+        /**
+         * Triggered after the ULL image post-processing is done
+         * and the snapshot will be delivered to the application
+         */
         void onSnapshotTaken(UllSnapshot snapshot);
     }
 

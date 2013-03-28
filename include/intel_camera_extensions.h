@@ -54,7 +54,8 @@ enum {
     CAMERA_MSG_SCENE_DETECT             = 0x2001,
     CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003,
     CAMERA_MSG_PANORAMA_METADATA        = 0x2005,
-    CAMERA_MSG_ULL_SNAPSHOT             = 0x2007
+    CAMERA_MSG_ULL_SNAPSHOT             = 0x2007,
+    CAMERA_MSG_ULL_TRIGGERED            = 0x2009        // notify cb
 };
 
 /**
@@ -68,6 +69,10 @@ typedef struct camera_panorama_metadata {
     bool    finalization_started;    /* signals whether automatic finalization has started.
                                         Only valid when associated with a snapshot */
 } camera_panorama_metadata_t;
+
+typedef struct camera_ull_metadata {
+    int32_t id;         /* ID of the snapshot */
+} camera_ull_metadata_t;
 
 }; // namespace android
 
