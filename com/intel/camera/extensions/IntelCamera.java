@@ -139,6 +139,7 @@ public class IntelCamera {
     public static final String PREVIEW_UPDATE_MODE_STANDARD = "standard";
     public static final String PREVIEW_UPDATE_MODE_DURING_CAPTURE = "during-capture";
     public static final String PREVIEW_UPDATE_MODE_CONTINUOUS = "continuous";
+    public static final String PREVIEW_UPDATE_MODE_WINDOWLESS = "windowless";
 
     // preview keep alive
     private static final String KEY_PREVIEW_KEEP_ALIVE = "preview-keep-alive";
@@ -1425,6 +1426,12 @@ public class IntelCamera {
      * produce a higher and more stable preview frame rate during
      * capture, but may negatively impact the time it takes to get
      * the output pictures.
+     *
+     * When set to PREVIEW_UPDATE_MODE_WINDOWLESS, preview will start without
+     * call to android.hardware.Camera.setPreviewDisplay(). This is provided in
+     * purpose to give application an oportunity to run camera use cases without
+     * the preview window. In case the preview surface is anyhow given using
+     * setPreviewDisplay(), the mode is switched to standard.
      *
      * @hide
      */
