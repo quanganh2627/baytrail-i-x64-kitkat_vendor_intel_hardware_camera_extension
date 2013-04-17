@@ -47,6 +47,7 @@ private:
     jclass mPanoramaMetadataClass;  // strong reference to PanoramaMetadata class
     jclass mPanoramaSnapshotClass;  // strong reference to PanoramaSnapshot class
     jclass mUllSnapshotClass;  // strong reference to UllSnapshot class
+    jclass mSceneDetectionMetadataClass; // strong reference to SceneDetectionMetadata class
     jclass mCameraJClass;
 
 };
@@ -67,6 +68,10 @@ struct fields_t {
     jmethodID ull_snapshot_constructor;
     jfieldID ull_id;
     jfieldID ull_snapshot_snapshot;
+    // Scene Detection
+    jmethodID scene_detection_metadata_constructor;
+    jfieldID scene_detection_metadata_hdr;
+    jfieldID scene_detection_metadata_scene;
 };
 
 static fields_t fields;
@@ -290,6 +295,7 @@ IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobjec
         mPanoramaSnapshotClass = NULL;
         mUllSnapshotClass = NULL;
         mCameraJObjectWeak = NULL;
+        mSceneDetectionMetadataClass = NULL;
 
         LOGE("getJNIEnv error, IntelCameraListener construction failed");
     } else {
@@ -305,6 +311,9 @@ IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobjec
 
         clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
         mUllSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+
+        clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$SceneDetectionMetadata");
+        mSceneDetectionMetadataClass = (jclass) env->NewGlobalRef(clazz);
 
         mCameraJObjectWeak = env->NewGlobalRef(weak_this);
     }
@@ -337,6 +346,11 @@ void IntelCameraListener::release()
         mUllSnapshotClass = NULL;
     }
 
+    if (mSceneDetectionMetadataClass != NULL) {
+        env->DeleteGlobalRef(mSceneDetectionMetadataClass);
+        mSceneDetectionMetadataClass = NULL;
+    }
+
     if (mCameraJObjectWeak != NULL) {
         env->DeleteGlobalRef(mCameraJObjectWeak);
         mCameraJObjectWeak = NULL;
@@ -351,7 +365,6 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
     JNIEnv *env = AndroidRuntime::getJNIEnv();
 
     switch (msgType) {
-    case CAMERA_MSG_SCENE_DETECT:
     case CAMERA_MSG_ULL_TRIGGERED:
     case CAMERA_MSG_LOW_BATTERY:
         if (env != NULL)
@@ -491,6 +504,27 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->DeleteLocalRef(ullSnapshot);
             }
         }
+    } else if (heapBase != NULL && msgType == CAMERA_MSG_SCENE_DETECT) {
+        env = AndroidRuntime::getJNIEnv();
+        const camera_scene_detection_metadata* pMetadatax = reinterpret_cast<const camera_scene_detection_metadata*>(heapBase + offset);
+        if (pMetadatax == NULL)
+            ALOGE("scene detection metadata was null");
+        else {
+            jobject metadata = env->NewObject(mSceneDetectionMetadataClass, fields.scene_detection_metadata_constructor);
+
+            if (metadata == NULL) {
+                ALOGE("NULL metadata for scene detection");
+                env->ExceptionClear();
+            } else {
+                jstring scenestring =  env->NewStringUTF(pMetadatax->scene);
+                env->SetObjectField(metadata, fields.scene_detection_metadata_scene, scenestring);
+                env->SetBooleanField(metadata, fields.scene_detection_metadata_hdr, pMetadatax->hdr);
+                env->CallStaticVoidMethod(mCameraJClass, fields.post_event, mCameraJObjectWeak, msgType, 0, 0, metadata);
+
+                env->DeleteLocalRef(metadata);
+                env->DeleteLocalRef(scenestring);
+            }
+        }
     } else if (mRealListener != NULL) {
         // Pass through all other messages that were not handled above
         mRealListener->postData(msgType, dataPtr, metadata);
@@ -587,6 +621,15 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
     fields.ull_snapshot_constructor = env->GetMethodID(clazz, "<init>", "()V");
     if (fields.ull_snapshot_constructor == NULL) {
         ALOGE("Can't find com/intel/camera/extensions/IntelCamera$UllSnapshot.UllSnapshot()");
+        return -1;
+    }
+
+    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$SceneDetectionMetadata");
+    fields.scene_detection_metadata_scene = env->GetFieldID(clazz, "sceneDetected", "Ljava/lang/String;");
+    fields.scene_detection_metadata_hdr = env->GetFieldID(clazz, "hdr", "Z");
+    fields.scene_detection_metadata_constructor = env->GetMethodID(clazz, "<init>", "()V");
+    if (fields.scene_detection_metadata_constructor == NULL) {
+        ALOGE("Can't find com/intel/camera/extensions/IntelCamera$SceneDetectionMetadata.SceneDetectionMetadata()");
         return -1;
     }
 
