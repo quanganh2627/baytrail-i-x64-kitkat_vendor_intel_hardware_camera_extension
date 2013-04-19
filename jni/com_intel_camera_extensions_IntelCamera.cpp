@@ -46,7 +46,7 @@ private:
     jobject mCameraJObjectWeak;
     jclass mPanoramaMetadataClass;  // strong reference to PanoramaMetadata class
     jclass mPanoramaSnapshotClass;  // strong reference to PanoramaSnapshot class
-    jclass mUllSnapshotClass;  // strong reference to UllSnapshot class
+    jclass mUllSnapshotClass;  // strong reference to PanoramaSnapshot class
     jclass mCameraJClass;
 
 };
@@ -65,7 +65,6 @@ struct fields_t {
     jfieldID panorama_snapshot_snapshot;
     // Ultra-low light
     jmethodID ull_snapshot_constructor;
-    jfieldID ull_id;
     jfieldID ull_snapshot_snapshot;
 };
 
@@ -342,10 +341,6 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
         env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
         mCameraJObjectWeak, msgType, ext1, ext2, NULL);
         break;
-    case CAMERA_MSG_ULL_TRIGGERED:
-        env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
-                                  mCameraJObjectWeak, msgType, ext1, ext2, NULL);
-            break;
     default:
         if (mRealListener != NULL)
             mRealListener->notify(msgType, ext1, ext2);
@@ -360,14 +355,11 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
     size_t size;
     sp<IMemoryHeap> heap = dataPtr->getMemory(&offset, &size);
     uint8_t *heapBase = (uint8_t*)heap->base();
-    JNIEnv *env = NULL;
 
-    if (heapBase != NULL &&
-        (msgType == CAMERA_MSG_PANORAMA_METADATA || msgType == CAMERA_MSG_PANORAMA_SNAPSHOT)) {
-        // Panorama-related message handlings:
+    if (heapBase != NULL) {
         const camera_panorama_metadata* pMetadata = reinterpret_cast<const camera_panorama_metadata*>(heapBase + offset);
         const jbyte* pPic = NULL;
-        env = AndroidRuntime::getJNIEnv();
+        JNIEnv *env = AndroidRuntime::getJNIEnv();
         switch (msgType) {
         case CAMERA_MSG_PANORAMA_METADATA:
             if (pMetadata == NULL)
@@ -432,39 +424,29 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->DeleteLocalRef(panoramaSnapshot);
             }
             break;
-        default:
-            ALOGE("Unknown data callback message.");
-            break;
-        }
-    } else if (heapBase != NULL && msgType == CAMERA_MSG_ULL_SNAPSHOT) {
-        // ULL data call back message:
-        env = AndroidRuntime::getJNIEnv();
+        case CAMERA_MSG_ULL_SNAPSHOT:
+            pPic = reinterpret_cast<jbyte *>(heapBase + offset);
+            if (pPic == NULL)
+                ALOGE("Null ULL snaphost data. pPic %d", (int)pPic);
+            else {
+                size_t arraySize = size; //TODO: no need for another var now?
+                jbyteArray array = env->NewByteArray(arraySize);
+                jobject ullSnapshot = env->NewObject(mUllSnapshotClass, fields.ull_snapshot_constructor);
 
-        // Take the ULL metadata from the start of the buffer:
-        const camera_ull_metadata *ullMetadata = reinterpret_cast<const camera_ull_metadata*>(heapBase + offset);
-        // ... and the pic data is after the meta in the buffer:
-        const jbyte *ullPic = reinterpret_cast<jbyte*>(heapBase + offset + sizeof(camera_ull_metadata));
+                if (ullSnapshot == NULL || array == NULL) {
+                    ALOGE("Couldn't allocate ULL snapshot object. ullSnapshot (%p), array (%p)", ullSnapshot, array);
+                    if (array)
+                        env->DeleteLocalRef(array);
+                    if (ullSnapshot)
+                        env->DeleteLocalRef(ullSnapshot);
 
-        if (ullPic == NULL) {
-            ALOGE("Null ULL snapshot data. pPic %d", (int)ullPic);
-        } else {
-            size_t arraySize = size - sizeof(camera_ull_metadata);
-            jbyteArray array = env->NewByteArray(arraySize);
-            jobject ullSnapshot = env->NewObject(mUllSnapshotClass, fields.ull_snapshot_constructor);
+                    env->ExceptionClear();
+                    break;
+                }
 
-            if (ullSnapshot == NULL || array == NULL) {
-                ALOGE("Couldn't allocate ULL snapshot object and/or metadata ullSnapshot (%p), array (%p)", ullSnapshot, array);
-                if (array)
-                    env->DeleteLocalRef(array);
-                if (ullSnapshot)
-                    env->DeleteLocalRef(ullSnapshot);
-
-                env->ExceptionClear();
-            } else {
                 // set image data
-                env->SetByteArrayRegion(array, 0, arraySize, ullPic);
+                env->SetByteArrayRegion(array, 0, arraySize, pPic);
                 // set callback object fields
-                env->SetIntField(ullSnapshot, fields.ull_id, ullMetadata->id);
                 env->SetObjectField(ullSnapshot, fields.ull_snapshot_snapshot, array);
 
                 // done constructing, so call the java class
@@ -474,10 +456,12 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->DeleteLocalRef(array);
                 env->DeleteLocalRef(ullSnapshot);
             }
+            break;
+        default:
+            if (mRealListener != NULL)
+                mRealListener->postData(msgType,dataPtr,metadata);
+            break;
         }
-    } else if (mRealListener != NULL) {
-        // Pass through all other messages that were not handled above
-        mRealListener->postData(msgType, dataPtr, metadata);
     }
 }
 
@@ -566,7 +550,6 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
     }
 
     clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
-    fields.ull_id = env->GetFieldID(clazz, "id", "I");
     fields.ull_snapshot_snapshot = env->GetFieldID(clazz, "snapshot", "[B");
     fields.ull_snapshot_constructor = env->GetMethodID(clazz, "<init>", "()V");
     if (fields.ull_snapshot_constructor == NULL) {
