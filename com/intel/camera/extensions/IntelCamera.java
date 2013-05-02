@@ -115,7 +115,8 @@ public class IntelCamera {
 
     // burst capture
     private static final String KEY_BURST_LENGTH = "burst-length";
-    private static final String KEY_BURST_FPS = "burst-fps";
+    private static final String KEY_BURST_FPS = "burst-fps"; // TODO: old API, remove it in the future
+    private static final String KEY_BURST_SPEED = "burst-speed";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
     private static final String KEY_BURST_CONTINUOUS = "burst-continuous";
 
@@ -1294,6 +1295,41 @@ public class IntelCamera {
         String str = mParameters.get(KEY_BURST_FPS + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
+
+    /**
+     * Gets burst mode speed.
+     *
+     * @return burst mode speed.
+     * @hide
+     */
+    public String getBurstSpeed() {
+        return mParameters.get(KEY_BURST_SPEED);
+    }
+
+    /**
+     * Sets burst mode speed.
+     *
+     * @param value burst mode speed. The value could be one which is got from the getSupportedBurstSpeed
+     *         "fast", "medium", "low" could be set right now.
+     *         "medium" is about 1/2 speed as "fast". "low" is about 1/4 speed as "fast".
+     * @hide
+     */
+    public void setBurstSpeed(String value) {
+        mParameters.set(KEY_BURST_SPEED, value);
+    }
+
+    /**
+     * Gets the supported burst mode speed.
+     *
+     * @return a list of supported burst speed. null if this feature
+     *         is not supported.
+     * @hide
+     */
+    public List<String> getSupportedBurstSpeed() {
+        String str = mParameters.get(KEY_BURST_SPEED + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
 
     /**
      * Gets burst continuous state
