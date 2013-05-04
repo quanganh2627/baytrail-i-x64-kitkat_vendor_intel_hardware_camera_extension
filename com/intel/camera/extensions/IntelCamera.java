@@ -153,6 +153,9 @@ public class IntelCamera {
     public static final String KEY_EXIF_MODEL = "exif-model-name";
     public static final String KEY_EXIF_SOFTWARE = "exif-software-name";
 
+    // Save still image and recorded video as mirrored (for front camera only)
+    public static final String KEY_SAVE_MIRRORED = "save-mirrored";
+
     private static final String TRUE = "true";
     private static final String FALSE = "false";
 
@@ -1951,6 +1954,27 @@ public class IntelCamera {
      */
     public List<String> getSupportedSlowMotionRate() {
         String str = mParameters.get(KEY_SLOW_MOTION_RATE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * Sets the save mirrored mode.
+     *
+     * @hide
+     */
+    public void setSaveMirrored(String value) {
+        mParameters.set(KEY_SAVE_MIRRORED, value);
+    }
+
+    /**
+     * Gets the supported values for save mirrored.
+     *
+     * @return on or off if the feature is supported. null if this feature
+               is not supported
+     * @hide
+     */
+    public List<String> getSupportedSaveMirrored() {
+        String str = mParameters.get(KEY_SAVE_MIRRORED + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
