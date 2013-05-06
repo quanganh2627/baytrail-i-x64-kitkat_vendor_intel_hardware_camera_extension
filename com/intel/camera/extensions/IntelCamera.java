@@ -110,6 +110,13 @@ public class IntelCamera {
     private static final String KEY_BLINK_SHUTTER = "blink-shutter";
     private static final String KEY_BLINK_SHUTTER_THRESHOLD = "blink-shutter-threshold";
 
+    // GPS extension
+    private static final String KEY_GPS_IMG_DIRECTION = "gps-img-direction";
+    private static final String KEY_GPS_IMG_DIRECTION_REF = "gps-img-direction-ref";
+    // possible value for the KEY_GPS_IMG_DIRECTION_REF
+    private static final String GPS_IMG_DIRECTION_REF_TRUE = "true-direction";
+    private static final String GPS_IMG_DIRECTION_REF_MAGNETIC = "magnetic-direction";
+
     // hw overlay rendering
     private static final String KEY_HW_OVERLAY_RENDERING = "overlay-render";
 
@@ -2011,6 +2018,38 @@ public class IntelCamera {
      */
     public List<String> getSupportedSaveMirrored() {
         String str = mParameters.get(KEY_SAVE_MIRRORED + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * Sets GPS Image direction. This will be stored in JPEG EXIF header.
+     *
+     * @param value, the range of it is from 0.00 to 359.99.
+     * @hide
+     */
+    public void setGpsImgDirection(double value) {
+        mParameters.set(KEY_GPS_IMG_DIRECTION, Double.toString(value));
+    }
+
+    /**
+     * Set GPS Image direction reference. This will be stored in JPEG EXIF header.
+     *
+     * the supported value could be get from the function getSupportedGpsImgDirectionRef
+     * @param value, it should be one of GPS_IMG_DIRECTION_REF_TRUE and GPS_IMG_DIRECTION_REF_MAGNETIC
+     * @hide
+     */
+    public void setGpsImgDirectionRef(String value) {
+        mParameters.set(KEY_GPS_IMG_DIRECTION_REF, value);
+    }
+
+    /**
+     * Gets the supported values for GPS Image direction reference.
+     *
+     * @return one of GPS_IMG_DIRECTION_REF_TRUE and GPS_IMG_DIRECTION_REF_MAGNETIC
+     * @hide
+     */
+    public List<String> getSupportedGpsImgDirectionRef() {
+        String str = mParameters.get(KEY_GPS_IMG_DIRECTION_REF + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
