@@ -73,7 +73,6 @@ public class IntelCamera {
     private static final String KEY_SHUTTER = "shutter";
     private static final String KEY_APERTURE = "aperture";
     private static final String KEY_ISO = "iso";
-    private static final String KEY_BACK_LIGHTING_CORRECTION = "back-lighting-correction-mode";
     private static final String KEY_AF_METERING_MODE = "af-metering-mode";
     private static final String KEY_AWB_MAPPING_MODE = "awb-mapping-mode";
     private static final String KEY_COLOR_TEMPERATURE = "color-temperature";
@@ -126,10 +125,6 @@ public class IntelCamera {
     private static final String KEY_BURST_SPEED = "burst-speed";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
     private static final String KEY_BURST_CONTINUOUS = "burst-continuous";
-
-    // values for back light correction
-    private static final String BACK_LIGHTING_CORRECTION_ON = "on";
-    private static final String BACK_LIGHTING_CORRECTION_OFF = "off";
 
     // values for af metering mode
     private static final String AF_METERING_MODE_AUTO = "auto";
@@ -1187,41 +1182,6 @@ public class IntelCamera {
      */
     public List<String> getSupportedAFMeteringModes() {
         String str = mParameters.get(KEY_AF_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
-        return split(str);
-    }
-
-    /**
-     * Gets the current back light correction mode.
-     *
-     * @return current back light correction. null if back light correction is not supported.
-     * @see #BACK_LIGHTING_CORRECTION_ON
-     * @see #BACK_LIGHTING_CORRECTION_OFF
-     * @hide
-     */
-    public String getBackLightCorrectionMode() {
-        return mParameters.get(KEY_BACK_LIGHTING_CORRECTION);
-    }
-
-    /**
-     * Sets the current back light correction mode.
-     *
-     * @param value new back light correction mode.
-     * @see #get getBackLightCorrectionMode()
-     * @hide
-     */
-    public void setBackLightCorrectionMode(String value) {
-        mParameters.set(KEY_BACK_LIGHTING_CORRECTION, value);
-    }
-
-    /**
-     * Gets the supported back light correction mode.
-     *
-     * @return a list of supported back light correction modes. null if back light correction mode setting
-     *         is not supported.
-     * @hide
-     */
-    public List<String> getSupportedBackLightCorrectionModes() {
-        String str = mParameters.get(KEY_BACK_LIGHTING_CORRECTION + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
