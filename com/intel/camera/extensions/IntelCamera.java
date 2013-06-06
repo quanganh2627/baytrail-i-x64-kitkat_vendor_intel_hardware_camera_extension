@@ -657,7 +657,7 @@ public class IntelCamera {
      * @hide
      * Starts the smile detection Smart Shutter.
      * After calling, the camera will trigger on smile when user presses shutter
-     * Note that smile detection doesnt work unless
+     * Note that smile detection doesn't work unless
      * {@link #startFaceDetection()} has been called by the application.
      * If the smile shutter has started, apps should not call this again
      * before calling {@link #stopSmileShutter()}.
@@ -687,7 +687,7 @@ public class IntelCamera {
      * Starts the blink shutter.
      * After calling, the camera will capture on eye blinking events
      * when the user press and hold the camera shutter key.
-     * Note that this feasture is not working, unless
+     * Note that this feature is not working, unless
      * {@link #startFaceDetection()} has been called by the application.
      * If the blink shutter has started, apps should not call this again
      * before calling {@link #stopBlinkShutter()}.
@@ -766,17 +766,35 @@ public class IntelCamera {
         mCameraDevice.setParameters(param);
     }
     /**
-    * @hide
-    */
-    public String getXNR() {
-        return mParameters.get(KEY_XNR);
-    }
-
-    /**
+     * Enable or disable XNR (eXtra Noise Reduction)
+     *
+     * XNR is a hardware accelerated process to reduce high-iso color noise.
+     * XNR is a function with heavy computational requirements and has an
+     * impact in image post-processing latencies.
+     *
+     * Availability of XNR is controlled by the scene mode and normally it is
+     * enabled by default for night-scene mode(s).
+     *
+     * Changing scene mode overrules this control so the value must be set with
+     * separate call to setParameters with below sequence.
+     *
+     * 1. change scene mode with separate call to setParameters() as
+     *    scene will override the controls given at the same time.
+     * 2. call getParameters() to update parameters changed by the scene
+     * 3. check the support and state of XNR using getXNR() and getSupportedXNR()
+     * 4. set changes to XNR if needed (setXNR())
+     * 5. call setParameters()
      * @hide
      */
     public void setXNR(String value) {
         mParameters.set(KEY_XNR, value);
+    }
+
+    /**
+    * @hide
+    */
+    public String getXNR() {
+        return mParameters.get(KEY_XNR);
     }
 
     /**
@@ -788,18 +806,38 @@ public class IntelCamera {
     }
 
     /**
+     * Enable or disable ANR (Advanced Noise Reduction)
+     *
+     * ANR is a hardware accelerated process for efficient reducing of Gaussian
+     * noise from images taken in low light conditions. ANR allows images to be
+     * taken with shorter exposure times and higher ISO and hereby helps to reduce
+     * motion blur.
+     *
+     * Availability of ANR is controlled by the scene mode and normally it is
+     * enabled by default for night-scene mode(s).
+     *
+     * Changing scene mode overrules this control so the value must be set with
+     * separate call to setParameters with below sequence.
+     *
+     * 1. change scene mode with separate call to setParameters() as
+     *    scene will override the controls given at the same time.
+     * 2. call getParameters() to update parameters changed by the scene
+     * 3. check the support and state of ANR using getANR() and getSupportedANR()
+     * 4. set changes to ANR if needed (setANR())
+     * 5. call setParameters()
+     * @hide
+     */
+    public void setANR(String value) {
+        mParameters.set(KEY_ANR, value);
+    }
+
+    /**
      * @hide
      */
     public String getANR() {
         return mParameters.get(KEY_ANR);
     }
 
-    /**
-     * @hide
-     */
-    public void setANR(String value) {
-        mParameters.set(KEY_ANR, value);
-    }
 
     /**
      * @hide
@@ -810,13 +848,8 @@ public class IntelCamera {
     }
 
     /**
-     * @hide
-     */
-    public String getGDC() {
-        return mParameters.get(KEY_GDC);
-    }
-
-    /**
+     * Enable or Disable GDC (Geometric Distortion Correction)
+     * Deprecated (TODO: remove)
      * @hide
      */
     public void setGDC(String value) {
@@ -824,6 +857,15 @@ public class IntelCamera {
     }
 
     /**
+     * Deprecated (TODO: remove)
+     * @hide
+     */
+    public String getGDC() {
+        return mParameters.get(KEY_GDC);
+    }
+
+    /**
+     * Deprecated (TODO: remove)
      * @hide
      */
     public List<String> getSupportedGDC() {
@@ -832,17 +874,18 @@ public class IntelCamera {
     }
 
     /**
+     * Enable or Disable Temporal Noise Reduction (TNR) for video
      * @hide
      */
-    public String getTemporalNoiseReduction() {
-        return mParameters.get(KEY_TEMPORAL_NOISE_REDUCTION);
+    public void setTemporalNoiseReduction(String value) {
+            mParameters.set(KEY_TEMPORAL_NOISE_REDUCTION, value);
     }
 
     /**
      * @hide
      */
-    public void setTemporalNoiseReduction(String value) {
-            mParameters.set(KEY_TEMPORAL_NOISE_REDUCTION, value);
+    public String getTemporalNoiseReduction() {
+        return mParameters.get(KEY_TEMPORAL_NOISE_REDUCTION);
     }
 
     /**
@@ -897,7 +940,30 @@ public class IntelCamera {
        return split(str);
     }
 
-     /**
+    /**
+     * Set metering mode of AE (Auto Exposure) algorithm
+     *
+     * AE Metering mode is normally controlled automatically per scene mode and
+     * use cases e.g pointed focusing. This control can be used to select AE
+     * metering mode specifically from the given support list
+     * (@see #getSupportedAEMeteringMode()).
+     *
+     * Changing scene mode overrules this control so the value must be set with
+     * separate call to setParameters with below sequence.
+     *
+     * 1. change scene mode with separate call to setParameters() as
+     *    scene will override the controls given at the same time.
+     * 2. call getParameters() to update parameters changed by the scene
+     * 3. check the support and state of XNR using getXNR() and getSupportedXNR()
+     * 4. set changes to XNR if needed (setXNR())
+     * 5. call setParameters()
+     * @hide
+     */
+    public void setAEMeteringMode(String value) {
+        mParameters.set(KEY_AE_METERING_MODE, value);
+    }
+
+    /**
      * @hide
      */
     public String getAEMeteringMode() {
@@ -907,16 +973,21 @@ public class IntelCamera {
     /**
      * @hide
      */
-    public void setAEMeteringMode(String value) {
-        mParameters.set(KEY_AE_METERING_MODE, value);
-    }
-
-    /**
-    * @hide
-    */
     public List<String> getSupportedAEMeteringModes() {
         String str = mParameters.get(KEY_AE_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
+    }
+
+    /**
+     * Set operation mode for AE (Auto Exposure) algorithm
+     *
+     * AE mode is normally controlled automatically. This control can be used to
+     * enforce AE mode to one of the give modes in supported list
+     * (@see #getSupportedAEMode()).
+     * @hide
+     */
+    public void setAEMode(String value) {
+        mParameters.set(KEY_AE_MODE, value);
     }
 
     /**
@@ -924,13 +995,6 @@ public class IntelCamera {
      */
     public String getAEMode() {
         return mParameters.get(KEY_AE_MODE);
-    }
-
-    /**
-     * @hide
-     */
-    public void setAEMode(String value) {
-        mParameters.set(KEY_AE_MODE, value);
     }
 
     /**
@@ -1095,7 +1159,33 @@ public class IntelCamera {
     }
 
     /**
-     * Gets the current awb mapping mode.
+     * Set the mapping mode of AWB (Auto White Balance) algorithm
+     *
+     * AWB Mapping mode is normally controlled automatically and per scene mode.
+     * This control can be used to select AWB mapping mode specifically from the
+     * given support list (@see #getSupportedAWBMappingMode()).
+     *
+     * Changing scene mode overrules this control so the value must be set with
+     * separate call to setParameters with below sequence.
+     *
+     * 1. change scene mode with separate call to setParameters() as
+     *    scene will override the controls given at the same time.
+     * 2. call getParameters() to update parameters changed by the scene
+     * 3. check the support and state of AWBMappingMode using getAWBMappingMode()
+     *    and getSupportedAWBMappingMode()
+     * 4. set changes to mode if needed (setAWBMappingMode())
+     * 5. call setParameters()
+     * @param value new awb mapping mode.
+     * @see #get getAWBMappingMode()
+     * @hide
+     */
+    public void setAWBMappingMode(String value) {
+        mParameters.set(KEY_AWB_MAPPING_MODE, value);
+    }
+
+
+    /**
+     * Gets the current AWB mapping mode.
      *
      * @return current awb mapping mode. null if awb mapping mode is not supported.
      * @see #AWB_MAPPING_INDOOR
@@ -1104,17 +1194,6 @@ public class IntelCamera {
      */
     public String getAWBMappingMode() {
         return mParameters.get(KEY_AWB_MAPPING_MODE);
-    }
-
-    /**
-     * Sets the current awb mapping mode.
-     *
-     * @param value new awb mapping mode.
-     * @see #get getAWBMappingMode()
-     * @hide
-     */
-    public void setAWBMappingMode(String value) {
-        mParameters.set(KEY_AWB_MAPPING_MODE, value);
     }
 
     /**
