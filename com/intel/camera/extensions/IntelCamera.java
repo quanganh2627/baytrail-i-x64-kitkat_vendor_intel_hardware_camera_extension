@@ -156,6 +156,9 @@ public class IntelCamera {
     // high speed recording, slow motion playback
     private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
 
+    // dual video
+    private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
+
     // Exif data
     public static final String KEY_EXIF_MAKER = "exif-maker-name";
     public static final String KEY_EXIF_MODEL = "exif-model-name";
@@ -2051,6 +2054,19 @@ public class IntelCamera {
     public List<String> getSupportedGpsImgDirectionRef() {
         String str = mParameters.get(KEY_GPS_IMG_DIRECTION_REF + SUPPORTED_VALUES_SUFFIX);
         return split(str);
+    }
+
+    /**
+     * Gets dual video state
+     *
+     * @return dual video state.
+     * @hide
+     */
+    public boolean isDualVideoSupported() {
+        String str = mParameters.get(KEY_DUAL_VIDEO_SUPPORTED);
+        if(TRUE.equals(str))
+            return true;
+        return false;
     }
 
     /**
