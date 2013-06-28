@@ -15,7 +15,7 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDES) \
 	$(LOCAL_PATH)/include \
-	frameworks/base/core/jni
+	$(call include-path-for, frameworks-base-core)
 include $(BUILD_SHARED_LIBRARY)
 
 ################# MAKE_XML ############################
