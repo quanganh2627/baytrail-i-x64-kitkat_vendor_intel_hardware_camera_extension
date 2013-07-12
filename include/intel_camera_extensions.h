@@ -55,7 +55,8 @@ enum {
     CAMERA_MSG_PANORAMA_SNAPSHOT        = 0x2003,
     CAMERA_MSG_PANORAMA_METADATA        = 0x2005,
     CAMERA_MSG_ULL_SNAPSHOT             = 0x2007,
-    CAMERA_MSG_ULL_TRIGGERED            = 0x2009        // notify cb
+    CAMERA_MSG_ULL_TRIGGERED            = 0x2009,        // notify cb
+    CAMERA_MSG_LOW_BATTERY              = 0x200B
 };
 
 /**

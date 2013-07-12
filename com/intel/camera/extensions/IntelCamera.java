@@ -240,6 +240,7 @@ public class IntelCamera {
     private SceneModeListener mSceneListener;
     private PanoramaListener mPanoramaListener;
     private UllListener mUllListener;
+    private LowBatteryListener mLowBatteryListener;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
     private boolean mSmileShutterRunning = false;
@@ -270,6 +271,7 @@ public class IntelCamera {
     private static final int CAMERA_MSG_PANORAMA_METADATA = 0x2005;
     private static final int CAMERA_MSG_ULL_SNAPSHOT = 0x2007;
     private static final int CAMERA_MSG_ULL_TRIGGERED = 0x2009;
+    private static final int CAMERA_MSG_LOW_BATTERY = 0x200B;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -362,6 +364,12 @@ public class IntelCamera {
             case CAMERA_MSG_ULL_TRIGGERED:
                 if (mUllListener != null) {
                     mUllListener.onUllTriggered(msg.arg1);
+                }
+                break;
+            case CAMERA_MSG_LOW_BATTERY:
+                Log.v(TAG, "LowBatteryListener");
+                if (mLowBatteryListener != null) {
+                    mLowBatteryListener.lowBattery();
                 }
                 break;
             default:
@@ -567,6 +575,29 @@ public class IntelCamera {
     public final void setSceneModeListener(SceneModeListener listener)
     {
         mSceneListener = listener;
+    }
+
+    public interface LowBatteryListener
+    {
+        /**
+        * Notify the listener of the low battery.
+        *
+        */
+        void lowBattery();
+    };
+
+    /**
+    * @hide
+    * Registers a listener to be notified about the low battery.
+    * If the flash is supported, when the getParameters is called, the camera HAL
+    * will check the battery voltage. When the battery voltage is lower than 3.3V,
+    * the flash will be disabled and one callback message will be sent to the application.
+    *
+    * @param listener the listener to notify
+    */
+    public final void setLowBatteryListener(LowBatteryListener listener)
+    {
+        mLowBatteryListener = listener;
     }
 
     /**

@@ -339,10 +339,8 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
 
     switch (msgType) {
     case CAMERA_MSG_SCENE_DETECT:
-        env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
-        mCameraJObjectWeak, msgType, ext1, ext2, NULL);
-        break;
     case CAMERA_MSG_ULL_TRIGGERED:
+    case CAMERA_MSG_LOW_BATTERY:
         env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
                                   mCameraJObjectWeak, msgType, ext1, ext2, NULL);
             break;
