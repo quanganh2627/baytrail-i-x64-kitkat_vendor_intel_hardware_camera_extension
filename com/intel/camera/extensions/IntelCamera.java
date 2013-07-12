@@ -150,6 +150,8 @@ public class IntelCamera {
 
     // high speed recording, slow motion playback
     private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
+    private static final String KEY_HIGH_SPEED_RESOLUTION_FPS = "high-speed-resolution-fps";
+    private static final String KEY_HIGH_SPEED = "high-speed";
 
     // dual video
     private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
@@ -2070,6 +2072,50 @@ public class IntelCamera {
      */
     public List<String> getSupportedSlowMotionRate() {
         String str = mParameters.get(KEY_SLOW_MOTION_RATE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
+    }
+
+    /**
+     * Sets the high speed resolution and fps in recording mode.
+     *
+     * @hide
+     */
+    public void setHighSpeedResolutionFPS(int width, int height, int fps) {
+        mParameters.set(KEY_HIGH_SPEED_RESOLUTION_FPS, "" + width + "x" + height + "@" + fps);
+    }
+
+    /**
+     * Gets the support list for the pair of resolution and fps in recording mode
+     *
+     * @hide
+     */
+    public List<String> getSupportedHighSpeedResolutionFps() {
+        return getSupportedValues(KEY_HIGH_SPEED_RESOLUTION_FPS + SUPPORTED_VALUES_SUFFIX);
+    }
+
+    /**
+     * Gets the current high speed value.
+     *
+     * @hide
+     */
+    public String getHighSpeed() {
+        return mParameters.get(KEY_HIGH_SPEED);
+    }
+
+    /**
+     * Sets the current high speed value.
+     *
+     * @hide
+     */
+    public void setHighSpeed(String value) {
+        mParameters.set(KEY_HIGH_SPEED, value);
+    }
+
+    /**
+     * @hide
+     */
+    public List<String> getSupportedHighSpeed() {
+        String str = mParameters.get(KEY_HIGH_SPEED + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
