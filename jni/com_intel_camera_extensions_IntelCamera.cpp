@@ -282,27 +282,40 @@ static void com_intel_camera_extensions_IntelCamera_stopFaceRecognition(JNIEnv *
 IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobject weak_this, jclass clazz)
 {
     LOGV("new IntelCameraListener");
-
-    mRealListener = aRealListener;
     JNIEnv *env = AndroidRuntime::getJNIEnv();
-    mCameraJClass = (jclass)env->NewGlobalRef(clazz);
+    if (env == NULL) {
+        mRealListener = NULL;
+        mCameraJClass = NULL;
+        mPanoramaMetadataClass = NULL;
+        mPanoramaSnapshotClass = NULL;
+        mUllSnapshotClass = NULL;
+        mCameraJObjectWeak = NULL;
 
-    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaMetadata");
-    mPanoramaMetadataClass = (jclass) env->NewGlobalRef(clazz);
+        LOGE("getJNIEnv error, IntelCameraListener construction failed");
+    } else {
+        mRealListener = aRealListener;
 
-    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaSnapshot");
-    mPanoramaSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+        mCameraJClass = (jclass)env->NewGlobalRef(clazz);
 
-    clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
-    mUllSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+        clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaMetadata");
+        mPanoramaMetadataClass = (jclass) env->NewGlobalRef(clazz);
 
-    mCameraJObjectWeak = env->NewGlobalRef(weak_this);
+        clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$PanoramaSnapshot");
+        mPanoramaSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+
+        clazz = env->FindClass("com/intel/camera/extensions/IntelCamera$UllSnapshot");
+        mUllSnapshotClass = (jclass) env->NewGlobalRef(clazz);
+
+        mCameraJObjectWeak = env->NewGlobalRef(weak_this);
+    }
 }
 
 void IntelCameraListener::release()
 {
     LOGV("release IntelCameraListener");
     JNIEnv *env = AndroidRuntime::getJNIEnv();
+    if(env == NULL)
+        return;
 
     if (mCameraJClass != NULL) {
         env->DeleteGlobalRef(mCameraJClass);
@@ -341,9 +354,10 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
     case CAMERA_MSG_SCENE_DETECT:
     case CAMERA_MSG_ULL_TRIGGERED:
     case CAMERA_MSG_LOW_BATTERY:
-        env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
-                                  mCameraJObjectWeak, msgType, ext1, ext2, NULL);
-            break;
+        if (env != NULL)
+            env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
+                                      mCameraJObjectWeak, msgType, ext1, ext2, NULL);
+        break;
     default:
         if (mRealListener != NULL)
             mRealListener->notify(msgType, ext1, ext2);
@@ -366,6 +380,8 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
         const camera_panorama_metadata* pMetadata = reinterpret_cast<const camera_panorama_metadata*>(heapBase + offset);
         const jbyte* pPic = NULL;
         env = AndroidRuntime::getJNIEnv();
+        if (env == NULL)
+            return;
         switch (msgType) {
         case CAMERA_MSG_PANORAMA_METADATA:
             if (pMetadata == NULL)
@@ -437,6 +453,8 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
     } else if (heapBase != NULL && msgType == CAMERA_MSG_ULL_SNAPSHOT) {
         // ULL data call back message:
         env = AndroidRuntime::getJNIEnv();
+        if (env == NULL)
+            return;
 
         // Take the ULL metadata from the start of the buffer:
         const camera_ull_metadata *ullMetadata = reinterpret_cast<const camera_ull_metadata*>(heapBase + offset);
