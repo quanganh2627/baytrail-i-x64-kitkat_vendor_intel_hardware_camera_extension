@@ -591,9 +591,10 @@ public class IntelCamera {
     /**
     * @hide
     * Registers a listener to be notified about the low battery.
-    * If the flash is supported, when the getParameters is called, the camera HAL
-    * will check the battery voltage. When the battery voltage is lower than 3.3V,
-    * the flash will be disabled and one callback message will be sent to the application.
+    * If the flash is supported and flash mode is not off, when the setParameters is called,
+    * camera HAL will check the battery status.
+    * Flash will be disabled and one callback message will be sent to the application
+    * if low battery.
     *
     * @param listener the listener to notify
     */
