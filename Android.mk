@@ -11,6 +11,7 @@ LOCAL_SHARED_LIBRARIES := \
 	libandroid_runtime \
 	libnativehelper \
 	libutils \
+	libcutils \
 	libcamera_client
 LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDES) \
