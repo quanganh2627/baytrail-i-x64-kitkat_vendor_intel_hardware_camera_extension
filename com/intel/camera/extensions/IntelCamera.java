@@ -239,7 +239,7 @@ public class IntelCamera {
     private Camera mCameraDevice = null;
     private Parameters mParameters;
     private EventHandler mEventHandler;
-    private SceneModeListener mSceneListener;
+    private SceneDetectionListener mSceneDetectionListener;
     private PanoramaListener mPanoramaListener;
     private UllListener mUllListener;
     private LowBatteryListener mLowBatteryListener;
@@ -342,11 +342,12 @@ public class IntelCamera {
         public void handleMessage(Message msg) {
             switch(msg.what) {
             case CAMERA_MSG_SCENE_DETECT:
-                Log.v(TAG, "SceneListener");
-                if (mSceneListener != null) {
-                    mSceneListener.onSceneChange(msg.arg1, msg.arg2 == 0 ? false : true);
+                Log.d(TAG, "Scene Detection Listener Data");
+                SceneDetectionMetadata sceneDetected = (SceneDetectionMetadata) msg.obj;
+                if (mSceneDetectionListener != null) {
+                    mSceneDetectionListener.onSceneChange(sceneDetected);
                 }
-                return;
+                break;
             case CAMERA_MSG_PANORAMA_METADATA:
                 PanoramaMetadata metadata = (PanoramaMetadata) msg.obj;
                 if (mPanoramaListener != null)
@@ -456,6 +457,24 @@ public class IntelCamera {
         public boolean finalizationStarted = false;
     }
 
+
+    /**
+     * The SceneDetectionMetadata class carries metadata information during scene detection mode via the
+     * callbacks of the SceneDetectionListener.
+     * @see #setSceneDetectionListener(SceneDetectionListener listener)
+     * @see IntelCamera.SceneDetectionListener
+     * @hide
+     */
+    public static class SceneDetectionMetadata
+    {
+        public SceneDetectionMetadata() {
+        }
+
+        public String sceneDetected;
+        public boolean hdr = false;
+
+    }
+
     /**
      * Sets the panorama listener for receiving panorama displacement callbacks
      * and live preview images.
@@ -552,7 +571,7 @@ public class IntelCamera {
         void onSnapshotTaken(UllSnapshot snapshot);
     }
 
-    public interface SceneModeListener
+    public interface SceneDetectionListener
     {
         /**
         * Notify the listener of the detected scene mode.
@@ -563,7 +582,7 @@ public class IntelCamera {
         * is detected
         * @see #getSceneMode()
         */
-        void onSceneChange(int scene, boolean hdrHint);
+        void onSceneChange(SceneDetectionMetadata metadata);
     };
 
     /**
@@ -574,9 +593,9 @@ public class IntelCamera {
     * @param listener the listener to notify
     * @see #startSceneDetection()
     */
-    public final void setSceneModeListener(SceneModeListener listener)
+    public final void setSceneDetectionListener(SceneDetectionListener listener)
     {
-        mSceneListener = listener;
+        mSceneDetectionListener = listener;
     }
 
     public interface LowBatteryListener
@@ -591,9 +610,10 @@ public class IntelCamera {
     /**
     * @hide
     * Registers a listener to be notified about the low battery.
-    * If the flash is supported, when the getParameters is called, the camera HAL
-    * will check the battery voltage. When the battery voltage is lower than 3.3V,
-    * the flash will be disabled and one callback message will be sent to the application.
+    * If the flash is supported and flash mode is not off, when the setParameters is called,
+    * camera HAL will check the battery status.
+    * Flash will be disabled and one callback message will be sent to the application
+    * if low battery.
     *
     * @param listener the listener to notify
     */
