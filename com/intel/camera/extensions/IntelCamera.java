@@ -85,8 +85,6 @@ public class IntelCamera {
 
     // HDR
     private static final String KEY_HDR_IMAGING = "hdr-imaging";
-    private static final String KEY_HDR_SHARPENING = "hdr-sharpening";
-    private static final String KEY_HDR_VIVIDNESS = "hdr-vividness";
     private static final String KEY_HDR_SAVE_ORIGINAL = "hdr-save-original";
 
     // Ultra low light
@@ -1782,70 +1780,6 @@ public class IntelCamera {
      */
     public List<String> getSupportedHDRImaging(Parameters params) {
         return getSupportedValues(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX, params);
-    }
-
-    /**
-     * Gets the current HDR Sharpening mode.
-     *
-     * @return current HDR Sharpening mode. null if this feature is not supported.
-     * @hide
-     */
-    public String getHDRSharpening(Parameters params) {
-        return params.get(KEY_HDR_SHARPENING);
-    }
-
-    /**
-     * Sets the current HDR Sharpening mode.
-     *
-     * @param value new HDR Sharpening mode
-     * @hide
-     */
-    public void setHDRSharpening(String value, Parameters params) {
-        params.set(KEY_HDR_SHARPENING, value);
-    }
-
-    /**
-     * Gets the supported HDR Sharpening mode.
-     *
-     * @return a list of supported HDR Sharpening mode. null if this feature
-     *         is not supported.
-     * @hide
-     */
-    public List<String> getSupportedHDRSharpening(Parameters params) {
-        String str = params.get(KEY_HDR_SHARPENING + SUPPORTED_VALUES_SUFFIX);
-        return split(str);
-    }
-
-    /**
-     * Gets the current HDR Vividness Enhancement mode.
-     *
-     * @return current HDR Vividness Enhancement mode. null if this feature is not supported.
-     * @hide
-     */
-    public String getHDRVividness(Parameters params) {
-        return params.get(KEY_HDR_VIVIDNESS);
-    }
-
-    /**
-     * Sets the current HDR Vividness Enhancement mode.
-     *
-     * @param value new HDR Vividness Enhancement mode
-     * @hide
-     */
-    public void setHDRVividness(String value, Parameters params) {
-        params.set(KEY_HDR_VIVIDNESS, value);
-    }
-
-    /**
-     * Gets the supported HDR Vividness Enhancement mode.
-     *
-     * @return a list of supported HDR Vividness Enhancement mode. null if this feature
-     *         is not supported.
-     * @hide
-     */
-    public List<String> getSupportedHDRVividness(Parameters params) {
-        String str = params.get(KEY_HDR_VIVIDNESS + SUPPORTED_VALUES_SUFFIX);
-        return split(str);
     }
 
     /**
