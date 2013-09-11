@@ -27,6 +27,8 @@
 
 #include "intel_camera_extensions.h"
 
+#include "libacc.h"
+
 using namespace android;
 
 class IntelCameraListener: public CameraListener
@@ -76,6 +78,12 @@ struct fields_t {
 
 static fields_t fields;
 
+static CameraAcc* acc;
+CameraAcc* get_acc()
+{
+    return acc;
+}
+
 extern sp<Camera> get_native_camera(JNIEnv *env, jobject thiz, struct JNICameraContext** context);
 
 static void com_intel_camera_extensions_IntelCamera_native_setup(JNIEnv *env, jobject thiz,
@@ -91,6 +99,8 @@ static void com_intel_camera_extensions_IntelCamera_native_setup(JNIEnv *env, jo
     l->incStrong(thiz);
     camera->setListener(l);
     env->SetIntField(thiz, fields.intel_listener, (int)l.get());
+
+    acc = new CameraAcc(camera);
 }
 
 static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, jobject thiz)
@@ -371,6 +381,12 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
             env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
                                       mCameraJObjectWeak, msgType, ext1, ext2, NULL);
         break;
+    case CAMERA_MSG_ACC_POINTER:
+        acc->notifyPointer(ext1, ext2);
+        break;
+    case CAMERA_MSG_ACC_FINISHED:
+        acc->notifyFinished();
+        break;
     default:
         if (mRealListener != NULL)
             mRealListener->notify(msgType, ext1, ext2);
@@ -525,6 +541,12 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                 env->DeleteLocalRef(scenestring);
             }
         }
+    } else if (heapBase != NULL && msgType == CAMERA_MSG_ACC_ARGUMENT_BUFFER) {
+        acc->postArgumentBuffer(heap, heapBase, size, offset);
+    } else if (heapBase != NULL && msgType == CAMERA_MSG_ACC_PREVIEW_BUFFER) {
+        acc->postPreviewBuffer(heap, heapBase, size, offset);
+    } else if (heapBase != NULL && msgType == CAMERA_MSG_ACC_METADATA_BUFFER) {
+        acc->postMetadataBuffer(heap, heapBase, size, offset);
     } else if (mRealListener != NULL) {
         // Pass through all other messages that were not handled above
         mRealListener->postData(msgType, dataPtr, metadata);

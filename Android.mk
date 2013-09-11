@@ -6,6 +6,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := libintelcamera_jni
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES:= \
+	libacc/libacc.cpp \
 	jni/com_intel_camera_extensions_IntelCamera.cpp
 LOCAL_SHARED_LIBRARIES := \
 	libandroid_runtime \
@@ -16,6 +17,8 @@ LOCAL_SHARED_LIBRARIES := \
 LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDES) \
 	$(LOCAL_PATH)/include \
+	$(LOCAL_PATH)/libacc \
+	vendor/intel/hardware/libcamera2 \
 	$(call include-path-for, frameworks-base-core)
 include $(BUILD_SHARED_LIBRARY)
 
@@ -42,7 +45,8 @@ include $(BUILD_JAVA_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_COPY_HEADERS_TO := cameralibs
 LOCAL_COPY_HEADERS := \
-	include/intel_camera_extensions.h
+	include/intel_camera_extensions.h \
+	libacc/Ilibacc.h
 include $(BUILD_COPY_HEADERS)
 
 ################# burst capture sound ################
