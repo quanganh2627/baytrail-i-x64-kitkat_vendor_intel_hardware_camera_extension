@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 /**
  * The IntelCamera class is used for accessing Intel's camera extensions.
-
+ *
  * This class allows user access to Intel camera features, such as Intel Parameters setting, smart scene detection,
  * panorama, and so on.
  * <p>
@@ -42,20 +42,19 @@ import java.util.Iterator;
  * to obtain a Camera instance.
  * <p>
  * Please release Intel camera by IntelCamera.{@link #release()} after using.
- * <p>
- * IntelCamera provide interface access to Intel parameters, user can get all existing parameters with
- * IntelCamera.{@link #getParameters()}, modify Intel parameters with IntelCamera APIs, then update them with
- * IntelCamera.{@link #setParameters(Parameters param)}.
+ * IntelCamera interface provides access to Intel parameter extensions. The standard parameter handling is done
+ * by using the standard Android API: Camera.Parameters, Camera.getParameters() and Camera.setParameters(). The Intel extensions
+ * can be accessed via IntelCamera API calls, which affect only the Intel extension part of the parameters.
  * <p>
  * To access the Intel camera device, user must declare the Intel camera extension library in Android project:
  * <p>
  * In Android.mk:
  * <pre>
-      LOCAL_JAVA_LIBRARIES:=com.intel.camera.extensions
+ *    LOCAL_JAVA_LIBRARIES:=com.intel.camera.extensions
  * </pre>
  * In AndroidManifest.xml:
  * <pre>
-       <CODE><</CODE>uses-library android:name="com.intel.camera.extensions" /<CODE>></CODE>
+ *     <CODE>uses-library android:name="com.intel.camera.extensions"</CODE>
  * </pre>
  * <p>
  */
@@ -810,14 +809,6 @@ public class IntelCamera {
         native_stopFaceRecognition();
     }
 
-    public Parameters getParameters() {
-        mParameters = mCameraDevice.getParameters();
-        return mParameters;
-    }
-
-    public void setParameters(Parameters param) {
-        mCameraDevice.setParameters(param);
-    }
     /**
      * Enable or disable XNR (eXtra Noise Reduction)
      *
@@ -839,22 +830,22 @@ public class IntelCamera {
      * 5. call setParameters()
      * @hide
      */
-    public void setXNR(String value) {
-        mParameters.set(KEY_XNR, value);
+    public void setXNR(String value, Parameters params) {
+        params.set(KEY_XNR, value);
     }
 
     /**
     * @hide
     */
-    public String getXNR() {
-        return mParameters.get(KEY_XNR);
+    public String getXNR(Parameters params) {
+        return params.get(KEY_XNR);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedXNR() {
-        String str = mParameters.get(KEY_XNR + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedXNR(Parameters params) {
+        String str = params.get(KEY_XNR + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -880,23 +871,23 @@ public class IntelCamera {
      * 5. call setParameters()
      * @hide
      */
-    public void setANR(String value) {
-        mParameters.set(KEY_ANR, value);
+    public void setANR(String value, Parameters params) {
+        params.set(KEY_ANR, value);
     }
 
     /**
      * @hide
      */
-    public String getANR() {
-        return mParameters.get(KEY_ANR);
+    public String getANR(Parameters params) {
+        return params.get(KEY_ANR);
     }
 
 
     /**
      * @hide
      */
-    public List<String> getSupportedANR() {
-        String str = mParameters.get(KEY_ANR + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedANR(Parameters params) {
+        String str = params.get(KEY_ANR + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -905,24 +896,24 @@ public class IntelCamera {
      * Deprecated (TODO: remove)
      * @hide
      */
-    public void setGDC(String value) {
-        mParameters.set(KEY_GDC, value);
+    public void setGDC(String value, Parameters params) {
+        params.set(KEY_GDC, value);
     }
 
     /**
      * Deprecated (TODO: remove)
      * @hide
      */
-    public String getGDC() {
-        return mParameters.get(KEY_GDC);
+    public String getGDC(Parameters params) {
+        return params.get(KEY_GDC);
     }
 
     /**
      * Deprecated (TODO: remove)
      * @hide
      */
-    public List<String> getSupportedGDC() {
-        String str = mParameters.get(KEY_GDC + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedGDC(Parameters params) {
+        String str = params.get(KEY_GDC + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -930,66 +921,66 @@ public class IntelCamera {
      * Enable or Disable Temporal Noise Reduction (TNR) for video
      * @hide
      */
-    public void setTemporalNoiseReduction(String value) {
-            mParameters.set(KEY_TEMPORAL_NOISE_REDUCTION, value);
+    public void setTemporalNoiseReduction(String value, Parameters params) {
+            params.set(KEY_TEMPORAL_NOISE_REDUCTION, value);
     }
 
     /**
      * @hide
      */
-    public String getTemporalNoiseReduction() {
-        return mParameters.get(KEY_TEMPORAL_NOISE_REDUCTION);
+    public String getTemporalNoiseReduction(Parameters params) {
+        return params.get(KEY_TEMPORAL_NOISE_REDUCTION);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedTemporalNoiseReduction() {
-        String str = mParameters.get(KEY_TEMPORAL_NOISE_REDUCTION + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedTemporalNoiseReduction(Parameters params) {
+        String str = params.get(KEY_TEMPORAL_NOISE_REDUCTION + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
     /**
      * @hide
      */
-    public String getNoiseReductionAndEdgeEnhancement() {
-        return mParameters.get(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT);
+    public String getNoiseReductionAndEdgeEnhancement(Parameters params) {
+        return params.get(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT);
     }
 
     /**
      * @hide
      */
-    public void setNoiseReductionAndEdgeEnhancement(String value) {
-        mParameters.set(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT, value);
+    public void setNoiseReductionAndEdgeEnhancement(String value, Parameters params) {
+        params.set(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedNoiseReductionAndEdgeEnhancement() {
-        String str = mParameters.get(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedNoiseReductionAndEdgeEnhancement(Parameters params) {
+        String str = params.get(KEY_NOISE_REDUCTION_AND_EDGE_ENHANCEMENT + SUPPORTED_VALUES_SUFFIX);
        return split(str);
     }
 
     /**
      * @hide
      */
-    public String getColorCorrection() {
-        return mParameters.get(KEY_MULTI_ACCESS_COLOR_CORRECTION);
+    public String getColorCorrection(Parameters params) {
+        return params.get(KEY_MULTI_ACCESS_COLOR_CORRECTION);
     }
 
    /**
     * @hide
     */
-  public void setColorCorrection(String value) {
-        mParameters.set(KEY_MULTI_ACCESS_COLOR_CORRECTION, value);
+  public void setColorCorrection(String value, Parameters params) {
+        params.set(KEY_MULTI_ACCESS_COLOR_CORRECTION, value);
     }
 
     /**
     * @hide
     */
-   public List<String> getSupportedColorCorrections() {
-        String str = mParameters.get(KEY_MULTI_ACCESS_COLOR_CORRECTION + SUPPORTED_VALUES_SUFFIX);
+   public List<String> getSupportedColorCorrections(Parameters params) {
+        String str = params.get(KEY_MULTI_ACCESS_COLOR_CORRECTION + SUPPORTED_VALUES_SUFFIX);
        return split(str);
     }
 
@@ -1012,22 +1003,22 @@ public class IntelCamera {
      * 5. call setParameters()
      * @hide
      */
-    public void setAEMeteringMode(String value) {
-        mParameters.set(KEY_AE_METERING_MODE, value);
+    public void setAEMeteringMode(String value, Parameters params) {
+        params.set(KEY_AE_METERING_MODE, value);
     }
 
     /**
      * @hide
      */
-    public String getAEMeteringMode() {
-        return mParameters.get(KEY_AE_METERING_MODE);
+    public String getAEMeteringMode(Parameters params) {
+        return params.get(KEY_AE_METERING_MODE);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedAEMeteringModes() {
-        String str = mParameters.get(KEY_AE_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedAEMeteringModes(Parameters params) {
+        String str = params.get(KEY_AE_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1039,176 +1030,176 @@ public class IntelCamera {
      * (@see #getSupportedAEMode()).
      * @hide
      */
-    public void setAEMode(String value) {
-        mParameters.set(KEY_AE_MODE, value);
+    public void setAEMode(String value, Parameters params) {
+        params.set(KEY_AE_MODE, value);
     }
 
     /**
      * @hide
      */
-    public String getAEMode() {
-        return mParameters.get(KEY_AE_MODE);
+    public String getAEMode(Parameters params) {
+        return params.get(KEY_AE_MODE);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedAEModes() {
-        String str = mParameters.get(KEY_AE_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedAEModes(Parameters params) {
+        String str = params.get(KEY_AE_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
     /**
      * @hide
      */
-    public String getContrastMode() {
-        return mParameters.get(KEY_CONTRAST_MODE);
+    public String getContrastMode(Parameters params) {
+        return params.get(KEY_CONTRAST_MODE);
     }
 
     /**
      * @hide
      */
-    public void setContrastMode(String value) {
-        mParameters.set(KEY_CONTRAST_MODE, value);
+    public void setContrastMode(String value, Parameters params) {
+        params.set(KEY_CONTRAST_MODE, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedContrastModes() {
-        String str = mParameters.get(KEY_CONTRAST_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedContrastModes(Parameters params) {
+        String str = params.get(KEY_CONTRAST_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
     /**
      * @hide
      */
-    public String getSaturationMode() {
-        return mParameters.get(KEY_SATURATION_MODE);
+    public String getSaturationMode(Parameters params) {
+        return params.get(KEY_SATURATION_MODE);
     }
 
     /**
      * @hide
      */
-    public void setSaturationMode(String value) {
-        mParameters.set(KEY_SATURATION_MODE, value);
+    public void setSaturationMode(String value, Parameters params) {
+        params.set(KEY_SATURATION_MODE, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedSaturationModes() {
-        String str = mParameters.get(KEY_SATURATION_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSaturationModes(Parameters params) {
+        String str = params.get(KEY_SATURATION_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
     /**
      * @hide
      */
-    public String getSharpnessMode() {
-        return mParameters.get(KEY_SHARPNESS_MODE);
+    public String getSharpnessMode(Parameters params) {
+        return params.get(KEY_SHARPNESS_MODE);
     }
 
     /**
      * @hide
      */
-    public void setSharpnessMode(String value) {
-        mParameters.set(KEY_SHARPNESS_MODE, value);
+    public void setSharpnessMode(String value, Parameters params) {
+        params.set(KEY_SHARPNESS_MODE, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedSharpnessModes() {
-        String str = mParameters.get(KEY_SHARPNESS_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSharpnessModes(Parameters params) {
+        String str = params.get(KEY_SHARPNESS_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
     /**
      * @hide
      */
-    public String getShutter() {
-        return mParameters.get(KEY_SHUTTER);
+    public String getShutter(Parameters params) {
+        return params.get(KEY_SHUTTER);
     }
 
     /**
      * @hide
      */
-    public void setShutter(String value) {
-        mParameters.set(KEY_SHUTTER, value);
+    public void setShutter(String value, Parameters params) {
+        params.set(KEY_SHUTTER, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedShutter() {
-        String str = mParameters.get(KEY_SHUTTER + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedShutter(Parameters params) {
+        String str = params.get(KEY_SHUTTER + SUPPORTED_VALUES_SUFFIX);
        return split(str);
     }
 
     /**
      * @hide
      */
-    public String getAperture() {
-        return mParameters.get(KEY_APERTURE);
+    public String getAperture(Parameters params) {
+        return params.get(KEY_APERTURE);
     }
 
     /**
      * @hide
      */
-    public void setAperture(String value) {
-        mParameters.set(KEY_APERTURE, value);
+    public void setAperture(String value, Parameters params) {
+        params.set(KEY_APERTURE, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedAperture() {
-        String str = mParameters.get(KEY_APERTURE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedAperture(Parameters params) {
+        String str = params.get(KEY_APERTURE + SUPPORTED_VALUES_SUFFIX);
        return split(str);
     }
 
     /**
      * @hide
      */
-    public String getISO() {
-        return mParameters.get(KEY_ISO);
+    public String getISO(Parameters params) {
+        return params.get(KEY_ISO);
     }
 
     /**
      * @hide
      */
-    public void setISO(String value) {
-        mParameters.set(KEY_ISO, value);
+    public void setISO(String value, Parameters params) {
+        params.set(KEY_ISO, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedISO() {
-        String str = mParameters.get(KEY_ISO + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedISO(Parameters params) {
+        String str = params.get(KEY_ISO + SUPPORTED_VALUES_SUFFIX);
        return split(str);
     }
 
     /**
      * @hide
      */
-    public void setExifMaker(String value) {
-        mParameters.set(KEY_EXIF_MAKER, value);
+    public void setExifMaker(String value, Parameters params) {
+        params.set(KEY_EXIF_MAKER, value);
     }
 
     /**
      * @hide
      */
-    public void setExifModel(String value) {
-        mParameters.set(KEY_EXIF_MODEL, value);
+    public void setExifModel(String value, Parameters params) {
+        params.set(KEY_EXIF_MODEL, value);
     }
 
     /**
      * @hide
      */
-    public void setExifSoftware(String value) {
-        mParameters.set(KEY_EXIF_SOFTWARE, value);
+    public void setExifSoftware(String value, Parameters params) {
+        params.set(KEY_EXIF_SOFTWARE, value);
     }
 
     /**
@@ -1232,8 +1223,8 @@ public class IntelCamera {
      * @see #get getAWBMappingMode()
      * @hide
      */
-    public void setAWBMappingMode(String value) {
-        mParameters.set(KEY_AWB_MAPPING_MODE, value);
+    public void setAWBMappingMode(String value, Parameters params) {
+        params.set(KEY_AWB_MAPPING_MODE, value);
     }
 
 
@@ -1245,8 +1236,8 @@ public class IntelCamera {
      * @see #AWB_MAPPING_OUTDOOR
      * @hide
      */
-    public String getAWBMappingMode() {
-        return mParameters.get(KEY_AWB_MAPPING_MODE);
+    public String getAWBMappingMode(Parameters params) {
+        return params.get(KEY_AWB_MAPPING_MODE);
     }
 
     /**
@@ -1256,8 +1247,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedAWBMappingModes() {
-        String str = mParameters.get(KEY_AWB_MAPPING_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedAWBMappingModes(Parameters params) {
+        String str = params.get(KEY_AWB_MAPPING_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1267,8 +1258,8 @@ public class IntelCamera {
      * @return current color temperature.
      * @hide
      */
-    public String getColorTemperature() {
-        return mParameters.get(KEY_COLOR_TEMPERATURE);
+    public String getColorTemperature(Parameters params) {
+        return params.get(KEY_COLOR_TEMPERATURE);
     }
 
     /**
@@ -1278,8 +1269,8 @@ public class IntelCamera {
      * @see #get getColorTemperature()
      * @hide
      */
-    public void setColorTemperature(int value) {
-        mParameters.set(KEY_COLOR_TEMPERATURE, value);
+    public void setColorTemperature(int value, Parameters params) {
+        params.set(KEY_COLOR_TEMPERATURE, value);
     }
 
     /**
@@ -1290,8 +1281,8 @@ public class IntelCamera {
      * @see #AF_METERING_MODE_SPOT
      * @hide
      */
-    public String getAFMeteringMode() {
-        return mParameters.get(KEY_AF_METERING_MODE);
+    public String getAFMeteringMode(Parameters params) {
+        return params.get(KEY_AF_METERING_MODE);
     }
 
     /**
@@ -1301,8 +1292,8 @@ public class IntelCamera {
      * @see #get getAFMeteringMode()
      * @hide
      */
-    public void setAFMeteringMode(String value) {
-        mParameters.set(KEY_AF_METERING_MODE, value);
+    public void setAFMeteringMode(String value, Parameters params) {
+        params.set(KEY_AF_METERING_MODE, value);
     }
 
     /**
@@ -1312,8 +1303,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedAFMeteringModes() {
-        String str = mParameters.get(KEY_AF_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedAFMeteringModes(Parameters params) {
+        String str = params.get(KEY_AF_METERING_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1323,8 +1314,8 @@ public class IntelCamera {
      * @return burst mode capture length.
      * @hide
      */
-    public int getBurstLength() {
-        String str = mParameters.get(KEY_BURST_LENGTH);
+    public int getBurstLength(Parameters params) {
+        String str = params.get(KEY_BURST_LENGTH);
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException ex) {
@@ -1340,8 +1331,8 @@ public class IntelCamera {
      * @param value burst mode capture length.
      * @hide
      */
-    public void setBurstLength(int value) {
-        mParameters.set(KEY_BURST_LENGTH, value);
+    public void setBurstLength(int value, Parameters params) {
+        params.set(KEY_BURST_LENGTH, value);
     }
 
     /**
@@ -1351,8 +1342,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedBurstLength() {
-        String str = mParameters.get(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBurstLength(Parameters params) {
+        String str = params.get(KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
         if (str == null || str.equals("") || str.equals("1")) {
             Log.v(TAG, "Return null for key:" + KEY_BURST_LENGTH + SUPPORTED_VALUES_SUFFIX);
             return null;
@@ -1367,8 +1358,8 @@ public class IntelCamera {
      * @return burst mode fps.
      * @hide
      */
-    public int getBurstFps() {
-        String str = mParameters.get(KEY_BURST_FPS);
+    public int getBurstFps(Parameters params) {
+        String str = params.get(KEY_BURST_FPS);
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException ex) {
@@ -1382,8 +1373,8 @@ public class IntelCamera {
      * @param value burst mode fps.
      * @hide
      */
-    public void setBurstFps(int value) {
-        mParameters.set(KEY_BURST_FPS, value);
+    public void setBurstFps(int value, Parameters params) {
+        params.set(KEY_BURST_FPS, value);
     }
 
     /**
@@ -1393,8 +1384,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedBurstFps() {
-        String str = mParameters.get(KEY_BURST_FPS + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBurstFps(Parameters params) {
+        String str = params.get(KEY_BURST_FPS + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1404,8 +1395,8 @@ public class IntelCamera {
      * @return burst mode speed.
      * @hide
      */
-    public String getBurstSpeed() {
-        return mParameters.get(KEY_BURST_SPEED);
+    public String getBurstSpeed(Parameters params) {
+        return params.get(KEY_BURST_SPEED);
     }
 
     /**
@@ -1416,8 +1407,8 @@ public class IntelCamera {
      *         "medium" is about 1/2 speed as "fast". "low" is about 1/4 speed as "fast".
      * @hide
      */
-    public void setBurstSpeed(String value) {
-        mParameters.set(KEY_BURST_SPEED, value);
+    public void setBurstSpeed(String value, Parameters params) {
+        params.set(KEY_BURST_SPEED, value);
     }
 
     /**
@@ -1427,8 +1418,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedBurstSpeed() {
-        String str = mParameters.get(KEY_BURST_SPEED + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBurstSpeed(Parameters params) {
+        String str = params.get(KEY_BURST_SPEED + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1440,8 +1431,8 @@ public class IntelCamera {
      * @return burst mode state.
      * @hide
      */
-    public boolean getBurstContinuous() {
-        if (mParameters.get(KEY_BURST_CONTINUOUS) == TRUE)
+    public boolean getBurstContinuous(Parameters params) {
+        if (params.get(KEY_BURST_CONTINUOUS) == TRUE)
             return true;
         return false;
     }
@@ -1461,8 +1452,8 @@ public class IntelCamera {
      * @param value continuous burst mode state
      * @hide
      */
-    public void setBurstContinuous(boolean toggle) {
-        mParameters.set(KEY_BURST_CONTINUOUS, toggle ? TRUE : FALSE);
+    public void setBurstContinuous(boolean toggle, Parameters params) {
+        params.set(KEY_BURST_CONTINUOUS, toggle ? TRUE : FALSE);
     }
 
     /**
@@ -1472,8 +1463,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedBurstcontinuous() {
-        String str = mParameters.get(KEY_BURST_CONTINUOUS + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBurstcontinuous(Parameters params) {
+        String str = params.get(KEY_BURST_CONTINUOUS + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1483,8 +1474,8 @@ public class IntelCamera {
      * @return burst mode capture length.
      * @hide
      */
-    public int getBurstStartIndex() {
-        return getInt(KEY_BURST_START_INDEX, 1);
+    public int getBurstStartIndex(Parameters params) {
+        return getInt(KEY_BURST_START_INDEX, 1, params);
     }
 
     /**
@@ -1493,8 +1484,8 @@ public class IntelCamera {
      * @param value burst mode capture length.
      * @hide
      */
-    public void setBurstStartIndex(int value) {
-        mParameters.set(KEY_BURST_START_INDEX, value);
+    public void setBurstStartIndex(int value, Parameters params) {
+        params.set(KEY_BURST_START_INDEX, value);
     }
 
     /**
@@ -1504,8 +1495,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedBurstStartIndex() {
-        return getSupportedValues(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBurstStartIndex(Parameters params) {
+        return getSupportedValues(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1520,7 +1511,7 @@ public class IntelCamera {
      * Deprecated (TODO: remove)
      * @hide
      */
-    public void setContinuousViewfinder(boolean value) {}
+    public void setContinuousViewfinder(boolean value, Parameters params) {}
 
     /**
      * Gets the supported values of preview update mode.
@@ -1533,8 +1524,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedPreviewUpdateMode() {
-        return getSupportedValues(KEY_PREVIEW_UPDATE_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedPreviewUpdateMode(Parameters params) {
+        return getSupportedValues(KEY_PREVIEW_UPDATE_MODE + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1544,8 +1535,8 @@ public class IntelCamera {
      * @return current preview update mode (@see setPreviewUpdateMode())
      * @hide
      */
-    public String getPreviewUpdateMode() {
-        return mParameters.get(KEY_PREVIEW_UPDATE_MODE);
+    public String getPreviewUpdateMode(Parameters params) {
+        return params.get(KEY_PREVIEW_UPDATE_MODE);
     }
 
     /**
@@ -1576,8 +1567,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public void setPreviewUpdateMode(String value) {
-        mParameters.set(KEY_PREVIEW_UPDATE_MODE, value);
+    public void setPreviewUpdateMode(String value, Parameters params) {
+        params.set(KEY_PREVIEW_UPDATE_MODE, value);
     }
 
     /**
@@ -1586,8 +1577,8 @@ public class IntelCamera {
      * @return current raw data format. null if this feature is not supported.
      * @hide
      */
-    public String getRAWDataFormat() {
-        return mParameters.get(KEY_RAW_DATA_FORMAT);
+    public String getRAWDataFormat(Parameters params) {
+        return params.get(KEY_RAW_DATA_FORMAT);
     }
 
     /**
@@ -1597,8 +1588,8 @@ public class IntelCamera {
      * @see #get getRAWDataFormat()
      * @hide
      */
-    public void setRAWDataFormat(String value) {
-        mParameters.set(KEY_RAW_DATA_FORMAT, value);
+    public void setRAWDataFormat(String value, Parameters params) {
+        params.set(KEY_RAW_DATA_FORMAT, value);
     }
 
     /**
@@ -1608,8 +1599,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedRAWDataFormats() {
-        String str = mParameters.get(KEY_RAW_DATA_FORMAT + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedRAWDataFormats(Parameters params) {
+        String str = params.get(KEY_RAW_DATA_FORMAT + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1619,8 +1610,8 @@ public class IntelCamera {
      * @return current capture bracket mode. null if this feature is not supported.
      * @hide
      */
-    public String getCaptureBracket() {
-        return mParameters.get(KEY_CAPTURE_BRACKET);
+    public String getCaptureBracket(Parameters params) {
+        return params.get(KEY_CAPTURE_BRACKET);
     }
 
     /**
@@ -1631,8 +1622,8 @@ public class IntelCamera {
      * @param value new capture bracket mode
      * @hide
      */
-    public void setCaptureBracket(String value) {
-        mParameters.set(KEY_CAPTURE_BRACKET, value);
+    public void setCaptureBracket(String value, Parameters params) {
+        params.set(KEY_CAPTURE_BRACKET, value);
     }
 
     /**
@@ -1642,8 +1633,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedCaptureBracket() {
-        String str = mParameters.get(KEY_CAPTURE_BRACKET + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedCaptureBracket(Parameters params) {
+        String str = params.get(KEY_CAPTURE_BRACKET + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1654,8 +1645,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedHWOverlayRendering() {
-        return split(mParameters.get(KEY_HW_OVERLAY_RENDERING + SUPPORTED_VALUES_SUFFIX));
+    public List<String> getSupportedHWOverlayRendering(Parameters params) {
+        return split(params.get(KEY_HW_OVERLAY_RENDERING + SUPPORTED_VALUES_SUFFIX));
     }
 
     /**
@@ -1667,8 +1658,8 @@ public class IntelCamera {
      * @param value new overlay rendering mode
      * @hide
      */
-    public void setHWOverlayRendering(String value) {
-        mParameters.set(KEY_HW_OVERLAY_RENDERING, value);
+    public void setHWOverlayRendering(String value, Parameters params) {
+        params.set(KEY_HW_OVERLAY_RENDERING, value);
     }
 
     /**
@@ -1677,8 +1668,8 @@ public class IntelCamera {
      * @return current rotation mode. null if this feature is not supported.
      * @hide
      */
-    public String getRotationMode() {
-        return mParameters.get(KEY_ROTATION_MODE);
+    public String getRotationMode(Parameters params) {
+        return params.get(KEY_ROTATION_MODE);
     }
 
     /**
@@ -1687,8 +1678,8 @@ public class IntelCamera {
      * @param value new rotation mode
      * @hide
      */
-    public void setRotationMode(String value) {
-        mParameters.set(KEY_ROTATION_MODE, value);
+    public void setRotationMode(String value, Parameters params) {
+        params.set(KEY_ROTATION_MODE, value);
     }
 
     /**
@@ -1698,8 +1689,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedRotationModes() {
-        String str = mParameters.get(KEY_ROTATION_MODE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedRotationModes(Parameters params) {
+        String str = params.get(KEY_ROTATION_MODE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1707,12 +1698,12 @@ public class IntelCamera {
      * Sets the focus distances
      * @hide
      */
-    public void setFocusDistances(float[] input) {
+    public void setFocusDistances(float[] input, Parameters params) {
         if (input == null || input.length != 3) {
             throw new IllegalArgumentException(
                     "output must be an float array with three elements.");
         }
-        mParameters.set(KEY_FOCUS_DISTANCES, "" + input[Parameters.FOCUS_DISTANCE_NEAR_INDEX] + "," +
+        params.set(KEY_FOCUS_DISTANCES, "" + input[Parameters.FOCUS_DISTANCE_NEAR_INDEX] + "," +
             input[Parameters.FOCUS_DISTANCE_OPTIMAL_INDEX] + "," + input[mParameters.FOCUS_DISTANCE_FAR_INDEX]);
     }
 
@@ -1720,17 +1711,17 @@ public class IntelCamera {
      * Sets the focus distances - for single input
      * @hide
      */
-    public void setFocusDistance(float input) {
-        mParameters.set(KEY_FOCUS_DISTANCES, "" + input + "," + input + "," + input);
+    public void setFocusDistance(float input, Parameters params) {
+        params.set(KEY_FOCUS_DISTANCES, "" + input + "," + input + "," + input);
     }
 
     /**
      * Gets the focus distances - for single output
      * @hide
      */
-    public float getFocusDistance() {
+    public float getFocusDistance(Parameters params) {
         float[] output = new float[3];
-       splitFloat(mParameters.get(KEY_FOCUS_DISTANCES), output);
+       splitFloat(params.get(KEY_FOCUS_DISTANCES), output);
         return output[Parameters.FOCUS_DISTANCE_OPTIMAL_INDEX];
     }
 
@@ -1738,12 +1729,12 @@ public class IntelCamera {
      * Sets the focus distances - for single input
      * @hide
      */
-    public void setFocusWindow(int input[]) {
+    public void setFocusWindow(int input[], Parameters params) {
         if (input == null || input.length != 4) {
             throw new IllegalArgumentException(
                     "output must be an int array with four elements.");
         }
-        mParameters.set(KEY_FOCUS_WINDOW, "" + input[0]
+        params.set(KEY_FOCUS_WINDOW, "" + input[0]
             + "," + input[1] + "," + input[2] + "," + input[3]);
     }
 
@@ -1753,8 +1744,8 @@ public class IntelCamera {
      * @return current ULL status.
      * @hide
      */
-    public String getULL() {
-        return mParameters.get(KEY_ULL);
+    public String getULL(Parameters params) {
+        return params.get(KEY_ULL);
     }
 
     /**
@@ -1775,8 +1766,8 @@ public class IntelCamera {
      * @see IntelCamera.UllSnapshot
      * @hide
      */
-    public void setULL(String value) {
-        mParameters.set(KEY_ULL, value);
+    public void setULL(String value, Parameters params) {
+        params.set(KEY_ULL, value);
     }
 
     /**
@@ -1787,8 +1778,8 @@ public class IntelCamera {
      * @see IntelCamera#setULL(String)
      * @hide
      */
-    public List<String> getSupportedULL() {
-        return getSupportedValues(KEY_ULL + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedULL(Parameters params) {
+        return getSupportedValues(KEY_ULL + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1797,8 +1788,8 @@ public class IntelCamera {
      * @return current HDR imaging mode. null if this feature is not supported.
      * @hide
      */
-    public String getHDRImaging() {
-        return mParameters.get(KEY_HDR_IMAGING);
+    public String getHDRImaging(Parameters params) {
+        return params.get(KEY_HDR_IMAGING);
     }
 
     /**
@@ -1807,8 +1798,8 @@ public class IntelCamera {
      * @param value new HDR Imaging mode
      * @hide
      */
-    public void setHDRImaging(String value) {
-        mParameters.set(KEY_HDR_IMAGING, value);
+    public void setHDRImaging(String value, Parameters params) {
+        params.set(KEY_HDR_IMAGING, value);
     }
 
     /**
@@ -1818,8 +1809,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedHDRImaging() {
-        return getSupportedValues(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHDRImaging(Parameters params) {
+        return getSupportedValues(KEY_HDR_IMAGING + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1828,8 +1819,8 @@ public class IntelCamera {
      * @return current HDR Sharpening mode. null if this feature is not supported.
      * @hide
      */
-    public String getHDRSharpening() {
-        return mParameters.get(KEY_HDR_SHARPENING);
+    public String getHDRSharpening(Parameters params) {
+        return params.get(KEY_HDR_SHARPENING);
     }
 
     /**
@@ -1838,8 +1829,8 @@ public class IntelCamera {
      * @param value new HDR Sharpening mode
      * @hide
      */
-    public void setHDRSharpening(String value) {
-        mParameters.set(KEY_HDR_SHARPENING, value);
+    public void setHDRSharpening(String value, Parameters params) {
+        params.set(KEY_HDR_SHARPENING, value);
     }
 
     /**
@@ -1849,8 +1840,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedHDRSharpening() {
-        String str = mParameters.get(KEY_HDR_SHARPENING + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHDRSharpening(Parameters params) {
+        String str = params.get(KEY_HDR_SHARPENING + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1860,8 +1851,8 @@ public class IntelCamera {
      * @return current HDR Vividness Enhancement mode. null if this feature is not supported.
      * @hide
      */
-    public String getHDRVividness() {
-        return mParameters.get(KEY_HDR_VIVIDNESS);
+    public String getHDRVividness(Parameters params) {
+        return params.get(KEY_HDR_VIVIDNESS);
     }
 
     /**
@@ -1870,8 +1861,8 @@ public class IntelCamera {
      * @param value new HDR Vividness Enhancement mode
      * @hide
      */
-    public void setHDRVividness(String value) {
-        mParameters.set(KEY_HDR_VIVIDNESS, value);
+    public void setHDRVividness(String value, Parameters params) {
+        params.set(KEY_HDR_VIVIDNESS, value);
     }
 
     /**
@@ -1881,8 +1872,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedHDRVividness() {
-        String str = mParameters.get(KEY_HDR_VIVIDNESS + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHDRVividness(Parameters params) {
+        String str = params.get(KEY_HDR_VIVIDNESS + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1892,8 +1883,8 @@ public class IntelCamera {
      * @return current HDR Save Original mode. null if this feature is not supported.
      * @hide
      */
-    public String getHDRSaveOriginal() {
-        return mParameters.get(KEY_HDR_SAVE_ORIGINAL);
+    public String getHDRSaveOriginal(Parameters params) {
+        return params.get(KEY_HDR_SAVE_ORIGINAL);
     }
 
     /**
@@ -1904,8 +1895,8 @@ public class IntelCamera {
      * @param value new HDR Save Original mode
      * @hide
      */
-    public void setHDRSaveOriginal(String value) {
-        mParameters.set(KEY_HDR_SAVE_ORIGINAL, value);
+    public void setHDRSaveOriginal(String value, Parameters params) {
+        params.set(KEY_HDR_SAVE_ORIGINAL, value);
     }
 
     /**
@@ -1915,8 +1906,8 @@ public class IntelCamera {
      *         is not supported.
      * @hide
      */
-    public List<String> getSupportedHDRSaveOriginal() {
-        String str = mParameters.get(KEY_HDR_SAVE_ORIGINAL + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHDRSaveOriginal(Parameters params) {
+        String str = params.get(KEY_HDR_SAVE_ORIGINAL + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -1938,8 +1929,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedSceneDetection() {
-        return getSupportedValues(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSceneDetection(Parameters params) {
+        return getSupportedValues(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1949,8 +1940,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedFaceDetection() {
-        return getSupportedValues(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedFaceDetection(Parameters params) {
+        return getSupportedValues(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1960,8 +1951,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedFaceRecognition() {
-        return getSupportedValues(KEY_FACE_RECOGNITION + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedFaceRecognition(Parameters params) {
+        return getSupportedValues(KEY_FACE_RECOGNITION + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1971,8 +1962,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedPanorama() {
-        return getSupportedValues(KEY_PANORAMA + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedPanorama(Parameters params) {
+        return getSupportedValues(KEY_PANORAMA + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -1980,8 +1971,8 @@ public class IntelCamera {
      * @return a list of Size object.
      * @hide
      */
-    public List<Camera.Size> getSupportedPanoramaLivePreviewSizes() {
-        String str = mParameters.get(KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES);
+    public List<Camera.Size> getSupportedPanoramaLivePreviewSizes(Parameters params) {
+        String str = params.get(KEY_SUPPORTED_PANORAMA_LIVE_PREVIEW_SIZES);
         ArrayList<String> sizeStrings = split(str);
         List<Camera.Size> sizes = new ArrayList<Camera.Size>();
         if (sizeStrings == null)
@@ -2000,8 +1991,8 @@ public class IntelCamera {
      * @return the max count
      * @hide
      */
-    public int getMaximumPanoramaSnapshotCount() {
-        return getInt(KEY_PANORAMA_MAX_SNAPSHOT_COUNT, 0);
+    public int getMaximumPanoramaSnapshotCount(Parameters params) {
+        return getInt(KEY_PANORAMA_MAX_SNAPSHOT_COUNT, 0, params);
     }
 
     /**
@@ -2009,8 +2000,8 @@ public class IntelCamera {
      * @return size of live preview images
      * @hide
      */
-    public Camera.Size getPanoramaLivePreviewSize() {
-        String str = mParameters.get(KEY_PANORAMA_LIVE_PREVIEW_SIZE);
+    public Camera.Size getPanoramaLivePreviewSize(Parameters params) {
+        String str = params.get(KEY_PANORAMA_LIVE_PREVIEW_SIZE);
         return parseSize(str);
     }
 
@@ -2020,8 +2011,8 @@ public class IntelCamera {
      * resolutions in {@link #getSupportedPanoramaLivePreviewSizes()}
      * @hide
      */
-    public void setPanoramaLivePreviewSize(int width, int height) {
-        mParameters.set(KEY_PANORAMA_LIVE_PREVIEW_SIZE, "" + width + "x" + height);
+    public void setPanoramaLivePreviewSize(int width, int height, Parameters params) {
+        params.set(KEY_PANORAMA_LIVE_PREVIEW_SIZE, "" + width + "x" + height);
     }
 
     /**
@@ -2030,8 +2021,8 @@ public class IntelCamera {
      * @param value for smile detection in smart shutter (0 = not-strict to 100 = strict)
      * @hide
      */
-    public void setSmileShutterThreshold(String value) {
-        mParameters.set(KEY_SMILE_SHUTTER_THRESHOLD, value);
+    public void setSmileShutterThreshold(String value, Parameters params) {
+        params.set(KEY_SMILE_SHUTTER_THRESHOLD, value);
     }
 
     /**
@@ -2041,8 +2032,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedSmileShutter() {
-        return getSupportedValues(KEY_SMILE_SHUTTER + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSmileShutter(Parameters params) {
+        return getSupportedValues(KEY_SMILE_SHUTTER + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -2051,8 +2042,8 @@ public class IntelCamera {
      * @param value for blink detection in smart shutter (0 = strict to 100 = not-strict)
      * @hide
      */
-    public void setBlinkShutterThreshold(String value) {
-        mParameters.set(KEY_BLINK_SHUTTER_THRESHOLD, value);
+    public void setBlinkShutterThreshold(String value, Parameters params) {
+        params.set(KEY_BLINK_SHUTTER_THRESHOLD, value);
     }
 
     /**
@@ -2062,8 +2053,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedBlinkShutter() {
-        return getSupportedValues(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedBlinkShutter(Parameters params) {
+        return getSupportedValues(KEY_BLINK_SHUTTER + SUPPORTED_VALUES_SUFFIX, params);
     }
 
 
@@ -2072,8 +2063,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public String getSlowMotionRate() {
-        return mParameters.get(KEY_SLOW_MOTION_RATE);
+    public String getSlowMotionRate(Parameters params) {
+        return params.get(KEY_SLOW_MOTION_RATE);
     }
 
     /**
@@ -2081,8 +2072,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public void setSlowMotionRate(String value) {
-        mParameters.set(KEY_SLOW_MOTION_RATE, value);
+    public void setSlowMotionRate(String value, Parameters params) {
+        params.set(KEY_SLOW_MOTION_RATE, value);
     }
 
     /**
@@ -2090,8 +2081,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public List<String> getSupportedSlowMotionRate() {
-        String str = mParameters.get(KEY_SLOW_MOTION_RATE + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSlowMotionRate(Parameters params) {
+        String str = params.get(KEY_SLOW_MOTION_RATE + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -2100,8 +2091,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public void setHighSpeedResolutionFPS(int width, int height, int fps) {
-        mParameters.set(KEY_HIGH_SPEED_RESOLUTION_FPS, "" + width + "x" + height + "@" + fps);
+    public void setHighSpeedResolutionFPS(int width, int height, int fps, Parameters params) {
+        params.set(KEY_HIGH_SPEED_RESOLUTION_FPS, "" + width + "x" + height + "@" + fps);
     }
 
     /**
@@ -2109,8 +2100,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public List<String> getSupportedHighSpeedResolutionFps() {
-        return getSupportedValues(KEY_HIGH_SPEED_RESOLUTION_FPS + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHighSpeedResolutionFps(Parameters params) {
+        return getSupportedValues(KEY_HIGH_SPEED_RESOLUTION_FPS + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
@@ -2118,8 +2109,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public String getHighSpeed() {
-        return mParameters.get(KEY_HIGH_SPEED);
+    public String getHighSpeed(Parameters params) {
+        return params.get(KEY_HIGH_SPEED);
     }
 
     /**
@@ -2127,15 +2118,15 @@ public class IntelCamera {
      *
      * @hide
      */
-    public void setHighSpeed(String value) {
-        mParameters.set(KEY_HIGH_SPEED, value);
+    public void setHighSpeed(String value, Parameters params) {
+        params.set(KEY_HIGH_SPEED, value);
     }
 
     /**
      * @hide
      */
-    public List<String> getSupportedHighSpeed() {
-        String str = mParameters.get(KEY_HIGH_SPEED + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedHighSpeed(Parameters params) {
+        String str = params.get(KEY_HIGH_SPEED + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -2144,8 +2135,8 @@ public class IntelCamera {
      *
      * @hide
      */
-    public void setSaveMirrored(String value) {
-        mParameters.set(KEY_SAVE_MIRRORED, value);
+    public void setSaveMirrored(String value, Parameters params) {
+        params.set(KEY_SAVE_MIRRORED, value);
     }
 
     /**
@@ -2155,8 +2146,8 @@ public class IntelCamera {
                is not supported
      * @hide
      */
-    public List<String> getSupportedSaveMirrored() {
-        String str = mParameters.get(KEY_SAVE_MIRRORED + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedSaveMirrored(Parameters params) {
+        String str = params.get(KEY_SAVE_MIRRORED + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -2166,8 +2157,8 @@ public class IntelCamera {
      * @param value, the range of it is from 0.00 to 359.99.
      * @hide
      */
-    public void setGpsImgDirection(double value) {
-        mParameters.set(KEY_GPS_IMG_DIRECTION, Double.toString(value));
+    public void setGpsImgDirection(double value, Parameters params) {
+        params.set(KEY_GPS_IMG_DIRECTION, Double.toString(value));
     }
 
     /**
@@ -2177,8 +2168,8 @@ public class IntelCamera {
      * @param value, it should be one of GPS_IMG_DIRECTION_REF_TRUE and GPS_IMG_DIRECTION_REF_MAGNETIC
      * @hide
      */
-    public void setGpsImgDirectionRef(String value) {
-        mParameters.set(KEY_GPS_IMG_DIRECTION_REF, value);
+    public void setGpsImgDirectionRef(String value, Parameters params) {
+        params.set(KEY_GPS_IMG_DIRECTION_REF, value);
     }
 
     /**
@@ -2187,8 +2178,8 @@ public class IntelCamera {
      * @return one of GPS_IMG_DIRECTION_REF_TRUE and GPS_IMG_DIRECTION_REF_MAGNETIC
      * @hide
      */
-    public List<String> getSupportedGpsImgDirectionRef() {
-        String str = mParameters.get(KEY_GPS_IMG_DIRECTION_REF + SUPPORTED_VALUES_SUFFIX);
+    public List<String> getSupportedGpsImgDirectionRef(Parameters params) {
+        String str = params.get(KEY_GPS_IMG_DIRECTION_REF + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
@@ -2198,8 +2189,8 @@ public class IntelCamera {
      * @return dual video state.
      * @hide
      */
-    public boolean isDualVideoSupported() {
-        String str = mParameters.get(KEY_DUAL_VIDEO_SUPPORTED);
+    public boolean isDualVideoSupported(Parameters params) {
+        String str = params.get(KEY_DUAL_VIDEO_SUPPORTED);
         if(TRUE.equals(str))
             return true;
         return false;
@@ -2222,8 +2213,8 @@ public class IntelCamera {
     }
 
     // Get supported values for a key
-    private List<String> getSupportedValues(String key) {
-        String str = mParameters.get(key);
+    private List<String> getSupportedValues(String key, Parameters params) {
+        String str = params.get(key);
         if (str == null || str.equals("")) {
             Log.v(TAG, "Return null for key:" + key);
             return null;
@@ -2244,9 +2235,9 @@ public class IntelCamera {
     }
 
     // Returns the value of a integer parameter.
-    private int getInt(String key, int defaultValue) {
+    private int getInt(String key, int defaultValue, Parameters params) {
         try {
-            return Integer.parseInt(mParameters.get(key));
+            return Integer.parseInt(params.get(key));
         } catch (NumberFormatException ex) {
             return defaultValue;
         }
