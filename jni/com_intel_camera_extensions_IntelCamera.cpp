@@ -114,6 +114,12 @@ static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, 
         intel_listener->decStrong(thiz);
 }
 
+static void com_intel_camera_extensions_IntelCamera_setPriority(JNIEnv *env, jobject thiz, int cameraId, bool lowPriority)
+{
+    ALOGV("native setPriority");
+    Camera::setPriority(cameraId, lowPriority);
+}
+
 static bool com_intel_camera_extensions_IntelCamera_enableIntelCamera(JNIEnv *env, jobject thiz, jobject cameraDevice)
 {
     ALOGV("enableIntelCamera");
@@ -652,6 +658,9 @@ static JNINativeMethod camMethods[] = {
     { "native_release",
       "()V",
       (void*)com_intel_camera_extensions_IntelCamera_native_release },
+    { "native_setPriority",
+      "(IZ)V",
+      (void *)com_intel_camera_extensions_IntelCamera_setPriority },
     { "native_enableIntelCamera",
       "()Z",
       (void *)com_intel_camera_extensions_IntelCamera_enableIntelCamera},
