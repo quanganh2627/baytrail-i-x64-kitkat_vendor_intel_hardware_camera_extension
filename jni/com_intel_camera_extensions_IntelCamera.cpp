@@ -522,6 +522,9 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
         }
     } else if (heapBase != NULL && msgType == CAMERA_MSG_SCENE_DETECT) {
         env = AndroidRuntime::getJNIEnv();
+        if (env == NULL)
+            return;
+
         const camera_scene_detection_metadata* pMetadatax = reinterpret_cast<const camera_scene_detection_metadata*>(heapBase + offset);
         if (pMetadatax == NULL)
             ALOGE("scene detection metadata was null");
