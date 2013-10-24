@@ -122,7 +122,6 @@ public class IntelCamera {
     private static final String KEY_BURST_FPS = "burst-fps"; // TODO: old API, remove it in the future
     private static final String KEY_BURST_SPEED = "burst-speed";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
-    private static final String KEY_BURST_CONTINUOUS = "burst-continuous";
 
     // values for af metering mode
     private static final String AF_METERING_MODE_AUTO = "auto";
@@ -1437,51 +1436,6 @@ public class IntelCamera {
      */
     public List<String> getSupportedBurstSpeed(Parameters params) {
         String str = params.get(KEY_BURST_SPEED + SUPPORTED_VALUES_SUFFIX);
-        return split(str);
-    }
-
-
-    /**
-     * Gets burst continuous state
-     *
-     * @see setBurstContinuous()
-     * @return burst mode state.
-     * @hide
-     */
-    public boolean getBurstContinuous(Parameters params) {
-        if (params.get(KEY_BURST_CONTINUOUS) == TRUE)
-            return true;
-        return false;
-    }
-
-    /**
-     * Sets continuous burst mode state
-     *
-     * When enabled, HAL can enable performance optimizations to
-     * speed up successive calls to takePicture(). For example
-     * HAL may trigger another picture capture while encoding
-     * the compressed frame for the previous frame.
-     *
-     * This mode does not change Android camera API semantics.
-     * Any pipelined actions will be cancelled automatically
-     * in case preview is restarted.
-     *
-     * @param value continuous burst mode state
-     * @hide
-     */
-    public void setBurstContinuous(boolean toggle, Parameters params) {
-        params.set(KEY_BURST_CONTINUOUS, toggle ? TRUE : FALSE);
-    }
-
-    /**
-     * Gets the supported list for burst continuous.
-     *
-     * @return a list of supported values for burst continuous. null if this feature
-     *         is not supported.
-     * @hide
-     */
-    public List<String> getSupportedBurstcontinuous(Parameters params) {
-        String str = params.get(KEY_BURST_CONTINUOUS + SUPPORTED_VALUES_SUFFIX);
         return split(str);
     }
 
