@@ -96,7 +96,6 @@ public class IntelCamera {
     private static final String KEY_PANORAMA = "panorama";
 
     // face detection and recognition
-    private static final String KEY_FACE_DETECTION = "face-detection";
     private static final String KEY_FACE_RECOGNITION = "face-recognition";
 
     // scene detection
@@ -1949,17 +1948,6 @@ public class IntelCamera {
      */
     public List<String> getSupportedSceneDetection(Parameters params) {
         return getSupportedValues(KEY_SCENE_DETECTION + SUPPORTED_VALUES_SUFFIX, params);
-    }
-
-    /**
-     * Gets if the face detection is supported
-     *
-     * @return on or off if the feature is supported null if this feature
-               is not supported
-     * @hide
-     */
-    public List<String> getSupportedFaceDetection(Parameters params) {
-        return getSupportedValues(KEY_FACE_DETECTION + SUPPORTED_VALUES_SUFFIX, params);
     }
 
     /**
