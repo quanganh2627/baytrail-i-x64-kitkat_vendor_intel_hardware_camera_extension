@@ -146,6 +146,7 @@ public class IntelCamera {
     // high speed recording, slow motion playback
     private static final String KEY_SLOW_MOTION_RATE = "slow-motion-rate";
     private static final String KEY_HIGH_SPEED_RESOLUTION_FPS = "high-speed-resolution-fps";
+    private static final String KEY_RECORDING_FRAME_RATE = "recording-fps";
 
     // dual video
     private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
@@ -1995,6 +1996,34 @@ public class IntelCamera {
      */
     public List<String> getSupportedHighSpeedResolutionFps(Parameters params) {
         return getSupportedValues(KEY_HIGH_SPEED_RESOLUTION_FPS + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    /**
+     * Gets the current recording frame rate.
+     *
+     * @hide
+     */
+    public int getRecordingFrameRate(Parameters params) {
+        return getInt(KEY_RECORDING_FRAME_RATE, 0, params);
+    }
+
+    /**
+     * Sets the recording frame rate.
+     *
+     * @hide
+     */
+    public void setRecordingFrameRate(int fps, Parameters params) {
+        params.set(KEY_RECORDING_FRAME_RATE, fps);
+    }
+
+    /**
+     * Gets the supported recording frame rates.
+     *
+     * @hide
+     */
+    public List<String> getSupportedRecordingFrameRate(Parameters params) {
+        String str = params.get(KEY_RECORDING_FRAME_RATE + SUPPORTED_VALUES_SUFFIX);
+        return split(str);
     }
 
     /**
