@@ -1981,15 +1981,6 @@ public class IntelCamera {
     }
 
     /**
-     * Sets the high speed resolution and fps in recording mode.
-     *
-     * @hide
-     */
-    public void setHighSpeedResolutionFPS(int width, int height, int fps, Parameters params) {
-        params.set(KEY_HIGH_SPEED_RESOLUTION_FPS, "" + width + "x" + height + "@" + fps);
-    }
-
-    /**
      * Gets the support list for the pair of resolution and fps in recording mode
      *
      * @hide
