@@ -93,7 +93,6 @@ typedef struct camera_ull_metadata {
  * scene mode metadata
  */
 const int SCENE_STRING_LENGTH = 50;
-const int NUM_SCENE_DETECTED = 10;
 typedef struct camera_scene_detection_metadata {
     char scene[SCENE_STRING_LENGTH];
     bool hdr;
