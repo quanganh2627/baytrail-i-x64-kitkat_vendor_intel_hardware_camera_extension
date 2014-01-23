@@ -120,6 +120,7 @@ public class IntelCamera {
     private static final String KEY_BURST_FPS = "burst-fps"; // TODO: old API, remove it in the future
     private static final String KEY_BURST_SPEED = "burst-speed";
     public static final String KEY_BURST_START_INDEX = "burst-start-index";
+    private static final String KEY_MAX_BURST_LENGTH_WITH_NEGATIVE_START_INDEX = "burst-max-length-negative";
 
     // values for af metering mode
     private static final String AF_METERING_MODE_AUTO = "auto";
@@ -1466,6 +1467,16 @@ public class IntelCamera {
      */
     public List<String> getSupportedBurstStartIndex(Parameters params) {
         return getSupportedValues(KEY_BURST_START_INDEX + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    /**
+     * Gets max burst length that can use when negative start index is in use.
+     *
+     * @return max burst length with negative start index.
+     * @hide
+     */
+    public int getMaxBurstLengthWithNegativeStartIndex(Parameters params) {
+        return getInt(KEY_MAX_BURST_LENGTH_WITH_NEGATIVE_START_INDEX, 1, params);
     }
 
     /**
