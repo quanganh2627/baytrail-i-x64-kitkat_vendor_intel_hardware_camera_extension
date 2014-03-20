@@ -150,6 +150,7 @@ public class IntelCamera {
     private static final String KEY_RECORDING_FRAME_RATE = "recording-fps";
 
     // dual video
+    private static final String KEY_DUAL_VIDEO = "dual-video";
     private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
 
     // Exif data
@@ -2082,16 +2083,34 @@ public class IntelCamera {
     }
 
     /**
+     * Sets dual video state
+     *
+     * @hide
+     */
+    public void setDualVideo(boolean toggle, Parameters params) {
+        params.set(KEY_DUAL_VIDEO, toggle ? TRUE : FALSE);
+    }
+
+    /**
      * Gets dual video state
      *
-     * @return dual video state.
+     * @return true if dual video is enabled.
+     * @hide
+     */
+    public boolean getDualVideo(Parameters params) {
+        String str = params.get(KEY_DUAL_VIDEO);
+        return TRUE.equals(str);
+    }
+
+    /**
+     * Gets if dual video is supported
+     *
+     * @return true if dual video is supported.
      * @hide
      */
     public boolean isDualVideoSupported(Parameters params) {
         String str = params.get(KEY_DUAL_VIDEO_SUPPORTED);
-        if(TRUE.equals(str))
-            return true;
-        return false;
+        return TRUE.equals(str);
     }
 
     /**
