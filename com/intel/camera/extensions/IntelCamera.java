@@ -153,6 +153,14 @@ public class IntelCamera {
     private static final String KEY_DUAL_VIDEO = "dual-video";
     private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
 
+    /* dual camera mode */
+    /** @hide */
+    public static final String KEY_DUAL_CAMERA_MODE = "dual-camera-mode";
+    /** @hide */
+    public static final String DUAL_CAMERA_MODE_NORMAL = "normal";
+    /** @hide */
+    public static final String DUAL_CAMERA_MODE_DEPTH = "depth";
+
     // Exif data
     public static final String KEY_EXIF_MAKER = "exif-maker-name";
     public static final String KEY_EXIF_MODEL = "exif-model-name";
@@ -2111,6 +2119,24 @@ public class IntelCamera {
     public boolean isDualVideoSupported(Parameters params) {
         String str = params.get(KEY_DUAL_VIDEO_SUPPORTED);
         return TRUE.equals(str);
+    }
+
+    /**
+     * Gets the dual camera mode which are supported
+     *
+     * @return the supported dual camera mode
+     * @hide
+     */
+    public List<String> getSupportedDualCameraMode(Parameters params) {
+        return getSupportedValues(KEY_DUAL_CAMERA_MODE + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    public void setDualCameraMode(String value, Parameters params) {
+        params.set(KEY_DUAL_CAMERA_MODE, value);
+    }
+
+    public String getDualCameraMode(Parameters params) {
+        return params.get(KEY_DUAL_CAMERA_MODE);
     }
 
     /**
