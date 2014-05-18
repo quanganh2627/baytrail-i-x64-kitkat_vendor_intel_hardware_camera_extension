@@ -112,6 +112,9 @@ public class IntelCamera {
     private static final String GPS_IMG_DIRECTION_REF_TRUE = "true-direction";
     private static final String GPS_IMG_DIRECTION_REF_MAGNETIC = "magnetic-direction";
 
+    // intelligent mode
+    public static final String KEY_INTELLIGENT_MODE = "intelligent-mode";
+
     // hw overlay rendering
     private static final String KEY_HW_OVERLAY_RENDERING = "overlay-render";
 
@@ -2088,6 +2091,24 @@ public class IntelCamera {
     public List<String> getSupportedGpsImgDirectionRef(Parameters params) {
         String str = params.get(KEY_GPS_IMG_DIRECTION_REF + SUPPORTED_VALUES_SUFFIX);
         return split(str);
+    }
+
+    /**
+     * Gets the intelligent mode which are supported
+     *
+     * @return the supported intelligent mode
+     * @hide
+     */
+    public List<String> getSupportedIntelligentMode(Parameters params) {
+        return getSupportedValues(KEY_INTELLIGENT_MODE + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    public void setIntelligentMode(boolean toggle, Parameters params) {
+        params.set(KEY_INTELLIGENT_MODE, toggle ? TRUE : FALSE);
+    }
+
+    public String getIntelligentMode(Parameters params) {
+        return params.get(KEY_INTELLIGENT_MODE);
     }
 
     /**
