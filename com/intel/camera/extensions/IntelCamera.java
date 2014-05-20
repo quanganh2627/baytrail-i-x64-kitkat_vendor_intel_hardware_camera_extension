@@ -172,6 +172,10 @@ public class IntelCamera {
     // Save still image and recorded video as mirrored (for front camera only)
     public static final String KEY_SAVE_MIRRORED = "save-mirrored";
 
+    // continuous shooting.
+    private static final String KEY_CONTINUOUS_SHOOTING = "continuous-shooting";
+    private static final String KEY_CONTINUOUS_SHOOTING_SUPPORTED = "continuous-shooting-supported";
+
     private static final String TRUE = "true";
     private static final String FALSE = "false";
 
@@ -275,6 +279,8 @@ public class IntelCamera {
     private native final void native_forceSmartShutterPicture();
     private native final void native_startFaceRecognition();
     private native final void native_stopFaceRecognition();
+    private native final void native_startContinuousShooting();
+    private native final void native_stopContinuousShooting();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
@@ -835,6 +841,27 @@ public class IntelCamera {
     {
         native_stopFaceRecognition();
     }
+
+    /**
+     * @hide
+     * Starts continuous shooting.
+     * App needs to call this to enable continuous capture mode.
+     */
+    public final void startContinuousShooting()
+    {
+        native_startContinuousShooting();
+    }
+
+    /**
+     * @hide
+     * Starts continuous shooting.
+     * @see #startContinuousShooting()
+     */
+    public final void stopContinuousShooting()
+    {
+        native_stopContinuousShooting();
+    }
+
 
     /**
      * Enable or disable XNR (eXtra Noise Reduction)
@@ -2158,6 +2185,37 @@ public class IntelCamera {
 
     public String getDualCameraMode(Parameters params) {
         return params.get(KEY_DUAL_CAMERA_MODE);
+    }
+
+    /**
+     * Sets continuous shooting state
+     *
+     * @hide
+     */
+    public void setContinuousShooting(String value, Parameters params) {
+        params.set(KEY_CONTINUOUS_SHOOTING, value);
+    }
+
+    /**
+     * Gets continuous shooting state
+     *
+     * @return true if continuous shooting is enabled.
+     * @hide
+     */
+    public boolean getContinuousShooting(Parameters params) {
+        String str = params.get(KEY_CONTINUOUS_SHOOTING);
+        return TRUE.equals(str);
+    }
+
+    /**
+     * Gets if continuous shooting is supported
+     *
+     * @return true if continuous shooting is supported.
+     * @hide
+     */
+    public boolean isContinuousShootingSupported(Parameters params) {
+        String str = params.get(KEY_CONTINUOUS_SHOOTING_SUPPORTED);
+        return TRUE.equals(str);
     }
 
     /**

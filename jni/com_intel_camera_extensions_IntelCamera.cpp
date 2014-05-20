@@ -300,6 +300,35 @@ static void com_intel_camera_extensions_IntelCamera_stopFaceRecognition(JNIEnv *
     camera->sendCommand(CAMERA_CMD_STOP_FACE_RECOGNITION, 0, 0);
 }
 
+static void com_intel_camera_extensions_IntelCamera_startContinuousShooting(JNIEnv *env, jobject thiz)
+{
+    LOGV("startContinuousShooting");
+
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_START_CONTINUOUS_SHOOTING, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_stopContinuousShooting(JNIEnv *env, jobject thiz)
+{
+    LOGV("stopContinuousShooting");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_STOP_CONTINUOUS_SHOOTING, 0, 0);
+}
+
 IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobject weak_this, jclass clazz)
 {
     LOGV("new IntelCameraListener");
@@ -617,6 +646,13 @@ static JNINativeMethod camMethods[] = {
     { "native_stopFaceRecognition",
       "()V",
       (void *)com_intel_camera_extensions_IntelCamera_stopFaceRecognition },
+    { "native_startContinuousShooting",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_startContinuousShooting },
+    { "native_stopContinuousShooting",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_stopContinuousShooting },
+
 };
 
 int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
