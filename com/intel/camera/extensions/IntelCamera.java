@@ -255,6 +255,7 @@ public class IntelCamera {
     private PanoramaListener mPanoramaListener;
     private UllListener mUllListener;
     private LowBatteryListener mLowBatteryListener;
+    private CaptureFrameIdCallback mCaptureFrameIdCallback;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
     private boolean mSmileShutterRunning = false;
@@ -281,6 +282,9 @@ public class IntelCamera {
     private native final void native_stopFaceRecognition();
     private native final void native_startContinuousShooting();
     private native final void native_stopContinuousShooting();
+    private native final void native_setPreviewFrameCaptureId(int id);
+    private native final void native_pausePreviewFrameUpdate();
+    private native final void native_resumePreviewFrameUpdate();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
@@ -289,6 +293,7 @@ public class IntelCamera {
     private static final int CAMERA_MSG_ULL_SNAPSHOT = 0x2007;
     private static final int CAMERA_MSG_ULL_TRIGGERED = 0x2009;
     private static final int CAMERA_MSG_LOW_BATTERY = 0x200B;
+    private static final int CAMERA_MSG_FRAME_ID = 0x2017;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -405,6 +410,12 @@ public class IntelCamera {
                 Log.v(TAG, "LowBatteryListener");
                 if (mLowBatteryListener != null) {
                     mLowBatteryListener.lowBattery();
+                }
+                break;
+            case CAMERA_MSG_FRAME_ID:
+                Log.v(TAG, "CaptureFrameIdCallback");
+                if (mCaptureFrameIdCallback != null) {
+                    mCaptureFrameIdCallback.onCaptureFrameIdAvailable(msg.arg1);
                 }
                 break;
             default:
@@ -652,6 +663,57 @@ public class IntelCamera {
     public final void setLowBatteryListener(LowBatteryListener listener)
     {
         mLowBatteryListener = listener;
+    }
+
+    /* Capture frame id listener, return frame id */
+    public interface CaptureFrameIdCallback {
+        /**
+        * Notify the listener of the frame id.
+        *
+        */
+        void onCaptureFrameIdAvailable(int frameId);
+    }
+
+    /**
+    * @hide
+    * Registers a listener to be notified about frame id.
+    * When take picture, the frame id of captured frame will be sent to the application
+    * which gotten from sensor meta data.
+    *
+    * @param listener the listener to notify
+    */
+    public final void setFrameIdListener(CaptureFrameIdCallback listener)
+    {
+        mCaptureFrameIdCallback = listener;
+    }
+
+    /**
+    * Set capture id of preview frame.
+    *
+    * @hide
+    */
+    public final void setWindowlessPreviewFrameCaptureId(int id) {
+        native_setPreviewFrameCaptureId(id);
+    }
+
+    /**
+     * @hide
+     * Pause preview frame update.
+     * After calling, preview frame queue won't be updated, unless
+     * {@link #resumeWindowlessPreviewFrameUpdate()} has been called by the application.
+     */
+    public final void pauseWindowlessPreviewFrameUpdate()
+    {
+        native_pausePreviewFrameUpdate();
+    }
+
+    /**
+     * @hide
+     * Resume preview frame update.
+     */
+    public final void resumeWindowlessPreviewFrameUpdate()
+    {
+        native_resumePreviewFrameUpdate();
     }
 
     /**

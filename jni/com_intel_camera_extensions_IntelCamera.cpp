@@ -303,7 +303,6 @@ static void com_intel_camera_extensions_IntelCamera_stopFaceRecognition(JNIEnv *
 static void com_intel_camera_extensions_IntelCamera_startContinuousShooting(JNIEnv *env, jobject thiz)
 {
     LOGV("startContinuousShooting");
-
     IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
     sp<Camera> camera = intel_listener->getCamera();
 
@@ -327,6 +326,48 @@ static void com_intel_camera_extensions_IntelCamera_stopContinuousShooting(JNIEn
     }
 
     camera->sendCommand(CAMERA_CMD_STOP_CONTINUOUS_SHOOTING, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_pausePreviewFrameUpdate(JNIEnv *env, jobject thiz)
+{
+    LOGV("pausePreviewFrameUpdate");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_PAUSE_PREVIEW_FRAME_UPDATE, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_resumePreviewFrameUpdate(JNIEnv *env, jobject thiz)
+{
+    LOGV("resumePreviewFrameUpdate");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_RESUME_PREVIEW_FRAME_UPDATE, 0, 0);
+}
+
+static void com_intel_camera_extensions_IntelCamera_setPreviewFrameCaptureId(JNIEnv *env, jobject thiz, jint id)
+{
+    LOGV("setPreviewFrameCaptureId");
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    sp<Camera> camera = intel_listener->getCamera();
+
+    if (camera == NULL) {
+        LOGE("get camera handle failed");
+        return;
+    }
+
+    camera->sendCommand(CAMERA_CMD_SET_PREVIEW_FRAME_CAPTURE_ID, id, 0);
 }
 
 IntelCameraListener::IntelCameraListener(JNICameraContext* aRealListener, jobject weak_this, jclass clazz)
@@ -412,6 +453,7 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
     switch (msgType) {
     case CAMERA_MSG_ULL_TRIGGERED:
     case CAMERA_MSG_LOW_BATTERY:
+    case CAMERA_MSG_FRAME_ID:
         if (env != NULL)
             env->CallStaticVoidMethod(mCameraJClass, fields.post_event,
                                       mCameraJObjectWeak, msgType, ext1, ext2, NULL);
@@ -652,7 +694,15 @@ static JNINativeMethod camMethods[] = {
     { "native_stopContinuousShooting",
       "()V",
       (void *)com_intel_camera_extensions_IntelCamera_stopContinuousShooting },
-
+    { "native_pausePreviewFrameUpdate",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_pausePreviewFrameUpdate },
+    { "native_resumePreviewFrameUpdate",
+      "()V",
+      (void *)com_intel_camera_extensions_IntelCamera_resumePreviewFrameUpdate },
+    { "native_setPreviewFrameCaptureId",
+      "(I)V",
+      (void *)com_intel_camera_extensions_IntelCamera_setPreviewFrameCaptureId },
 };
 
 int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
