@@ -1,6 +1,6 @@
 /*
 **
-** Copyright 2012, Intel Corporation
+** Copyright 2012-2014, Intel Corporation
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -474,9 +474,21 @@ void IntelCameraListener::notify(int32_t msgType, int32_t ext1, int32_t ext2)
 void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
                            camera_frame_metadata_t *metadata)
 {
-    ssize_t offset;
-    size_t size;
+    ssize_t offset(0);
+    size_t size(0);
+
+    if (dataPtr == NULL) {
+        ALOGE("postData dataPtr is null");
+        return;
+    }
+
     sp<IMemoryHeap> heap = dataPtr->getMemory(&offset, &size);
+
+    if (heap == NULL) {
+        ALOGE("potsData data heap is null");
+        return;
+    }
+
     uint8_t *heapBase = (uint8_t*)heap->base();
     JNIEnv *env = NULL;
 
