@@ -112,6 +112,9 @@ public class IntelCamera {
     private static final String GPS_IMG_DIRECTION_REF_TRUE = "true-direction";
     private static final String GPS_IMG_DIRECTION_REF_MAGNETIC = "magnetic-direction";
 
+    // intelligent mode
+    public static final String KEY_INTELLIGENT_MODE = "intelligent-mode";
+
     // hw overlay rendering
     private static final String KEY_HW_OVERLAY_RENDERING = "overlay-render";
 
@@ -150,7 +153,16 @@ public class IntelCamera {
     private static final String KEY_RECORDING_FRAME_RATE = "recording-fps";
 
     // dual video
+    private static final String KEY_DUAL_VIDEO = "dual-video";
     private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
+
+    /* dual camera mode */
+    /** @hide */
+    public static final String KEY_DUAL_CAMERA_MODE = "dual-camera-mode";
+    /** @hide */
+    public static final String DUAL_CAMERA_MODE_NORMAL = "normal";
+    /** @hide */
+    public static final String DUAL_CAMERA_MODE_DEPTH = "depth";
 
     // Exif data
     public static final String KEY_EXIF_MAKER = "exif-maker-name";
@@ -159,6 +171,10 @@ public class IntelCamera {
 
     // Save still image and recorded video as mirrored (for front camera only)
     public static final String KEY_SAVE_MIRRORED = "save-mirrored";
+
+    // continuous shooting.
+    private static final String KEY_CONTINUOUS_SHOOTING = "continuous-shooting";
+    private static final String KEY_CONTINUOUS_SHOOTING_SUPPORTED = "continuous-shooting-supported";
 
     private static final String TRUE = "true";
     private static final String FALSE = "false";
@@ -239,6 +255,7 @@ public class IntelCamera {
     private PanoramaListener mPanoramaListener;
     private UllListener mUllListener;
     private LowBatteryListener mLowBatteryListener;
+    private CaptureFrameIdCallback mCaptureFrameIdCallback;
     private boolean mSceneDetectionRunning = false;
     private boolean mPanoramaRunning = false;
     private boolean mSmileShutterRunning = false;
@@ -263,6 +280,11 @@ public class IntelCamera {
     private native final void native_forceSmartShutterPicture();
     private native final void native_startFaceRecognition();
     private native final void native_stopFaceRecognition();
+    private native final void native_startContinuousShooting();
+    private native final void native_stopContinuousShooting();
+    private native final void native_setPreviewFrameCaptureId(int id);
+    private native final void native_pausePreviewFrameUpdate();
+    private native final void native_resumePreviewFrameUpdate();
 
     // here need keep pace with native msgType
     private static final int CAMERA_MSG_SCENE_DETECT = 0x2001;
@@ -271,6 +293,7 @@ public class IntelCamera {
     private static final int CAMERA_MSG_ULL_SNAPSHOT = 0x2007;
     private static final int CAMERA_MSG_ULL_TRIGGERED = 0x2009;
     private static final int CAMERA_MSG_LOW_BATTERY = 0x200B;
+    private static final int CAMERA_MSG_FRAME_ID = 0x2017;
 
     static {
         System.loadLibrary("intelcamera_jni");
@@ -387,6 +410,12 @@ public class IntelCamera {
                 Log.v(TAG, "LowBatteryListener");
                 if (mLowBatteryListener != null) {
                     mLowBatteryListener.lowBattery();
+                }
+                break;
+            case CAMERA_MSG_FRAME_ID:
+                Log.v(TAG, "CaptureFrameIdCallback");
+                if (mCaptureFrameIdCallback != null) {
+                    mCaptureFrameIdCallback.onCaptureFrameIdAvailable(msg.arg1);
                 }
                 break;
             default:
@@ -636,6 +665,57 @@ public class IntelCamera {
         mLowBatteryListener = listener;
     }
 
+    /* Capture frame id listener, return frame id */
+    public interface CaptureFrameIdCallback {
+        /**
+        * Notify the listener of the frame id.
+        *
+        */
+        void onCaptureFrameIdAvailable(int frameId);
+    }
+
+    /**
+    * @hide
+    * Registers a listener to be notified about frame id.
+    * When take picture, the frame id of captured frame will be sent to the application
+    * which gotten from sensor meta data.
+    *
+    * @param listener the listener to notify
+    */
+    public final void setFrameIdListener(CaptureFrameIdCallback listener)
+    {
+        mCaptureFrameIdCallback = listener;
+    }
+
+    /**
+    * Set capture id of preview frame.
+    *
+    * @hide
+    */
+    public final void setWindowlessPreviewFrameCaptureId(int id) {
+        native_setPreviewFrameCaptureId(id);
+    }
+
+    /**
+     * @hide
+     * Pause preview frame update.
+     * After calling, preview frame queue won't be updated, unless
+     * {@link #resumeWindowlessPreviewFrameUpdate()} has been called by the application.
+     */
+    public final void pauseWindowlessPreviewFrameUpdate()
+    {
+        native_pausePreviewFrameUpdate();
+    }
+
+    /**
+     * @hide
+     * Resume preview frame update.
+     */
+    public final void resumeWindowlessPreviewFrameUpdate()
+    {
+        native_resumePreviewFrameUpdate();
+    }
+
     /**
      * @hide
      * Starts the smart scene detection.
@@ -823,6 +903,27 @@ public class IntelCamera {
     {
         native_stopFaceRecognition();
     }
+
+    /**
+     * @hide
+     * Starts continuous shooting.
+     * App needs to call this to enable continuous capture mode.
+     */
+    public final void startContinuousShooting()
+    {
+        native_startContinuousShooting();
+    }
+
+    /**
+     * @hide
+     * Starts continuous shooting.
+     * @see #startContinuousShooting()
+     */
+    public final void stopContinuousShooting()
+    {
+        native_stopContinuousShooting();
+    }
+
 
     /**
      * Enable or disable XNR (eXtra Noise Reduction)
@@ -2082,16 +2183,101 @@ public class IntelCamera {
     }
 
     /**
+     * Gets the intelligent mode which are supported
+     *
+     * @return the supported intelligent mode
+     * @hide
+     */
+    public List<String> getSupportedIntelligentMode(Parameters params) {
+        return getSupportedValues(KEY_INTELLIGENT_MODE + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    public void setIntelligentMode(boolean toggle, Parameters params) {
+        params.set(KEY_INTELLIGENT_MODE, toggle ? TRUE : FALSE);
+    }
+
+    public String getIntelligentMode(Parameters params) {
+        return params.get(KEY_INTELLIGENT_MODE);
+    }
+
+    /**
+     * Sets dual video state
+     *
+     * @hide
+     */
+    public void setDualVideo(boolean toggle, Parameters params) {
+        params.set(KEY_DUAL_VIDEO, toggle ? TRUE : FALSE);
+    }
+
+    /**
      * Gets dual video state
      *
-     * @return dual video state.
+     * @return true if dual video is enabled.
+     * @hide
+     */
+    public boolean getDualVideo(Parameters params) {
+        String str = params.get(KEY_DUAL_VIDEO);
+        return TRUE.equals(str);
+    }
+
+    /**
+     * Gets if dual video is supported
+     *
+     * @return true if dual video is supported.
      * @hide
      */
     public boolean isDualVideoSupported(Parameters params) {
         String str = params.get(KEY_DUAL_VIDEO_SUPPORTED);
-        if(TRUE.equals(str))
-            return true;
-        return false;
+        return TRUE.equals(str);
+    }
+
+    /**
+     * Gets the dual camera mode which are supported
+     *
+     * @return the supported dual camera mode
+     * @hide
+     */
+    public List<String> getSupportedDualCameraMode(Parameters params) {
+        return getSupportedValues(KEY_DUAL_CAMERA_MODE + SUPPORTED_VALUES_SUFFIX, params);
+    }
+
+    public void setDualCameraMode(String value, Parameters params) {
+        params.set(KEY_DUAL_CAMERA_MODE, value);
+    }
+
+    public String getDualCameraMode(Parameters params) {
+        return params.get(KEY_DUAL_CAMERA_MODE);
+    }
+
+    /**
+     * Sets continuous shooting state
+     *
+     * @hide
+     */
+    public void setContinuousShooting(String value, Parameters params) {
+        params.set(KEY_CONTINUOUS_SHOOTING, value);
+    }
+
+    /**
+     * Gets continuous shooting state
+     *
+     * @return true if continuous shooting is enabled.
+     * @hide
+     */
+    public boolean getContinuousShooting(Parameters params) {
+        String str = params.get(KEY_CONTINUOUS_SHOOTING);
+        return TRUE.equals(str);
+    }
+
+    /**
+     * Gets if continuous shooting is supported
+     *
+     * @return true if continuous shooting is supported.
+     * @hide
+     */
+    public boolean isContinuousShootingSupported(Parameters params) {
+        String str = params.get(KEY_CONTINUOUS_SHOOTING_SUPPORTED);
+        return TRUE.equals(str);
     }
 
     /**

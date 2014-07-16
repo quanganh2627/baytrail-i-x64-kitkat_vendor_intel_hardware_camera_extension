@@ -3,7 +3,7 @@
 
 #include <camera/Camera.h>
 #include <utils/threads.h>
-#include <MessageQueue.h>
+#include "MessageQueue.h"
 
 using namespace android;
 

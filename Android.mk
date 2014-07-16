@@ -18,7 +18,6 @@ LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDES) \
 	$(LOCAL_PATH)/include \
 	$(LOCAL_PATH)/libacc \
-	vendor/intel/hardware/libcamera2 \
 	$(call include-path-for, frameworks-base-core)
 include $(BUILD_SHARED_LIBRARY)
 

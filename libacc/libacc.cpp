@@ -4,8 +4,6 @@
 #include <camera/Camera.h>
 #include <camera/CameraParameters.h>
 
-// libcamera2 includes
-#include <MessageQueue.h>
 #include <utils/threads.h>
 
 //Intel camera extensions
