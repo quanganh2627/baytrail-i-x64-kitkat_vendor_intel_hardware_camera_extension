@@ -152,9 +152,9 @@ public class IntelCamera {
     private static final String KEY_HIGH_SPEED_RESOLUTION_FPS = "high-speed-resolution-fps";
     private static final String KEY_RECORDING_FRAME_RATE = "recording-fps";
 
-    // dual video
-    private static final String KEY_DUAL_VIDEO = "dual-video";
-    private static final String KEY_DUAL_VIDEO_SUPPORTED = "dual-video-supported";
+    // dual mode
+    private static final String KEY_DUAL_MODE = "dual-mode";
+    private static final String KEY_DUAL_MODE_SUPPORTED = "dual-mode-supported";
 
     /* dual camera mode */
     /** @hide */
@@ -2201,33 +2201,33 @@ public class IntelCamera {
     }
 
     /**
-     * Sets dual video state
+     * Sets dual mode state
      *
      * @hide
      */
-    public void setDualVideo(boolean toggle, Parameters params) {
-        params.set(KEY_DUAL_VIDEO, toggle ? TRUE : FALSE);
+    public void setDualMode(boolean toggle, Parameters params) {
+        params.set(KEY_DUAL_MODE, toggle ? TRUE : FALSE);
     }
 
     /**
-     * Gets dual video state
+     * Gets dual mode state
      *
-     * @return true if dual video is enabled.
+     * @return true if dual mode is enabled.
      * @hide
      */
-    public boolean getDualVideo(Parameters params) {
-        String str = params.get(KEY_DUAL_VIDEO);
+    public boolean getDualMode(Parameters params) {
+        String str = params.get(KEY_DUAL_MODE);
         return TRUE.equals(str);
     }
 
     /**
-     * Gets if dual video is supported
+     * Gets if dual mode is supported
      *
-     * @return true if dual video is supported.
+     * @return true if dual mode is supported.
      * @hide
      */
-    public boolean isDualVideoSupported(Parameters params) {
-        String str = params.get(KEY_DUAL_VIDEO_SUPPORTED);
+    public boolean isDualModeSupported(Parameters params) {
+        String str = params.get(KEY_DUAL_MODE_SUPPORTED);
         return TRUE.equals(str);
     }
 
