@@ -106,5 +106,7 @@ typedef struct camera_scene_detection_metadata {
 
 }; // namespace android
 
+const int NUM_SCENE_DETECTED = 10;
+
 #endif /* _INTEL_CAMERA_EXTENSIONS */
 
