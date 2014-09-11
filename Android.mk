@@ -4,10 +4,11 @@ include $(CLEAR_VARS)
 LOCAL_COPY_HEADERS_TO := cameralibs
 LOCAL_COPY_HEADERS := \
 	include/intel_camera_extensions.h \
+	include/android_hardware_Camera.h \
 	libacc/Ilibacc.h
 include $(BUILD_COPY_HEADERS)
 
-ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))
+
 
 ################# MAKE_LIB ############################
 include $(CLEAR_VARS)
@@ -58,4 +59,3 @@ LOCAL_MODULE_OWNER := intel
 LOCAL_MODULE_PATH := $(TARGET_OUT)/media/audio/ui
 LOCAL_SRC_FILES := data/sounds/effects/$(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
-endif #ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))
