@@ -26,7 +26,7 @@ import com.intel.camera2.extensions.ImageConverter;
 
 /**
  * It receives some images that are received in one direction.
- * It returns one panoramic image what the received images are stitched.
+ * It returns one panoramic image from the stitching of the received images. 
  * 
  * This class needs some libraries what there are dependence on Intel specific platform.
  * The {@link #isSupported} method informs that your device can be supported.
@@ -58,7 +58,7 @@ public class Panorama {
     }
 
     /**
-     * It checks the panorama library is available.
+     * It checks for the availability of the panorama library.
      */
     public static boolean isSupported() {
         return PanoramaJNI.isSupported();
@@ -83,7 +83,7 @@ public class Panorama {
     }
 
     /**
-     * It creates new panorama instance. If it's not supported, it will return null.
+     * It creates a new panorama instance. If it's not supported, it will return null.
      * @return Panorama instance
      */
     public static Panorama newInstance() {
@@ -101,7 +101,7 @@ public class Panorama {
     }
 
     /**
-     * It releases all resources are allocated internally.<br>
+     * It releases all resources that are allocated internally.
      * This method must be called after finishing panorama.
      */
     public void release() {
@@ -139,9 +139,9 @@ public class Panorama {
     /**
      * It adds the image for stitching.
      */
-    public int addInputImage(Bitmap bitmap, int degree) {
+    public int addInputImage(Bitmap bitmap) {
         if (checkToAddInputImage()) {
-            IaFrame iaFrame = new IaFrame(bitmap, IaFrame.PvlFormat.NV12, degree);
+            IaFrame iaFrame = new IaFrame(bitmap, IaFrame.PvlFormat.NV12, 0);
             addInputImage(iaFrame);
             return SUCCESS;
         } else {
@@ -152,9 +152,9 @@ public class Panorama {
     /**
      * It adds the image for stitching.
      */
-    public int addInputImage(Image image, int degree) {
+    public int addInputImage(Image image) {
         if (checkToAddInputImage()) {
-            IaFrame iaFrame = new IaFrame(image, IaFrame.PvlFormat.NV12, degree);
+            IaFrame iaFrame = new IaFrame(image, IaFrame.PvlFormat.NV12, 0);
             addInputImage(iaFrame);
             return SUCCESS;
         } else {
