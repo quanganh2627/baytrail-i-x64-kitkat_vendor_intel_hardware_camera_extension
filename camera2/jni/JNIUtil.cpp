@@ -47,6 +47,7 @@ unsigned char* getValueByteArray(JNIEnv* env, jobject obj, const char* field_nam
 
     fid = env->GetFieldID(cls, field_name, "[B");
     if(fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s ", field_name);
         env->ExceptionClear();
         return NULL;
@@ -54,12 +55,14 @@ unsigned char* getValueByteArray(JNIEnv* env, jobject obj, const char* field_nam
 
     jba = (jbyteArray)env->GetObjectField(obj, fid);
     if(jba == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("imageData array jba == NULL.");
         env->ExceptionClear();
         return NULL;
     }
     array = (unsigned char*)env->GetByteArrayElements(jba, 0);
     env->ReleaseByteArrayElements(jba, (jbyte *)array, 0);
+    env->DeleteLocalRef(cls);
 
     return array;
 }
@@ -77,12 +80,15 @@ int getValueInt(JNIEnv* env, jobject obj, const char* field_name) {
 
     fid = env->GetFieldID(cls, field_name, "I");
     if (fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
         return -1;
     }
 
-    return env->GetIntField(obj, fid);
+    int ret = env->GetIntField(obj, fid);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 long getValueLong(JNIEnv* env, jobject obj, const char* field_name) {
@@ -98,12 +104,15 @@ long getValueLong(JNIEnv* env, jobject obj, const char* field_name) {
 
     fid = env->GetFieldID(cls, field_name, "J");
     if (fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
         return -1;
     }
 
-    return env->GetLongField(obj, fid);
+    long ret = env->GetLongField(obj, fid);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 float getValueFloat(JNIEnv* env, jobject obj, const char* field_name) {
@@ -119,12 +128,15 @@ float getValueFloat(JNIEnv* env, jobject obj, const char* field_name) {
 
     fid = env->GetFieldID(cls, field_name, "F");
     if (fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
         return -1.0f;
     }
 
-    return (float) env->GetFloatField(obj, fid);
+    float ret = (float) env->GetFloatField(obj, fid);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 bool getValueBoolean(JNIEnv* env, jobject obj, const char* field_name) {
@@ -140,12 +152,15 @@ bool getValueBoolean(JNIEnv* env, jobject obj, const char* field_name) {
 
     fid = env->GetFieldID(cls, field_name, "Z");
     if (fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
         return false;
     }
 
-    return (bool) env->GetBooleanField(obj, fid);
+    bool ret = (bool) env->GetBooleanField(obj, fid);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject getValueObject(JNIEnv* env, jobject obj, const char* field_name, const char* field_type) {
@@ -161,15 +176,23 @@ jobject getValueObject(JNIEnv* env, jobject obj, const char* field_name, const c
 
     fid = env->GetFieldID(cls, field_name, field_type);
     if (fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
         return NULL;
     }
 
-    return env->GetObjectField(obj, fid);
+    jobject ret = env->GetObjectField(obj, fid);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, const char* field_name) {
+    if (dst_buf == NULL) {
+        LOGE("dst_buf is null");
+        return;
+    }
+
     jclass cls;
     jfieldID fid;
     jbyteArray jba;
@@ -184,6 +207,7 @@ void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, co
 
     fid = env->GetFieldID(cls, field_name, "[B");
     if(fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s ", field_name);
         env->ExceptionClear();
         return;
@@ -191,6 +215,7 @@ void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, co
 
     jba = (jbyteArray)env->GetObjectField(src_obj, fid);
     if(jba == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("%s's byte array is NULL.", field_name);
         env->ExceptionClear();
         return;
@@ -198,17 +223,19 @@ void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, co
     len = env->GetArrayLength(jba);
     LOGD("%s array length = %d", field_name, len);
     array = (unsigned char*)env->GetByteArrayElements(jba, 0);
-    if (dst_buf == NULL) {
-    	LOGD("dst_buf is null");
-    	dst_buf = (unsigned char*) malloc(sizeof(unsigned char) * len);
-    }
     if (array != NULL) {
-		memcpy(dst_buf, array, len);
-		env->ReleaseByteArrayElements(jba, (jbyte *)array, JNI_ABORT);
+        memcpy(dst_buf, array, len);
+        env->ReleaseByteArrayElements(jba, (jbyte *)array, JNI_ABORT);
     }
+    env->DeleteLocalRef(cls);
 }
 
 void copyValueCharArray(JNIEnv* env, jobject obj, const char* field_name, unsigned short* buf) {
+    if (buf == NULL) {
+        LOGE("dst_buf is null");
+        return;
+    }
+
     jclass cls;
     jfieldID fid;
     jcharArray jca;
@@ -224,6 +251,7 @@ void copyValueCharArray(JNIEnv* env, jobject obj, const char* field_name, unsign
 
     fid = env->GetFieldID(cls, field_name, "[C");
     if(fid == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("Failed in 'GetFieldID' %s ", field_name);
         env->ExceptionClear();
         return;
@@ -231,6 +259,7 @@ void copyValueCharArray(JNIEnv* env, jobject obj, const char* field_name, unsign
 
     jca = (jcharArray)env->GetObjectField(obj, fid);
     if(jca == NULL) {
+        env->DeleteLocalRef(cls);
         LOGE("%s's byte array is NULL.", field_name);
         env->ExceptionClear();
         return;
@@ -238,9 +267,10 @@ void copyValueCharArray(JNIEnv* env, jobject obj, const char* field_name, unsign
     len = env->GetArrayLength(jca);
     array = (unsigned short*)env->GetCharArrayElements(jca, 0);
     if (array != NULL) {
-    	memcpy(buf, array, len);
-    	env->ReleaseCharArrayElements(jca, (jchar *)array, JNI_ABORT);
+        memcpy(buf, array, len);
+        env->ReleaseCharArrayElements(jca, (jchar *)array, JNI_ABORT);
     }
+    env->DeleteLocalRef(cls);
 }
 
 #define RGB2GRAY(r, g, b) ((unsigned char)(((r)*77+(g)*151+(b)*28)>>8))
@@ -269,6 +299,10 @@ jbyteArray convertToGray(JNIEnv* env, jobject jBitmap)
     int size = stride * height;
     uint32_t* src = (uint32_t*) bitmapPixels;
     unsigned char* dst = (unsigned char*) malloc(size);
+    if (dst == NULL) {
+        LOGE("No enough memory.");
+        return NULL;
+    }
 
     //LOGV("stride(%d) height(%d) size(%d)", stride, height, size);
     //LOGV("src(0x%08x) dst(0x%08x)", (uint32_t)src, (uint32_t)dst);
@@ -354,6 +388,7 @@ int jniRegisterNativeMethods
             env->ExceptionClear();
         }
     }
+    env->DeleteLocalRef(clazz);
 
     LOGD("\tRegisterNatives Error. (%d/%d)\n", numMethodsWrong, numMethods);
     LOGD(" ");

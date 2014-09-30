@@ -51,7 +51,11 @@ jlong EyeDetection_create(JNIEnv* env, jobject thiz)
     LOGV("pvl_eye_detection_create ret(%d)", ret);
     if (ret == pvl_success) {
         ede = (EyeDetectionEngine*)calloc(1, sizeof(EyeDetectionEngine));
-        ede->eyedetection = ed;
+        if (ede != NULL) {
+            ede->eyedetection = ed;
+        } else {
+            pvl_eye_detection_destroy(ed);
+        }
     }
 
     return (jlong)ede;
@@ -107,6 +111,8 @@ void getFDResult(JNIEnv* env, pvl_face_detection_result *out, jobjectArray jFDRe
     out->rip_angle = getValueInt(env, fdResult, STR_FD_rip_angle);
     out->rop_angle = getValueInt(env, fdResult, STR_FD_rop_angle);
     out->tracking_id = getValueInt(env, fdResult, STR_FD_tracking_id);
+
+    env->DeleteLocalRef(fdResult);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_eye_detection_result* results, int num)
@@ -124,6 +130,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_eye_detection_result* results, int n
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -131,10 +138,12 @@ jobject createJConfig(JNIEnv *env, pvl_eye_detection *detection)
 {
     jclass cls = env->FindClass(CLASS_EYE_DETECTION_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "FF)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJVersion(env, &detection->version),
                             detection->max_face_width_ratio,
                             detection->max_rip_error_tolerance);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 static JNINativeMethod gMethods[] = {

@@ -90,8 +90,6 @@ static tag_info_t com_intel_cv_info_tags[COM_INTEL_CV_INFO_END -
     { "availableFaceRecognize",        TYPE_BYTE   },
     [ COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_CV_INFO_START ] =
     { "availableObjectTrack",          TYPE_BYTE   },
-    [ COM_INTEL_CV_INFO_AVAILABLE_PANORAMA - COM_INTEL_CV_INFO_START ] =
-    { "availablePanorama",             TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_device_tags[COM_INTEL_DEVICE_END -
@@ -398,9 +396,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
         case COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK: {
-            break;
-        }
-        case COM_INTEL_CV_INFO_AVAILABLE_PANORAMA: {
             break;
         }
 

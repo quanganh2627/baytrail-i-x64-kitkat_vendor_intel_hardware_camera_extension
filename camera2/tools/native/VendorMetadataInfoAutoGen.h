@@ -121,12 +121,11 @@ const metadata_tag_t static_vendor_tags_table[] = {
     // CV
     {"cv.info.availableFaceRecognize", COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_cv_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availableObjectTrack", COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
-    {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     // DEVICE
     {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_dualCameraMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     // IMAGE_ENHANCE
     {"imageEnhance.info.availablecolorEffects", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS, TYPE_BYTE, com_intel_imageEnhance_colorEffect_values, 7, true, {-1,0,0}, ENUM_LIST },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 6
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
 

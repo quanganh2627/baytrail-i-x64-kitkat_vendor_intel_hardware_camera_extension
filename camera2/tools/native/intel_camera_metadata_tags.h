@@ -95,7 +95,6 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE =      // byte[]       | public
             COM_INTEL_CV_INFO_START,
     COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK,         // byte[]       | public
-    COM_INTEL_CV_INFO_AVAILABLE_PANORAMA,             // byte[]       | public
     COM_INTEL_CV_INFO_END,
 
     COM_INTEL_DEVICE_DUAL_CAMERA_MODE =               // enum         | public

@@ -3,6 +3,6 @@ Specification-Title: Camera2 SDK add-ons
 Specification-Version: 0.9
 Specification-Vendor: Intel
 Implementation-Title: com.intel.camera2.extensions
-Implementation-Version: 1
+Implementation-Version: 3
 Implementation-Vendor: Intel
 

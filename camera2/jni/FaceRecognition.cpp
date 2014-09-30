@@ -55,7 +55,11 @@ jlong FaceRecognition_create(JNIEnv* env, jobject thiz)
     LOGV("pvl_face_recognition_create ret(%d)", ret);
     if (ret == pvl_success) {
         fre = (FaceRecognitionEngine*)calloc(1, sizeof(FaceRecognitionEngine));
-        fre->facerecognition = fr;
+        if (fre != NULL) {
+            fre->facerecognition = fr;
+        } else {
+            pvl_face_recognition_destroy(fr);
+        }
     }
 
     return (jlong)fre;
@@ -81,7 +85,6 @@ jobjectArray FaceRecognition_runInImage(JNIEnv* env, jobject thiz, jlong instanc
         pvl_face_recognition_result results[length];
         memset(results, 0, sizeof(pvl_face_recognition_result) * length);
 
-        int num_faces = length;
         pvl_point left_eyes[length];
         pvl_point right_eyes[length];
 
@@ -216,6 +219,8 @@ void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDRes
     getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
     getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
     out->confidence = getValueInt(env, edResult, STR_ED_confidence);
+
+    env->DeleteLocalRef(edResult);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_result* results, int num, int facedataSize) {
@@ -240,6 +245,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_result* results, in
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -301,6 +307,7 @@ jobjectArray createJResult2(JNIEnv* env, pvl_face_detection_result* fdResults, p
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -338,21 +345,25 @@ jobject createJConfig(JNIEnv *env, pvl_face_recognition *fr)
 {
     jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "IIIII)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJVersion(env, &fr->version),
                             fr->max_supported_faces_in_preview,
                             fr->max_faces_in_database,
                             fr->max_persons_in_database,
                             fr->max_faces_per_person,
                             fr->facedata_size);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJParam(JNIEnv *env, pvl_face_recognition_parameters *param)
 {
     jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_PARAM);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(I)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             param->max_faces_in_preview);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getParam(JNIEnv *env, pvl_face_recognition_parameters *param, jobject jParam)

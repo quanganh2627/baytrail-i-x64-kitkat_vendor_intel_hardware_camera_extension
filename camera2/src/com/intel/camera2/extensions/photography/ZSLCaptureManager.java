@@ -918,7 +918,7 @@ public class ZSLCaptureManager {
     private CameraCaptureSession.CaptureCallback mMainCaptureCallback = new CameraCaptureSession.CaptureCallback() {
         @Override
         public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
-            long now = System.nanoTime();
+//            long now = System.nanoTime();
 //        Log.d(TAG, "nano timestamp = " + timestamp + " , now = " + now + " / delta = " + (now - timestamp));
             if (mPreviewCallback != null) {
                 mPreviewCallback.onCaptureStarted(session, request, timestamp, frameNumber);

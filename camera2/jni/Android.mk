@@ -17,7 +17,7 @@ LOCAL_MODULE := libiacp_jni
 
 ifeq ($(MY_BUILD_FLAG),true)
 LOCAL_MODULE_TAGS := optional
-LOCAL_MULTILIB := 32
+LOCAL_MULTILIB := both
 #LOCAL_PRELINK_MODULE := false   # Prevent from prelink error
 LOCAL_CFLAGS := -funsigned-char -Wno-unused-parameter -DPACKAGE="\"com/intel/camera2/extensions\"" -DTAG="\"CP_JNI\""
 LOCAL_ALLOW_UNDEFINED_SYMBOLS := true
@@ -29,13 +29,30 @@ LOCAL_SHARED_LIBRARIES := \
 
 LOCAL_C_INCLUDES := \
     $(TARGET_OUT_HEADERS)/libmfldadvci \
-    $(TARGET_OUT_HEADERS)/libtbd
+    $(TARGET_OUT_HEADERS)/libtbd \
+    $(TARGET_OUT_HEADERS)/acc
 
 LOCAL_SRC_FILES := \
-    cp_jni.cpp \
     JNIUtil.cpp \
     CpUtil.cpp \
-    cp_onload.cpp
+    cp_onload.cpp \
+    cp_jni.cpp \
+    cp_ipu_jni.cpp \
+    cp_cpu_jni.cpp
+endif
+
+ifeq ($(PLATFORM_ACC_SUPPORT), true)
+LOCAL_SHARED_LIBRARIES += \
+    libcutils \
+    libutils \
+    libbinder \
+    libacc_client
+
+LOCAL_SRC_FILES += \
+    AccWrapper.cpp \
+    CpIpuUtil.cpp \
+    CpMemUtil.cpp
+LOCAL_CFLAGS += -DPLATFORM_ACC_SUPPORT
 endif
 
 include $(BUILD_SHARED_LIBRARY)
@@ -60,6 +77,7 @@ LOCAL_SHARED_LIBRARIES := \
     libpvl_eye_detection \
     libpvl_face_detection \
     libpvl_face_recognition \
+    libpvl_face_recognition_with_db \
     libpvl_panorama \
     libpvl_smile_detection
 
@@ -75,8 +93,8 @@ LOCAL_SRC_FILES := \
     EyeDetection.cpp \
     SmileDetection.cpp \
     BlinkDetection.cpp \
-    FaceRecognition.cpp
-#    FaceRecognitionWithDb.cpp
+    FaceRecognition.cpp \
+    FaceRecognitionWithDb.cpp
 
 endif
 

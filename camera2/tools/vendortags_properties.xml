@@ -323,16 +323,6 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </details>
               </entry>
 
-              <entry name="availablePanorama" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.panoramaMode</description>
-                <details>NO is always supported.
-
-                         Yes means the device supports (TO BE DEFINED)
-                </details>
-              </entry>
             </namespace>
           </static>
         </section>

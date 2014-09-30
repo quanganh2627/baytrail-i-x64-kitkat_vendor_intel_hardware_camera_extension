@@ -20,11 +20,6 @@
 #include "pvl_eye_detection.h"
 #include "pvl_face_recognition_with_db.h"
 
-#define checkRet(ret) if (ret != pvl_success) { \
-                          LOGE("ret(%d)", ret); \
-                          return ret; \
-                      }
-
 struct FaceRecognitionWidthDbEngine {
     pvl_face_recognition_with_db *facerecognition_with_db;
     int debug;
@@ -61,9 +56,17 @@ jlong FaceRecognitionWithDb_create(JNIEnv* env, jobject thiz, jstring dbPath)
     pvl_face_recognition_with_db_get_default_config(&config);
     pvl_err ret = pvl_face_recognition_with_db_create(&config, db_path, &fr);
     LOGV("pvl_face_recognition_with_db_create ret(%d) fr_instance(%p)", ret, fr);
+    if (ret != pvl_success) {
+        return 0;
+    }
+
     if (ret == pvl_success) {
         fre = (FaceRecognitionWidthDbEngine*)calloc(1, sizeof(FaceRecognitionWidthDbEngine));
-        fre->facerecognition_with_db = fr;
+        if (fre != NULL) {
+            fre->facerecognition_with_db = fr;
+        } else {
+            pvl_face_recognition_with_db_destroy(fr);
+        }
     }
 
     return (jlong)fre;
@@ -88,8 +91,11 @@ jobjectArray FaceRecognitionWithDb_runInImage(JNIEnv* env, jobject thiz, jlong i
 
         jsize length = env->GetArrayLength(jEDResults);
 
-        pvl_face_recognition_with_db_result* results;
-        pvl_face_recognition_with_db_create_result_buffer(fr, length, &results);
+        pvl_face_recognition_with_db_result* results = NULL;
+        pvl_err ret = pvl_face_recognition_with_db_create_result_buffer(fr, length, &results);
+        if (ret != pvl_success) {
+            return NULL;
+        }
 
         int num_faces = length;
         pvl_point left_eyes[length];
@@ -102,7 +108,7 @@ jobjectArray FaceRecognitionWithDb_runInImage(JNIEnv* env, jobject thiz, jlong i
             memcpy(&right_eyes[i], &edResult.right_eye, sizeof(pvl_point));
         }
 
-        pvl_err ret = pvl_face_recognition_with_db_run_in_image(fr, &image, length, left_eyes, right_eyes, results);
+        ret = pvl_face_recognition_with_db_run_in_image(fr, &image, length, left_eyes, right_eyes, results);
         LOGV("pvl_face_recognition_with_db_run_in_image ret(%d)", ret);
         if (ret == pvl_success) {
             jResult = createJResult(env, results, length, fr->facedata_size);
@@ -192,13 +198,14 @@ jint FaceRecognitionWithDb_registerFace(JNIEnv* env, jobject thiz, jlong instanc
     if (fr != NULL) {
         pvl_face_recognition_with_db_result *result;
         ret = pvl_face_recognition_with_db_create_result_buffer(fr, 1, &result);
-        checkRet(ret);
+        if (ret != pvl_success) {
+            return ret;
+        }
 
         getFRDBResult(env, result, jFRDBResult);
 
         ret = pvl_face_recognition_with_db_register_facedata(fr, &result->facedata);
         LOGV("pvl_face_recognition_with_db_register_facedata: faceId(%llu) personId(%d) ret(%d)", result->facedata.face_id, result->facedata.person_id, (int)ret);
-        checkRet(ret);
 
         pvl_face_recognition_with_db_destroy_result_buffer(result);
     }
@@ -212,7 +219,6 @@ jint FaceRecognitionWithDb_unregisterFace(JNIEnv* env, jobject thiz, jlong insta
     if (fr != NULL) {
         ret = pvl_face_recognition_with_db_unregister_facedata(fr, faceId);
         LOGV("pvl_face_recognition_with_db_unregister_facedata: faceId(%llu) ret(%d)", faceId, (int)ret);
-        checkRet(ret);
     }
     return ret;
 }
@@ -224,7 +230,6 @@ jint FaceRecognitionWithDb_updatePerson(JNIEnv* env, jobject thiz, jlong instanc
     if (fr != NULL) {
         ret = pvl_face_recognition_with_db_update_person(fr, faceId, personId);
         LOGV("pvl_face_recognition_with_db_update_person: faceId(%llu) personId(%d) ret(%d)", faceId, personId, (int)ret);
-        checkRet(ret);
     }
     return ret;
 }
@@ -236,7 +241,6 @@ jint FaceRecognitionWithDb_unregisterPerson(JNIEnv* env, jobject thiz, jlong ins
     if (fr != NULL) {
         ret = pvl_face_recognition_with_db_unregister_person(fr, personId);
         LOGV("pvl_face_recognition_with_db_unregister_person: personId(%d) ret(%d)", personId, (int)ret);
-        checkRet(ret);
     }
     return ret;
 }
@@ -247,7 +251,6 @@ jint FaceRecognitionWithDb_getNumFacesInDatabase(JNIEnv* env, jobject thiz, jlon
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
         ret = pvl_face_recognition_with_db_get_num_faces_in_database(fr);
-        checkRet(ret);
     }
     return ret;
 }
@@ -292,6 +295,8 @@ void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDRes
     getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
     getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
     out->confidence = getValueInt(env, edResult, STR_ED_confidence);
+
+    env->DeleteLocalRef(edResult);
 }
 
 void getFRDBResult(JNIEnv* env, pvl_face_recognition_with_db_result *out, jobject jFRDBResults) {
@@ -334,6 +339,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_result* res
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -362,6 +368,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_facedata* f
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -439,21 +446,25 @@ jobject createJConfig(JNIEnv *env, pvl_face_recognition_with_db *fr)
 {
     jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_WITH_DB_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "IIIII)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJVersion(env, &fr->version),
                             fr->max_supported_faces_in_preview,
                             fr->max_faces_in_database,
                             fr->max_persons_in_database,
                             fr->max_faces_per_person,
                             fr->facedata_size);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJParam(JNIEnv *env, pvl_face_recognition_with_db_parameters *param)
 {
     jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_WITH_DB_PARAM);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(I)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             param->max_faces_in_preview);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getParam(JNIEnv *env, pvl_face_recognition_with_db_parameters *param, jobject jParam)

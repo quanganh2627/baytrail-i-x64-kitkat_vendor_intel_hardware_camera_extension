@@ -51,8 +51,12 @@ jlong FaceDetection_create(JNIEnv* env, jobject thiz)
     LOGV("pvl_face_detection_create ret(%d)", ret);
     if (ret == pvl_success) {
         fde = (FaceDetectionEngine*)calloc(1, sizeof(FaceDetectionEngine));
-        fde->facedetection = fd;
-        LOGE("calloc fd(0x%08x) fde(0x%08x)", (uint32_t)fd, (uint32_t)fde);
+        if (fde != NULL) {
+            fde->facedetection = fd;
+            LOGE("calloc fd(0x%08x) fde(0x%08x)", (uint32_t)fd, (uint32_t)fde);
+        } else {
+            pvl_face_detection_destroy(fd);
+        }
     }
 
     return (jlong)fde;
@@ -137,6 +141,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_detection_result* results, int 
         jobject jResult = env->NewObject(cls, constructor, createJRect(env, &result->rect), result->confidence, result->rip_angle, result->rop_angle, result->tracking_id);
         env->SetObjectArrayElement(retArray, i, jResult);
     }
+    env->DeleteLocalRef(cls);
 
     return retArray;
 }
@@ -145,7 +150,7 @@ jobject createJConfig(JNIEnv *env, pvl_face_detection *detection)
 {
     jclass cls = env->FindClass(CLASS_FACE_DETECTION_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "IIIIII)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJVersion(env, &detection->version),
                             detection->max_supported_num_faces,
                             detection->min_face_size,
@@ -153,18 +158,22 @@ jobject createJConfig(JNIEnv *env, pvl_face_detection *detection)
                             detection->rip_range_resolution,
                             detection->rop_range_max,
                             detection->rop_range_resolution);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJParam(JNIEnv *env, pvl_face_detection_parameters *param)
 {
     jclass cls = env->FindClass(CLASS_FACE_DETECTION_PARAM);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(IFIII)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             param->max_num_faces,
                             param->min_face_ratio,
                             param->rip_range,
                             param->rop_range,
                             param->num_rollover_frames);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getParam(JNIEnv *env, pvl_face_detection_parameters *param, jobject jParam)

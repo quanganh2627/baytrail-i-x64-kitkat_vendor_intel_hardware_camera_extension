@@ -134,23 +134,23 @@ int BpAccService::CPHdrCompose(const int inImageNum, const acc_ia_frame* inBuf, 
     data.writeInt32(inImageNum);
 
     for (int i = 0; i < inImageNum; i++) {
-        data.writeStrongBinder(inBuf->data->asBinder());
-        data.writeInt32(inBuf->size);
-        data.writeInt32(inBuf->width);
-        data.writeInt32(inBuf->height);
-        data.writeInt32(inBuf->format);
-        data.writeInt32(inBuf->stride);
-        data.writeInt32(inBuf->rotation);
+        data.writeStrongBinder(inBuf[i].data->asBinder());
+        data.writeInt32(inBuf[i].size);
+        data.writeInt32(inBuf[i].width);
+        data.writeInt32(inBuf[i].height);
+        data.writeInt32(inBuf[i].format);
+        data.writeInt32(inBuf[i].stride);
+        data.writeInt32(inBuf[i].rotation);
     }
 
     for (int i = 0; i < inImageNum; i++) {
-        data.writeStrongBinder(inPvBuf->data->asBinder());
-        data.writeInt32(inPvBuf->size);
-        data.writeInt32(inPvBuf->width);
-        data.writeInt32(inPvBuf->height);
-        data.writeInt32(inPvBuf->format);
-        data.writeInt32(inPvBuf->stride);
-        data.writeInt32(inPvBuf->rotation);
+        data.writeStrongBinder(inPvBuf[i].data->asBinder());
+        data.writeInt32(inPvBuf[i].size);
+        data.writeInt32(inPvBuf[i].width);
+        data.writeInt32(inPvBuf[i].height);
+        data.writeInt32(inPvBuf[i].format);
+        data.writeInt32(inPvBuf[i].stride);
+        data.writeInt32(inPvBuf[i].rotation);
     }
 
     data.writeStrongBinder(outBuf->data->asBinder());
@@ -200,23 +200,23 @@ int BpAccService::CPUllCompose(const int inImageNum, const acc_ia_frame* inBuf, 
     data.writeInt32(inImageNum);
 
     for (int i = 0; i < inImageNum; i++) {
-        data.writeStrongBinder(inBuf->data->asBinder());
-        data.writeInt32(inBuf->size);
-        data.writeInt32(inBuf->width);
-        data.writeInt32(inBuf->height);
-        data.writeInt32(inBuf->format);
-        data.writeInt32(inBuf->stride);
-        data.writeInt32(inBuf->rotation);
+        data.writeStrongBinder(inBuf[i].data->asBinder());
+        data.writeInt32(inBuf[i].size);
+        data.writeInt32(inBuf[i].width);
+        data.writeInt32(inBuf[i].height);
+        data.writeInt32(inBuf[i].format);
+        data.writeInt32(inBuf[i].stride);
+        data.writeInt32(inBuf[i].rotation);
     }
 
     for (int i = 0; i < inImageNum; i++) {
         data.writeStrongBinder(inPvBuf->data->asBinder());
-        data.writeInt32(inPvBuf->size);
-        data.writeInt32(inPvBuf->width);
-        data.writeInt32(inPvBuf->height);
-        data.writeInt32(inPvBuf->format);
-        data.writeInt32(inPvBuf->stride);
-        data.writeInt32(inPvBuf->rotation);
+        data.writeInt32(inPvBuf[i].size);
+        data.writeInt32(inPvBuf[i].width);
+        data.writeInt32(inPvBuf[i].height);
+        data.writeInt32(inPvBuf[i].format);
+        data.writeInt32(inPvBuf[i].stride);
+        data.writeInt32(inPvBuf[i].rotation);
     }
 
     data.writeStrongBinder(outBuf->data->asBinder());

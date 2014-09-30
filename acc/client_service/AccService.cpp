@@ -417,9 +417,35 @@ int AccService::CPHdrCompose(const int inImageNum, const acc_ia_frame* inBuf, co
 #endif
     memset(&cfg, 0, sizeof(ia_cp_hdr_cfg));
 
+// workaround for adding malloc buffers for cp lib to use.
+// if let the cp lib to ashmem to do HDR, the image is crashed.
+// the root cause is unknown right now.
+// TODO: remove the workaround when the root cause has been found.
+    void* tempInBuf[inImageNum];
+    for (int i = 0; i < inImageNum; i++) {
+        tempInBuf[i] = NULL;
+        tempInBuf[i] = malloc(inBuf[i].size);
+        if (NULL == tempInBuf[i]) {
+            ALOGE("@%s, line:%d, malloc fail in buffer for:i", __FUNCTION__, __LINE__, i);
+            for (int j = 0; j < i; j++)
+                free(tempInBuf[j]);
+            return -1;
+        }
+    }
+    void* tempOutBuf = NULL;
+    tempOutBuf = malloc(outBuf->size);
+    if (NULL == tempOutBuf) {
+        ALOGE("@%s, line:%d, malloc fail out buffer", __FUNCTION__, __LINE__);
+        for (int i = 0; i < inImageNum; i++)
+            free(tempInBuf[i]);
+        return -1;
+    }
+
     for(int i = 0 ; i < inImageNum ; i++) {
         heap = inBuf[i].data->getMemory();
-        in[i].data = heap->base();
+        memcpy(tempInBuf[i], heap->base(), inBuf[i].size);
+        in[i].data = tempInBuf[i];
+//        in[i].data = heap->base();
         in[i].size = inBuf[i].size;
         in[i].width = inBuf[i].width;
         in[i].height = inBuf[i].height;
@@ -446,7 +472,8 @@ int AccService::CPHdrCompose(const int inImageNum, const acc_ia_frame* inBuf, co
     }
 
     heap = outBuf->data->getMemory();
-    out.data = heap->base();
+    out.data = tempOutBuf;
+//    out.data = heap->base();
     out.size = outBuf->size;
     out.width = outBuf->width;
     out.height = outBuf->height;
@@ -476,6 +503,11 @@ int AccService::CPHdrCompose(const int inImageNum, const acc_ia_frame* inBuf, co
     debugDumpData(filename, (unsigned char*)out_pv.data, out_pv.size);
 #endif
 
+    memcpy(outBuf->data->getMemory()->base(), out.data, out.size);
+    for (int i = 0; i < inImageNum; i++)
+        free(tempInBuf[i]);
+    free(tempOutBuf);
+
     ALOG1("@%s, hdr post process done, output %d x %d and total data size = %d, consume:%ums",
         __FUNCTION__, out.width, out.height, out.size, (unsigned)((systemTime() - startTime) / 1000000));
     return 0;
@@ -486,7 +518,7 @@ int AccService::CPUllInit(int width, int height)
     ALOG1("%s", __FUNCTION__);
     ia_cp_context* ctx = getCpContext(mCpe);
     ia_cp_ull* ull = getCpULL(mCpe);
-    if (mCpe == NULL || ctx == NULL || ull == NULL) {
+    if (mCpe == NULL || ctx == NULL || ull != NULL) {
         ALOGE("CPEngine(%p) CpContext(%p) CpUll(%p)", mCpe, ctx, ull);
         return -1;
     }

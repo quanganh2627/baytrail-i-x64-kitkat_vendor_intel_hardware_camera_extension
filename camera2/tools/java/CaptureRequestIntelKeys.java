@@ -102,7 +102,8 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>Control of Dual camera.</p>
-     * <p>When ON, the camera HAL can support dual camera mode.  </p>
+     * <p>When ON, the camera HAL can support dual camera mode.<br />
+     * </p>
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_OFF
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_ON
      */

@@ -34,6 +34,7 @@ jobject createIaFrame(JNIEnv* env, pvl_image* src) {
     jbyteArray imageData = env->NewByteArray(src->size);
     env->SetByteArrayRegion(imageData, 0, src->size, (jbyte*)src->data);
     jobject iaFrame = env->NewObject(cls, constructor, imageData, src->stride, src->width, src->height, 17, src->rotation);
+    env->DeleteLocalRef(cls);
     return iaFrame;
 }
 
@@ -60,6 +61,7 @@ jobject createJRect(JNIEnv* env, pvl_rect* rect) {
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(IIII)V");
 
     jobject jRect = env->NewObject(cls, constructor, rect->left, rect->top, rect->right, rect->bottom);
+    env->DeleteLocalRef(cls);
     return jRect;
 }
 
@@ -68,6 +70,7 @@ jobject createJPoint(JNIEnv* env, pvl_point* point) {
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(II)V");
 
     jobject jPoint = env->NewObject(cls, constructor, point->x, point->y);
+    env->DeleteLocalRef(cls);
     return jPoint;
 }
 
@@ -76,11 +79,13 @@ jobject createJVersion(JNIEnv* env, const pvl_version* version)
     jclass cls = env->FindClass(CLASS_PVL_VERSION);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(III" SIG_STRING ")V");
 
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                           version->major,
                           version->minor,
                           version->patch,
                           env->NewStringUTF(version->description));
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getValueRect(JNIEnv* env, pvl_rect* out, jobject obj, const char* field_name) {
@@ -89,11 +94,15 @@ void getValueRect(JNIEnv* env, pvl_rect* out, jobject obj, const char* field_nam
     out->top = getValueInt(env, rectObj, "top");
     out->right = getValueInt(env, rectObj, "right");
     out->bottom = getValueInt(env, rectObj, "bottom");
+
+    env->DeleteLocalRef(rectObj);
 }
 
 void getValuePoint(JNIEnv* env, pvl_point* out, jobject obj, const char* field_name) {
-    jobject rectObj = getValueObject(env, obj, field_name, CLASS_POINT);
-    out->x = getValueInt(env, rectObj, "x");
-    out->y = getValueInt(env, rectObj, "y");
+    jobject pointObj = getValueObject(env, obj, field_name, CLASS_POINT);
+    out->x = getValueInt(env, pointObj, "x");
+    out->y = getValueInt(env, pointObj, "y");
+
+    env->DeleteLocalRef(pointObj);
 }
 

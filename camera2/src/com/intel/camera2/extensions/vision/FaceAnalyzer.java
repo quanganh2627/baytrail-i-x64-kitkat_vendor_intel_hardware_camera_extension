@@ -43,6 +43,8 @@ public class FaceAnalyzer {
     private static final String TAG = "FaceAnalyzer";
     public static final int SUCCESS = 0;
     public static final int ERROR = -1;
+    private static final int MAX_FACE_NUM = 30;
+    private static final String KEY_SYSTEM_PROPERTY_DB_PATH = "com.intel.facedb.";
 
     private String mDbPath;
 
@@ -69,6 +71,32 @@ public class FaceAnalyzer {
      */
     public static boolean isSupported() {
         return PVLibraryLoader.isSupported();
+    }
+
+    /**
+     * It writes the database path in System property.
+     * The path will read by Camera HAL3 to load the database on FaceRecognition library.
+     * @Warning
+     * - If user don't want to use the FR features on the camera, it is not necessary to call this method.<br>
+     * - This method must be called before opening the camera.<br>
+     * @param dbPath database file path.
+     * @param cameraId It can receive from the getCameraIdList() of CameraManager.
+     * @return If the returned value is true, writing database path in system property was success.
+     */
+    public static boolean setPropertyDatabasePath(String dbPath, String cameraId) {
+        boolean bRet = false;
+        Log.v(TAG, "cameraId("+cameraId+") dbPath("+dbPath+")");
+        if (cameraId != null && !cameraId.isEmpty()) {
+            String key = KEY_SYSTEM_PROPERTY_DB_PATH + cameraId;
+            try {
+                String oldPath = System.setProperty(key, dbPath);
+                Log.v(TAG, "Key("+key+") new("+dbPath+") old("+oldPath+")");
+                bRet = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return bRet;
     }
 
     /**
@@ -374,6 +402,12 @@ public class FaceAnalyzer {
         if (FaceDetectionJNI.isSupported()) {
             if (mFaceDetectionInstance == 0) {
                 mFaceDetectionInstance = FaceDetectionJNI.create();
+
+                FaceDetectionJNI.Param param = FaceDetectionJNI.getParam(mFaceDetectionInstance);
+                if (param != null) {
+                    param.max_num_faces = MAX_FACE_NUM;
+                    FaceDetectionJNI.setParam(mFaceDetectionInstance, param);
+                }
             }
         }
         return mFaceDetectionInstance;

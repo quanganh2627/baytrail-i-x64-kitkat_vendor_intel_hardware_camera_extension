@@ -52,7 +52,11 @@ jlong SmileDetection_create(JNIEnv* env, jobject thiz)
     pvl_err ret = pvl_smile_detection_create(&config, &sd);
     if (ret == pvl_success) {
         fde = (SmileDetectionEngine*)calloc(1, sizeof(SmileDetectionEngine));
-        fde->smiledetection = sd;
+        if (fde != NULL) {
+            fde->smiledetection = sd;
+        } else {
+            pvl_smile_detection_destroy(sd);
+        }
     }
 
     return (jlong)fde;
@@ -83,7 +87,7 @@ jobjectArray SmileDetection_runInImage(JNIEnv* env, jobject thiz, jlong instance
             pvl_eye_detection_result edResult;
             getEDResult(env, &edResult, jEDResults, i);
 
-            pvl_err ret = pvl_smile_detection_run_in_image(sd, &image, &edResult.left_eye, &edResult.right_eye, &results[i]);
+            pvl_smile_detection_run_in_image(sd, &image, &edResult.left_eye, &edResult.right_eye, &results[i]);
         }
 
         jResult = createJResult(env, results, length);
@@ -128,6 +132,8 @@ void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDRes
     getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
     getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
     out->confidence = getValueInt(env, edResult, STR_ED_confidence);
+
+    env->DeleteLocalRef(edResult);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_smile_detection_result* results, int num)
@@ -142,6 +148,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_smile_detection_result* results, int
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 
@@ -149,18 +156,22 @@ jobject createJConfig(JNIEnv *env, pvl_smile_detection *detection)
 {
     jclass cls = env->FindClass(CLASS_SMILE_DETECTION_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "II)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJVersion(env, &detection->version),
                             detection->default_threshold,
                             detection->rop_tolerance);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJParam(JNIEnv *env, pvl_smile_detection_parameters *param)
 {
     jclass cls = env->FindClass(CLASS_SMILE_DETECTION_PARAM);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(I)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             param->threshold);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getParam(JNIEnv *env, pvl_smile_detection_parameters *param, jobject jParam)
