@@ -29,7 +29,10 @@ final class CPJNI extends CPLibraryLoader {
 
     public static final int RET_ERROR = -1;
 
-    public native static long init();
+    public native static int [] getAvailableAccTarget();
+    public native static int getHdrAccMode(int tartget);
+    public native static int getUllAccMode(int target);
+    public native static long init(int target);
     public native static void uninit(long instance);
 
     public native static int hdrInit(long instance, int width, int height, BlenderOption opt);

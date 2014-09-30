@@ -1,0 +1,18 @@
+LOCAL_PATH:= $(call my-dir)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := host.cpp
+
+LOCAL_C_INCLUDES += $(TARGET_OUT_HEADERS)/acc
+
+LOCAL_CFLAGS += -W -Wall -Werror
+
+LOCAL_STATIC_LIBRARIES :=
+
+LOCAL_SHARED_LIBRARIES := libacc libutils libcutils liblog
+
+LOCAL_MODULE := acc_test
+LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
+LOCAL_MODULE_TAGS := optional
+
+include $(BUILD_EXECUTABLE)

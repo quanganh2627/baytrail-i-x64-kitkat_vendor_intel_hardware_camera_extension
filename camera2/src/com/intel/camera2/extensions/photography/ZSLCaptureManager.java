@@ -129,7 +129,7 @@ public class ZSLCaptureManager {
      * helper method to get the available capture size list for using application ZSL feature
      * 
      * @param context the context of the application
-     * @param cameraId the id of camera want to use
+     * @param cameraId the id of camera wanted for use
      * @param imageFormat the ImageForamt.
      * 
      * @return list of supported capture size for ZSL
@@ -250,7 +250,7 @@ public class ZSLCaptureManager {
 
     /**
      * <p>Close all acquired Image object in the history queue and also close ImageReader object.
-     * Once this method called, user should call setup() again to configure.</p>
+     * Once this method is called, user should call setup() again to configure.</p>
      */
     public void release() {
         Log.v(TAG,"");
@@ -267,7 +267,7 @@ public class ZSLCaptureManager {
     }
 
     /**
-     * <p>Suspend ZSL queue updating and arrived new Image object will be closed automatically.
+     * <p>Suspend ZSL queue updating and the arrived new Image object will be closed automatically.
      * user should call this method prior to directly call getImage() API.</p>
      */
     public synchronized void suspend() {
@@ -443,9 +443,9 @@ public class ZSLCaptureManager {
     }
 
     /**
-     * <p>Take a series of picture using Time-Nudge feature.</p>
-     * <p>this method will provide list of ImageEntry which includes Image object and CaptureResult pair through TimeNudgeCallback interface. 
-     * once all received Image process done, call initialize() API to start ZSL manager again.</p>
+     * <p>Take a series of pictures using Time-Nudge feature.</p>
+     * <p>this method will provide a list of ImageEntry which includes Image object and CaptureResult pair through TimeNudgeCallback interface. 
+     * once all received Image process is done, call initialize() API to start ZSL manager again.</p>
      * 
      * @param callback the callback interface to receive result of Time-Nudge capture.
      */
@@ -540,7 +540,7 @@ public class ZSLCaptureManager {
     }
 
     /**
-     * data class to represent ZSL capture result. it consists with {@link Image image} object, 
+     * data class to represent ZSL capture result. it consists of {@link Image image} object, 
      * {@link CaptureResult result} object, and timestamp in nanoseconds unit which means the time when
      * this instance created.
      */
@@ -918,7 +918,7 @@ public class ZSLCaptureManager {
     private CameraCaptureSession.CaptureCallback mMainCaptureCallback = new CameraCaptureSession.CaptureCallback() {
         @Override
         public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
-            long now = System.nanoTime();
+//            long now = System.nanoTime();
 //        Log.d(TAG, "nano timestamp = " + timestamp + " , now = " + now + " / delta = " + (now - timestamp));
             if (mPreviewCallback != null) {
                 mPreviewCallback.onCaptureStarted(session, request, timestamp, frameNumber);

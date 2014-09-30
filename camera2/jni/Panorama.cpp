@@ -59,10 +59,13 @@ jlong Panorama_create(JNIEnv* env, jobject thiz)
     LOGV("pvl_panorama_create ret(%d)", ret);
     if (ret == pvl_success) {
         pe = (PanoramaEngine*)calloc(1, sizeof(PanoramaEngine));
-        pe->panorama = pano;
-
-        LOGI("calloc pe(0x%08x) pano(0x%08x)", (uint32_t)pe, (uint32_t)pano);
-        LOGI("max(%d) min(%d) max(%d), def(%d)", pano->max_supported_num_images, pano->min_overlapping_ratio, pano->max_overlapping_ratio, pano->default_overlapping_ratio);
+        if (pe != NULL) {
+            pe->panorama = pano;
+            LOGI("calloc pe(0x%08x) pano(0x%08x)", (uint32_t)pe, (uint32_t)pano);
+            LOGI("max(%d) min(%d) max(%d), def(%d)", pano->max_supported_num_images, pano->min_overlapping_ratio, pano->max_overlapping_ratio, pano->default_overlapping_ratio);
+        } else {
+            pvl_panorama_destroy(pano);
+        }
     }
 
     return (jlong)pe;
@@ -114,9 +117,9 @@ void Panorama_stitch(JNIEnv* env, jobject thiz, jlong instance, jobject jIaFrame
         LOGV("pvl_panorama_stitch_one_image - err(%d)", err);
 
         if (isDebug(instance)) {
-            char fileName[255];
-            sprintf(fileName, "%s/pano_%dx%d_%d.yuv", SDCARD_DIR, image.width, image.height, picNum);
-            dump(fileName, &image);
+            //char fileName[255];
+            //sprintf(fileName, "%s/pano_%dx%d_%d.yuv", SDCARD_DIR, image.width, image.height, picNum);
+            //dump(fileName, &image);
         }
     }
 }
@@ -137,9 +140,9 @@ jobject Panorama_run(JNIEnv* env, jobject thiz, jlong instance)
         }
 
         if (isDebug(instance)) {
-            char fileName[255];
-            sprintf(fileName, "%s/pano_%dx%d_result.yuv", SDCARD_DIR, image.width, image.height);
-            dump(fileName, &image);
+            //char fileName[255];
+            //sprintf(fileName, "%s/pano_%dx%d_result.yuv", SDCARD_DIR, image.width, image.height);
+            //dump(fileName, &image);
         }
     }
 
@@ -188,21 +191,25 @@ jobject createJConfig(JNIEnv *env, pvl_panorama *panorama)
 {
     jclass cls = envFindClass(env, CLASS_PANORAMA_CONFIG);
     jmethodID constructor = envGetMethodID(env, cls, "<init>", "(" SIG_PANORAMA_VERSION "IIII)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             createJPanoramaVersion(env, &panorama->version),
                             panorama->max_supported_num_images,
                             panorama->min_overlapping_ratio,
                             panorama->max_overlapping_ratio,
                             panorama->default_overlapping_ratio);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJParam(JNIEnv *env, pvl_panorama_parameters *param)
 {
     jclass cls = envFindClass(env, CLASS_PANORAMA_PARAM);
     jmethodID constructor = envGetMethodID(env, cls, "<init>", "(II)V");
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                             param->overlapping_ratio,
                             (int)param->direction);
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 jobject createJPanoramaVersion(JNIEnv* env, const pvl_version* version)
@@ -210,11 +217,13 @@ jobject createJPanoramaVersion(JNIEnv* env, const pvl_version* version)
     jclass cls = envFindClass(env, CLASS_PANORAMA_VERSION);
     jmethodID constructor = envGetMethodID(env, cls, "<init>", "(III" SIG_STRING ")V");
 
-    return env->NewObject(cls, constructor,
+    jobject ret = env->NewObject(cls, constructor,
                           version->major,
                           version->minor,
                           version->patch,
                           env->NewStringUTF(version->description));
+    env->DeleteLocalRef(cls);
+    return ret;
 }
 
 void getParam(JNIEnv *env, pvl_panorama_parameters *param, jobject jParam)
@@ -257,8 +266,6 @@ int register_jni_Panorama(JNIEnv *env)
 jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     JNIEnv *env = NULL;
-    int ret;
-    int register_count = 0;
 
     if(vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
         LOGE("JNI GetEnv Error");

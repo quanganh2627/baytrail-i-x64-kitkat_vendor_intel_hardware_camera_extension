@@ -44,6 +44,8 @@ void printFrameInfo(ia_frame* pFrame);
 void downscaleFrame(ia_frame* src, ia_frame* dest);
 void debugDumpData(const char* filename, unsigned char* data, int bytes);
 jobject createIaFrame(JNIEnv* env, ia_frame* src);
+void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, const char* field_name, int tgt);
+
 
 #endif  /* __CPUTIL_H__ */
 

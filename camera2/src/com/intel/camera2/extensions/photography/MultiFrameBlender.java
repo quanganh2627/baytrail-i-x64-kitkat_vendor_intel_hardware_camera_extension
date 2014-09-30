@@ -31,8 +31,8 @@ import android.util.LongSparseArray;
 import android.util.Size;
 
 /**
- * <p>this class provide multi-frame blending APIs.</p>
- * <<p>currently, it supports {@link TYPE#HDR HDR} and {@link TYPE#ULL ULL} composition.
+ * <p>this class provides multi-frame blending APIs.</p>
+ * <p>currently, it supports {@link TYPE#HDR HDR} and {@link TYPE#ULL ULL} composition.
  * each composition will be done through adding source frames to call {{@link #addInputFrame(Image, CaptureResult)}
  * for the designated number of frames.</p>
  * <p>the composition process will be performed in the separated thread, and then the result will be delivered through
@@ -54,6 +54,7 @@ public class MultiFrameBlender {
 
     private long mCPInstance;
 
+    private BlenderOption mBlenderOption;
     private TYPE mType = TYPE.NONE;
     private Size mSize;
     private TARGET mTarget;
@@ -80,6 +81,10 @@ public class MultiFrameBlender {
     private final int STATUS_READY = 1;
     private final int STATUS_BLENDING = 2;
     private final int STATUS_BLEND_DONE = 3;
+
+    public static final int ACC_STANDALONE = 0;
+    public static final int ACC_EXTENSION = 1;
+    public static final int ERROR_MODE = 2;
 
     private int mState = STATUS_INVALID;
 
@@ -139,10 +144,41 @@ public class MultiFrameBlender {
         checkAndThrowException();
         return mSize;
     }
+    /**
+     * to query the acc capability,
+     * @ return a int array which indicate the capability of the acc mode
+     */
+    public static int[] getAvailableAccTarget() {
+        int [] arrays = CPJNI.getAvailableAccTarget();
+        return arrays;
+    }
+
+   /**
+     * to query the acc work mode for HDR
+     * @return CPJNI.IPU_STANDALONE or CPJNI.IPU_EXTENSION for ipu work mode
+     */
+    public static int getHdrAccMode(TARGET target) {
+        if (target == TARGET.IPU) {
+            return CPJNI.getHdrAccMode(CPJNI.TARGET_IPU);
+        } else {
+            return CPJNI.getHdrAccMode(CPJNI.TARGET_CPU);
+        }
+    }
 
     /**
+     * to query the acc work mode for HDR
+     * @return CPJNI.IPU_STANDALONE or CPJNI.IPU_EXTENSION for ipu work mode
+     */
+    public static int getUllAccMode(TARGET target) {
+        if (target == TARGET.IPU) {
+            return CPJNI.getUllAccMode(CPJNI.TARGET_IPU);
+        } else {
+            return CPJNI.getUllAccMode(CPJNI.TARGET_CPU);
+        }
+    }
+    /**
      * configure {@link MultiFrameBlender} to the given setting.
-     * if blender already configured with different settings, it will re-initialize blender with the given new settings.
+     * if blender is already configured with different settings, it will re-initialize blender with the given new settings.
      * @param type the type of blender. it could be {@link TYPE#HDR} or {@link TYPE#ULL} now.
      * @param size the size of source frames
      * @param target the target unit of composition run on.
@@ -151,38 +187,22 @@ public class MultiFrameBlender {
      */
     public boolean configureBlender(TYPE type, Size size, TARGET target, int numberOfFrames) {
         // TODO : create proper blender option
-
-        mCPInstance = CPJNI.init();
-        if (mCPInstance == 0) {
-            throw new IllegalArgumentException("fail to create CP instance");
-        }
         mFrameCount = numberOfFrames;
         Log.d(TAG, "type = " + type + ", w = " + size.getWidth() + ", h = " + size.getHeight());
         int ret = IA_ERR_NONE;
         if (type == TYPE.NONE|| size.getWidth() == 0 || size.getHeight() == 0) {
             throw new IllegalArgumentException("Invalid argument(s)!");
         }
-        if (type != mType || !size.equals(mSize) || target != mTarget) {
-            if (mType == TYPE.HDR) {
-                CPJNI.hdrUninit(mCPInstance);
-            } else if (mType == TYPE.ULL) {
-                CPJNI.ullUninit(mCPInstance);
-            }
-        }
-        BlenderOption option;
+
         if (target == TARGET.IPU) {
-            option = new BlenderOption(0, CPJNI.TARGET_IPU);
+            mBlenderOption = new BlenderOption(0, CPJNI.TARGET_IPU);
         } else {
-            option = new BlenderOption(0, CPJNI.TARGET_CPU);
+            mBlenderOption = new BlenderOption(0, CPJNI.TARGET_CPU);
         }
         mTarget = target;
         mType = type;
         mSize = size;
-        if (mType == TYPE.HDR) {
-            ret = CPJNI.hdrInit(mCPInstance, size.getWidth(), size.getHeight(), option);
-        } else if (mType == TYPE.ULL) {
-            ret = CPJNI.ullInit(mCPInstance, size.getWidth(), size.getHeight(), option);
-        }
+
         if (mFrames == null) {
             mFrames = new LongSparseArray<IaFrame>();
         }
@@ -209,6 +229,7 @@ public class MultiFrameBlender {
         mFrames.clear();
         mMetadatas.clear();
         mState = STATUS_INITILIZED;
+        mConvertedCount = 0;
     }
 
     /**
@@ -259,7 +280,7 @@ public class MultiFrameBlender {
      * blend all added frames into the configured {@link TYPE} of output.
      * result will be delivered through {@link MultiFrameBlendCallback}
      */
-    private void blend() {
+    public void blend() {
         checkAndThrowException();
         if (mState != STATUS_READY || mMetadatas.size() != mFrames.size()) {
             Log.e(TAG, "blender is not in ready state");
@@ -272,6 +293,10 @@ public class MultiFrameBlender {
         Thread blendThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                Size size = mSize;
+                TYPE type = mType;
+                BlenderOption blenderOption = mBlenderOption;
+
                 IaFrame[] frames = new IaFrame[mFrames.size()];
                 for (int i = 0 ; i < mFrames.size() ; i++) {
                     frames[i] = mFrames.valueAt(i);
@@ -279,11 +304,24 @@ public class MultiFrameBlender {
                 IaFrame outFrame = null;
                 int ret = 0;
                 long time = System.currentTimeMillis();
-                if (mType == TYPE.HDR) {
+
+                /* Create & Initialize CP instance */
+                mCPInstance = CPJNI.init(mTarget.ordinal());
+                if (mCPInstance == 0) {
+                    throw new IllegalArgumentException("fail to create CP instance");
+                }
+                if (type == TYPE.HDR) {
+                    ret = CPJNI.hdrInit(mCPInstance, size.getWidth(), size.getHeight(), blenderOption);
+                } else if (type == TYPE.ULL) {
+                    ret = CPJNI.ullInit(mCPInstance, size.getWidth(), size.getHeight(), blenderOption);
+                }
+
+                /* Blend images. */
+                if (type == TYPE.HDR) {
                     // TODO : calculate and create HdrOption using metadata 
                     HdrOption cfg = new HdrOption(0, 0);
                     outFrame = CPJNI.hdrCompose(mCPInstance, frames, cfg);
-                } else if (mType == TYPE.ULL) {
+                } else if (type == TYPE.ULL) {
                     // TODO : calculate and create UllOption using metadata
                     CaptureResult metadata = null;
                     if (mMetadatas.size() > 0) {
@@ -317,6 +355,17 @@ public class MultiFrameBlender {
                     UllOption cfg = new UllOption(analogGain, digitalGain, aperture, exposureTimeUs, iso, totalExposure, zoomFactor, enabledNdFilter);
                     outFrame = CPJNI.ullCompose(mCPInstance, frames, cfg);
                 }
+
+                /* Release CP instance. */
+                if (type == TYPE.HDR) {
+                    CPJNI.hdrUninit(mCPInstance);
+                } else if (type == TYPE.ULL) {
+                    CPJNI.ullUninit(mCPInstance);
+                }
+                CPJNI.uninit(mCPInstance);
+                mCPInstance = 0;
+
+                /* Notify to finish blending. */
                 Log.d(TAG, "elapsed time for composition = " + (System.currentTimeMillis() - time));
                 mState = STATUS_BLEND_DONE;
                 if (outFrame != null) {
@@ -358,13 +407,6 @@ public class MultiFrameBlender {
      */
     public void release() {
         flush();
-        if (mType == TYPE.HDR) {
-            CPJNI.hdrUninit(mCPInstance);
-        } else if (mType == TYPE.ULL) {
-            CPJNI.ullUninit(mCPInstance);
-        }
-        CPJNI.uninit(mCPInstance);
-        mCPInstance = 0;
 
         mState = STATUS_INVALID;
         mType = TYPE.NONE;
@@ -388,7 +430,7 @@ public class MultiFrameBlender {
      * callback interface to notify {@link MultiFrameBlender blender's} event.
      */
     public interface MultiFrameBlendCallback {
-        public void onAddedFrame(Image image, CaptureResult metadata);
+        public void onAddedFrame(Image image, CaptureResult metadata, int addedFrameCount);
         public void onBlendCompleted(YuvImage image);
         public void onBlendFailed(int error);
         public void onBlendAborted();
@@ -412,15 +454,13 @@ public class MultiFrameBlender {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_ADDED_FRAME: {
-                    if (mCallback != null) {
-                        long key = mMetadatas.keyAt(msg.arg1);
-                        mCallback.onAddedFrame((Image)msg.obj, mMetadatas.get(key));
-                    }
                     mConvertedCount++;
                     if (mConvertedCount == mFrameCount) {
                         mState = STATUS_READY;
-                        mConvertedCount = 0;
-                        blend();
+                    }
+                    if (mCallback != null) {
+                        long key = mMetadatas.keyAt(msg.arg1);
+                        mCallback.onAddedFrame((Image)msg.obj, mMetadatas.get(key), mConvertedCount);
                     }
                     break;
                 }

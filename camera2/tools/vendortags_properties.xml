@@ -323,16 +323,6 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </details>
               </entry>
 
-              <entry name="availablePanorama" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.panoramaMode</description>
-                <details>NO is always supported.
-
-                         Yes means the device supports (TO BE DEFINED)
-                </details>
-              </entry>
             </namespace>
           </static>
         </section>
@@ -398,28 +388,28 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
               </entry>
 
               <entry name="brightness" type="int32" visibility="public" >
-                <range>[-10,10]; 10 is maximum brightening, 0 is neutral</range>
-                <details> value of brightness </details>
+                <range>[-10,10]</range>
+                <details> value of brightness, its range is [-10, 10]; 10 is maximum brightness, 0 is neutral. </details>
               </entry>
 
               <entry name="contrast" type="int32" visibility="public" >
-                <range>[-10,10]; 10 is maximum contrast, 0 is neutral</range>
-                <details> value of contrast</details>
+                <range>[-10,10]</range>
+                <details> value of contrast, its range is [-10, 10]; 10 is maximum contrast, 0 is neutral. </details>
               </entry>
 
               <entry name="saturation" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum saturation, 0 is neutral</range>
-                <details> value of saturation</details>
+                <range>[-10,10]</range>
+                <details> value of saturation, its range is [-10, 10]; 10 is maximum saturation, 0 is neutral. </details>
               </entry>
 
               <entry name="hue" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum hue, 0 is neutral</range>
-                <details> value of hue</details>
+                <range>[-10,10]</range>
+                <details> value of hue, its range is [-10, 10]; 10 is maximum hue, 0 is neutral. </details>
               </entry>
 
               <entry name="sharpness" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum sharpening, 0 is neutral</range>
-                <details> value of sharpness</details>
+                <range>[-10,10]</range>
+                <details> value of sharpness, its range is [-10, 10]; 10 is maximum sharpness, 0 is neutral. </details>
               </entry>
           </controls>
 

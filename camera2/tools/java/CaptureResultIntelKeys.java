@@ -186,7 +186,8 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>Control of Dual camera.</p>
-     * <p>When ON, the camera HAL can support dual camera mode.  </p>
+     * <p>When ON, the camera HAL can support dual camera mode.<br />
+     * </p>
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_OFF
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_ON
      */
@@ -212,31 +213,31 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.imageEnhance.colorEffect", int.class);
 
     /**
-     * <p>value of brightness </p>
+     * <p>value of brightness, its range is [-10, 10]; 10 is maximum brightness, 0 is neutral. </p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_BRIGHTNESS =
             new Key<Integer>("com.intel.imageEnhance.brightness", int.class);
 
     /**
-     * <p>value of contrast</p>
+     * <p>value of contrast, its range is [-10, 10]; 10 is maximum contrast, 0 is neutral. </p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_CONTRAST =
             new Key<Integer>("com.intel.imageEnhance.contrast", int.class);
 
     /**
-     * <p>value of saturation</p>
+     * <p>value of saturation, its range is [-10, 10]; 10 is maximum saturation, 0 is neutral. </p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_SATURATION =
             new Key<Integer>("com.intel.imageEnhance.saturation", int.class);
 
     /**
-     * <p>value of hue</p>
+     * <p>value of hue, its range is [-10, 10]; 10 is maximum hue, 0 is neutral. </p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_HUE =
             new Key<Integer>("com.intel.imageEnhance.hue", int.class);
 
     /**
-     * <p>value of sharpness</p>
+     * <p>value of sharpness, its range is [-10, 10]; 10 is maximum sharpness, 0 is neutral. </p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_SHARPNESS =
             new Key<Integer>("com.intel.imageEnhance.sharpness", int.class);

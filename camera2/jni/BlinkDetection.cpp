@@ -46,13 +46,17 @@ jlong BlinkDetection_create(JNIEnv* env, jobject thiz)
     pvl_config config = {{0, 0, 0, NULL}, {pvl_false, pvl_false, pvl_false, pvl_false, NULL, NULL}, {NULL, NULL, NULL, NULL, NULL}};
 
     BlinkDetectionEngine *fde = NULL;
-    pvl_blink_detection *bd = NULL;//(pvl_blink_detection*)calloc(1, sizeof(pvl_blink_detection));
+    pvl_blink_detection *bd = NULL;
 
     pvl_blink_detection_get_default_config(&config);
     pvl_err ret = pvl_blink_detection_create(&config, &bd);
     if (ret == pvl_success) {
         fde = (BlinkDetectionEngine*)calloc(1, sizeof(BlinkDetectionEngine));
-        fde->blinkdetection = bd;
+        if (fde != NULL) {
+            fde->blinkdetection = bd;
+        } else {
+            pvl_blink_detection_destroy(bd);
+        }
     }
 
     return (jlong)fde;
@@ -84,6 +88,9 @@ jobjectArray BlinkDetection_runInImage(JNIEnv* env, jobject thiz, jlong instance
             getEDResult(env, &edResult, jEDResults, i);
 
             pvl_err ret = pvl_blink_detection_run(bd, &image, &edResult.left_eye, &edResult.right_eye, &results[i]);
+            if (ret < pvl_success) {
+                LOGE("[%d/%d] ret(%d)", i, length, ret);
+            }
         }
 
         jResult = createJResult(env, results, length);
@@ -128,24 +135,30 @@ void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDRes
     getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
     getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
     out->confidence = getValueInt(env, edResult, STR_ED_confidence);
+
+    env->DeleteLocalRef(edResult);
 }
 
 jobject createJConfig(JNIEnv *env, pvl_blink_detection *detection)
 {
     jclass cls = env->FindClass(CLASS_BLINK_DETECTION_CONFIG);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "II)V");
-    return env->NewObject(cls, constructor,
+    jobject retObj = env->NewObject(cls, constructor,
                             createJVersion(env, &detection->version),
                             detection->default_threshold,
                             detection->rop_tolerance);
+    env->DeleteLocalRef(cls);
+    return retObj;
 }
 
 jobject createJParam(JNIEnv *env, pvl_blink_detection_parameters *param)
 {
     jclass cls = env->FindClass(CLASS_BLINK_DETECTION_PARAM);
     jmethodID constructor = env->GetMethodID(cls, "<init>", "(I)V");
-    return env->NewObject(cls, constructor,
+    jobject retObj = env->NewObject(cls, constructor,
                             param->threshold);
+    env->DeleteLocalRef(cls);
+    return retObj;
 }
 
 void getParam(JNIEnv *env, pvl_blink_detection_parameters *param, jobject jParam)
@@ -169,6 +182,7 @@ jobjectArray createJResult(JNIEnv* env, pvl_blink_detection_result* results, int
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
+    env->DeleteLocalRef(cls);
     return retArray;
 }
 

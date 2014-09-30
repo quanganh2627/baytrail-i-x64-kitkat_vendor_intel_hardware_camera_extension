@@ -111,16 +111,16 @@ public class FaceData {
         public static final int STATE_OPEN = 0;
         public static final int STATE_CLOSE = 1;
 
-        /** The blink score on the left eye in range between 0 and 100, where 0 means wide opened eye and 100 means fully closed eye. */
+        /** The blink score on the left eye in a range of 0 to 100, where 0 means wide-open eye and 100 means fully closed eye. */
         public int leftEyeScore;
 
-        /** The blink state on the left eye. */
+        /** The blink state of the left eye. */
         public int leftEyeState;
 
-        /** The blink score on the right eye in range between 0 and 100, where 0 means wide opened eye and 100 means fully closed eye. */
+        /** The blink score on the right eye in a range of 0 to 100, where 0 means wide-open eye and 100 means fully closed eye. */
         public int rightEyeScore;
 
-        /** The blink state on the right eye. */
+        /** The blink state of the right eye. */
         public int rightEyeState;
 
         public BlinkInfo(int left_score, int left_state, int right_score, int right_state) {
@@ -140,7 +140,7 @@ public class FaceData {
      * The result info class of face recognition.
      */
     public static class RecognitionInfo {
-        /** It's default person id which the recognition library couldn't search the person in database. */
+        /** It is the default person id that is used when the recognition library cannot find a person in the database. */
         public static final int UNKOWN_PERSON_ID = -10000;
 
         /** The estimated similarity between the input face and the faces in the database. The biggest value will be assigned. */
@@ -149,7 +149,7 @@ public class FaceData {
         public long faceId;
         /** The unique id of the person associated with the face data. The valid person will have positive person_id (i.e. person_id > 0). */
         public int personId;
-        /** The timestamp when the face data was generated. */
+        /** The timestamp of when the face data was generated. */
         public long timeStamp;
         /** The environmental information of the face. Reserved for future use. */
         public int condition;

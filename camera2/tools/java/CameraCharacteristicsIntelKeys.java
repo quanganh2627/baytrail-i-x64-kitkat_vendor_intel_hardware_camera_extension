@@ -59,14 +59,6 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
             new Key<int[]>("com.intel.cv.info.availableObjectTrack", int[].class);
 
     /**
-     * <p>List of enums from com.intel.cv.panoramaMode</p>
-     * <p>NO is always supported.</p>
-     * <p>Yes means the device supports (TO BE DEFINED)</p>
-     */
-    public static final Key<int[]> INTEL_CV_INFO_AVAILABLE_PANORAMA =
-            new Key<int[]>("com.intel.cv.info.availablePanorama", int[].class);
-
-    /**
      * <p>List of enums from com.intel.device.dualCameraMode</p>
      * <p>OFF Dual camera mode is off. ON Dual camera mode is on.</p>
      */

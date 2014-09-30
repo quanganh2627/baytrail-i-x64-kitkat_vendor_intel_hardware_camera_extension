@@ -23,8 +23,6 @@
 jint JNI_OnLoad(JavaVM *vm, void *reserved)
 {
     JNIEnv *env = NULL;
-    int ret;
-    int register_count = 0;
 
     if(vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
         LOGE("JNI GetEnv Error");
@@ -38,7 +36,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
     REG_METHOD(register_jni_SmileDetection);
     REG_METHOD(register_jni_BlinkDetection);
     REG_METHOD(register_jni_FaceRecognition);
-    //REG_METHOD(register_jni_FaceRecognitionWithDb);
+    REG_METHOD(register_jni_FaceRecognitionWithDb);
 
     return JNI_VERSION_1_6;
 }
