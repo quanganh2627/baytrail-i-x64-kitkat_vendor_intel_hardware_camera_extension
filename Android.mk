@@ -1,5 +1,14 @@
-ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))
 LOCAL_PATH:= $(call my-dir)
+################# COPY_HEADERS #######################
+include $(CLEAR_VARS)
+LOCAL_COPY_HEADERS_TO := cameralibs
+LOCAL_COPY_HEADERS := \
+	include/intel_camera_extensions.h \
+	include/android_hardware_Camera.h \
+	libacc/Ilibacc.h
+include $(BUILD_COPY_HEADERS)
+
+
 
 ################# MAKE_LIB ############################
 include $(CLEAR_VARS)
@@ -40,14 +49,6 @@ LOCAL_SRC_FILES := \
 	com/intel/camera/extensions/IntelCamera.java
 include $(BUILD_JAVA_LIBRARY)
 
-################# COPY_HEADERS #######################
-include $(CLEAR_VARS)
-LOCAL_COPY_HEADERS_TO := cameralibs
-LOCAL_COPY_HEADERS := \
-	include/intel_camera_extensions.h \
-	libacc/Ilibacc.h
-include $(BUILD_COPY_HEADERS)
-
 ################# burst capture sound ################
 include $(CLEAR_VARS)
 LOCAL_MODULE := fast_click.pcm
@@ -58,4 +59,3 @@ LOCAL_MODULE_OWNER := intel
 LOCAL_MODULE_PATH := $(TARGET_OUT)/media/audio/ui
 LOCAL_SRC_FILES := data/sounds/effects/$(LOCAL_MODULE)
 include $(BUILD_PREBUILT)
-endif #ifneq (,$(wildcard frameworks/base/core/jni/android_hardware_Camera.h))

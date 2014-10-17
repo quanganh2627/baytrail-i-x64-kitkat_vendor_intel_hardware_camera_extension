@@ -18,8 +18,8 @@ enum {
     STANDALONE_UNLOAD = 4
 };
 
-#define LOG1 if(0) LOGD
-#define LOG2 if(0) LOGD
+#define LOG1 if(0) ALOGD
+#define LOG2 if(0) ALOGD
 
 CameraAcc::CameraAcc(sp<Camera> cam)   :
     Thread(true) // callbacks may call into java
@@ -33,7 +33,7 @@ CameraAcc::CameraAcc(sp<Camera> cam)   :
 
     if (cam == NULL)
     {
-        LOGE("Could not connect to camera service!");
+        ALOGE("Could not connect to camera service!");
         return;
     }
 
@@ -121,7 +121,7 @@ status_t CameraAcc::acc_upload_fw(fw_info &fw)
         }
     }
     if (idx == -1) {
-        LOGE("Firmware data not in buffer allocated by us!");
+        ALOGE("Firmware data not in buffer allocated by us!");
         return UNKNOWN_ERROR;
     }
 
@@ -170,7 +170,7 @@ status_t CameraAcc::acc_unload_standalone()
     LOG1("@%s", __FUNCTION__);
 
     if (mStandaloneMode == false) {
-        LOGW("Not in standalone mode!");
+        ALOGW("Not in standalone mode!");
         return NO_ERROR;
     }
 
@@ -182,7 +182,7 @@ void* CameraAcc::host_alloc(int size)
     LOG1("@%s", __FUNCTION__);
 
     if (mArgumentBuffers.size() >= MAX_NUMBER_ARGUMENT_BUFFERS) {
-        LOGE("Cannot allocate more buffers!");
+        ALOGE("Cannot allocate more buffers!");
         return NULL;
     }
 
@@ -219,7 +219,7 @@ status_t CameraAcc::host_free(host_ptr ptr)
         }
     }
     if (idx == -1) {
-        LOGE("This buffer has not been allocated by us!");
+        ALOGE("This buffer has not been allocated by us!");
         return UNKNOWN_ERROR;
     }
 
@@ -243,7 +243,7 @@ status_t CameraAcc::acc_map(host_ptr in, isp_ptr &out)
         }
     }
     if (idx == -1) {
-        LOGE("This buffer has not been allocated by us!");
+        ALOGE("This buffer has not been allocated by us!");
         return UNKNOWN_ERROR;
     }
 
@@ -277,7 +277,7 @@ status_t CameraAcc::acc_sendarg(isp_ptr arg)
         }
     }
     if (idx == -1) {
-        LOGE("This buffer has not been mapped!");
+        ALOGE("This buffer has not been mapped!");
         return UNKNOWN_ERROR;
     }
 
@@ -298,7 +298,7 @@ status_t CameraAcc::acc_unmap(isp_ptr p)
         }
     }
     if (idx == -1) {
-        LOGW("This buffer has not been mapped!");
+        ALOGW("This buffer has not been mapped!");
         return NO_ERROR;
     }
 
@@ -358,7 +358,7 @@ status_t CameraAcc::waitForAndExecuteMessage()
             break;
     }
     if (status != NO_ERROR) {
-        LOGE("operation failed, ID = %d, status = %d", msg.id, status);
+        ALOGE("operation failed, ID = %d, status = %d", msg.id, status);
     }
     return status;
 }
@@ -467,7 +467,7 @@ void CameraAcc::postPreviewBuffer(sp<IMemoryHeap> heap, uint8_t *heapBase, size_
     status_t status = mCamera->sendCommand(CAMERA_CMD_ACC_RETURN_BUFFER, frameCounter, 0);
 
     if (status != NO_ERROR)
-        LOGE("Could not return buffer");
+        ALOGE("Could not return buffer");
 }
 
 void CameraAcc::postMetadataBuffer(sp<IMemoryHeap> heap, uint8_t *heapBase, size_t size, ssize_t offset)
@@ -483,7 +483,7 @@ void CameraAcc::postMetadataBuffer(sp<IMemoryHeap> heap, uint8_t *heapBase, size
 bool CameraAcc::dumpImage2File(const void* data, const unsigned int width_padded, unsigned int width,
                           unsigned int height, const char* name)
 {
-    LOGD("@%s", __FUNCTION__);
+    ALOGD("@%s", __FUNCTION__);
     char filename[80];
     static unsigned int count = 0;
     size_t bytes = 0;
@@ -503,17 +503,17 @@ bool CameraAcc::dumpImage2File(const void* data, const unsigned int width_padded
              height, count, name);
     strncat(rawdpp, filename, strlen(filename));
 
-    LOGD("Will write image to %s", rawdpp);
+    ALOGD("Will write image to %s", rawdpp);
 
     fp = fopen (rawdpp, "w+");
     if (fp == NULL) {
-        LOGE("open file %s failed %s", rawdpp, strerror(errno));
+        ALOGE("open file %s failed %s", rawdpp, strerror(errno));
         return false;
     }
 
     bytes = fwrite(data, size, 1, fp);
     if (bytes < (size_t)size)
-        LOGW("Write less raw bytes to %s: %d, %d", filename, size, bytes);
+        ALOGW("Write less raw bytes to %s: %d, %d", filename, size, bytes);
 
     count++;
 
