@@ -266,7 +266,6 @@ public class IntelCamera {
 
     private native final void native_setup(Object camera_this, Camera cameraDevice);
     private native final void native_release();
-    private native final void native_setPriority(int cameraId, boolean lowPriority);
     private native final boolean native_enableIntelCamera();
     private native final void native_startSceneDetection();
     private native final void native_stopSceneDetection();
@@ -297,23 +296,6 @@ public class IntelCamera {
 
     static {
         System.loadLibrary("intelcamera_jni");
-    }
-
-    /* When setting lowPriority to true:
-         - No existing open cameras: A low priority camera instance is created
-         - One or more open cameras: The CameraServicelayer will reject the
-                                     request to open a new camera instance
-     A running low priority camera instance can be killed by the
-     CameraServiceLayer if a normal priority camera instance is being opened.
-     The low priority request is (for each cameraId) associated with the
-     process ID of the process calling IntelCamera(Int, boolean) and stored
-     inside the CameraServiceLayer. A stored request can be cleared again by
-     setting lowPriority to false.
-     */
-    public IntelCamera(int cameraId, boolean lowPriority) {
-        native_setPriority(cameraId, lowPriority);
-        mCameraDevice = android.hardware.Camera.open(cameraId);
-        init();
     }
 
     public IntelCamera(int cameraId) {
