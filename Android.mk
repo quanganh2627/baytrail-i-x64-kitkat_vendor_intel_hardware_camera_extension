@@ -1,4 +1,6 @@
 LOCAL_PATH:= $(call my-dir)
+include $(LOCAL_PATH)/Camera2Android.mk
+
 ################# COPY_HEADERS #######################
 include $(CLEAR_VARS)
 LOCAL_COPY_HEADERS_TO := cameralibs
