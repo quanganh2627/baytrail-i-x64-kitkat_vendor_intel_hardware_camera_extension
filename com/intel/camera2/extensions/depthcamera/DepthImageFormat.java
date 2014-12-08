@@ -16,7 +16,7 @@ public class DepthImageFormat extends ImageFormat {
     /**
      * Depth Z format used for depth images, stored in 16 bit words. 
      */
-    public static final int Z16 = 0x1F0;
+    public static final int Z16 = 0x111;
     
     /**
      * Y12 is a YUV planar format comprised of a WxH Y plane only, with each pixel
@@ -35,7 +35,7 @@ public class DepthImageFormat extends ImageFormat {
             case NV21:
             case YUV_420_888:
             case RAW_SENSOR:
-            case BAYER_RGGB:
+   //         case BAYER_RGGB:
             	return ImageFormat.getBitsPerPixel(format);
             case Y12:
             	return 16;
