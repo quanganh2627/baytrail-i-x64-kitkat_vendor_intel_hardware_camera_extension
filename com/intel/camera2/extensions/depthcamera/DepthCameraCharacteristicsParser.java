@@ -12,14 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraCharacteristics.Key;
 import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CameraMetadata.Key;
-import android.hardware.camera2.Size;
+import android.util.Size;
 
 /*
 	Set of static helper functions to access depth camera charecteristics 
 */	
-public class DepthCameraCharacteristics
+public class DepthCameraCharacteristicsParser
 {
 	
 	//// Auxiliary streams Description strings
@@ -49,15 +49,17 @@ public class DepthCameraCharacteristics
     private static ArrayList<Integer> getNodeIndex(CameraCharacteristics c,int nodeId)
     {
         List<Key<?> > keys = c.getKeys();
-        if ( keys.contains(CameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES) )
+        if ( keys.contains(DS4CameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES) )
         {
-            int[] nodes = c.get(CameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES);
+
+            int[] nodes = c.get(DS4CameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES);
             ArrayList<Integer> res = new ArrayList<Integer>();
             for ( int i=0; i< nodes.length; i++)
                 if ( nodes[i] == nodeId )
                     res.add(i);
             return res.size() > 0 ? res : null;
         }
+
         return null;
     }
     /**
@@ -69,13 +71,13 @@ public class DepthCameraCharacteristics
         List<Key<?> > keys = c.getKeys();
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
         if ( keys.contains(CameraCharacteristics.SCALER_AVAILABLE_PROCESSED_SIZES) 
-            && keys.contains(CameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING) && nodeIdx != null)
+            && keys.contains(DS4CameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING) && nodeIdx != null)
         {
             
             ArrayList<Size> res = new ArrayList<Size>();
 
             Size[] sizes = c.get(CameraCharacteristics.SCALER_AVAILABLE_PROCESSED_SIZES);
-            byte[] mappings = c.get(CameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING);
+            byte[] mappings = c.get(DS4CameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING);
 
             if ( sizes.length != mappings.length )
                 throw new IllegalStateException(" availableSizes array size doesn't match the nodesMapping array size!!!");
@@ -115,13 +117,13 @@ public class DepthCameraCharacteristics
         List<Key<?> > keys = c.getKeys();
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
         if ( keys.contains(CameraCharacteristics.SCALER_AVAILABLE_FORMATS) 
-            && keys.contains(CameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING) && nodeIdx != null)
+            && keys.contains(DS4CameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING) && nodeIdx != null)
         {
             
             ArrayList<Integer> res = new ArrayList<Integer>();
 
             int[] formats = c.get(CameraCharacteristics.SCALER_AVAILABLE_FORMATS);
-            byte[] mappings = c.get(CameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING);
+            byte[] mappings = c.get(DS4CameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING);
 
             if ( formats.length != mappings.length )
                 throw new IllegalStateException(" availableFormats array size doesn't match the nodesMapping array size!!!");
@@ -146,7 +148,7 @@ public class DepthCameraCharacteristics
 	 * @return
 	 */
 	public static boolean isDepthCamera(CameraCharacteristics c) {
-        if ( getNodeIndex(c,CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH) != null )
+        if ( getNodeIndex(c,DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH) != null )
             return true;
 		return false;
 	}
@@ -158,21 +160,24 @@ public class DepthCameraCharacteristics
 	 */
 	public static String getDepthCameraModuleName(CameraCharacteristics c)
 	{
-        List<Key<?> > keys = c.getKeys();
-        if ( keys.contains(CameraCharacteristics.DEPTHCOMMON_MODULE_ID) )
+        try
         {
-            int mid = c.get(CameraCharacteristics.DEPTHCOMMON_MODULE_ID);
+            int mid = c.get(DS4CameraCharacteristics.DEPTHCOMMON_MODULE_ID);
             switch ( mid )
             {
-                case CameraMetadata.DEPTHCOMMON_MODULE_ID_IVCAM: 
+                case DS4CameraMetadata.DEPTHCOMMON_MODULE_ID_IVCAM: 
                     return DEPTH_CAMERA_IVCAM_MODULE_NAME;
-                case CameraMetadata.DEPTHCOMMON_MODULE_ID_DS:
+                case DS4CameraMetadata.DEPTHCOMMON_MODULE_ID_DS:
                     return DEPTH_CAMERA_DS_MODULE_NAME;
                 default:
                     return null;
             }
         }
-		return null;
+        catch ( IllegalArgumentException e)
+        {
+            return null;
+        }
+
         
 	}
 	/**
@@ -181,7 +186,7 @@ public class DepthCameraCharacteristics
 	 * @return
 	 */
     public static int[] getSupportedDepthFormats(CameraCharacteristics c) {
-        return  getSupportedNodeFormats(c, CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH);
+        return  getSupportedNodeFormats(c, DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH);
 	}
     
     /**
@@ -191,9 +196,13 @@ public class DepthCameraCharacteristics
      */
     public static byte[] getSupportedDepthUnits(CameraCharacteristics c)
     {
-        if ( c.getKeys().contains(CameraCharacteristics.DEPTHCOMMON_AVAILABLE_DEPTH_UNITS))
-            return c.get(CameraCharacteristics.DEPTHCOMMON_AVAILABLE_DEPTH_UNITS);
-    	return null;
+        try {
+            return c.get(DS4CameraCharacteristics.DEPTHCOMMON_AVAILABLE_DEPTH_UNITS);
+        }
+        catch ( IllegalArgumentException e)
+        {
+            return null;
+        }
     }
     /**
      * Returns list of supported auxiliary stream ids
@@ -224,9 +233,9 @@ public class DepthCameraCharacteristics
     {
         switch ( auxId )
         {
-           case CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT:
+           case DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT:
             	return AUX_STREAM_LEFT_RIGHT_DESC;
-            case CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_CENTER:
+            case DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_CENTER:
                 return AUX_STREAM_CENTER_DESC;
             default:
                 return "Unknown";
@@ -249,7 +258,7 @@ public class DepthCameraCharacteristics
      * @return
      */
     public static int[] getSupportedColorFormats(CameraCharacteristics c) {
-		return  getSupportedNodeFormats(c, CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_COLOR);
+		return  getSupportedNodeFormats(c, DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_COLOR);
 	}
     
     /**
@@ -258,7 +267,7 @@ public class DepthCameraCharacteristics
      * @return
      */
     public static Size[] getSupportedDepthAuxSizes(CameraCharacteristics c) {
-		return getSupportedNodeSizes(c, CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH);
+		return getSupportedNodeSizes(c, DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_DEPTH);
 	} 
     /**
      * Returns List of the supported Color Stream sizes
@@ -266,7 +275,7 @@ public class DepthCameraCharacteristics
      * @return
      */
     public static Size[] getSupportedColorSizes(CameraCharacteristics c) {
-		return getSupportedNodeSizes(c, CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_COLOR);
+		return getSupportedNodeSizes(c, DS4CameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_COLOR);
 	} 
     
     /**
@@ -302,12 +311,13 @@ public class DepthCameraCharacteristics
     //TODO change to return the struct
 	public static byte[] getCalibrationData(CameraCharacteristics c, DepthCameraSetup.DepthOutputSettings s)
     {
-		 List<Key<?> > keys = c.getKeys();
-		if ( keys.contains(CameraCharacteristics.DEPTHCOMMON_CALIBRATION_DATA) )
-		{
-			return c.get(CameraCharacteristics.DEPTHCOMMON_CALIBRATION_DATA);
-		}
-		return null;
+		try {
+            return c.get(DS4CameraCharacteristics.DEPTHCOMMON_CALIBRATION_DATA);
+        }
+        catch ( IllegalArgumentException e)
+        {
+            return null;
+        }
     }
 	
 }
