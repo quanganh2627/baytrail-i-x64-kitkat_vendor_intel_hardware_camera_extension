@@ -147,8 +147,8 @@ public:
     void setCpuConsumer(const sp<CpuConsumer>& consumer) { mConsumer = consumer; }
     CpuConsumer* getCpuConsumer() { return mConsumer.get(); }
 
-    void setBufferQueue(const sp<BufferQueue>& bq) { mBufferQueue = bq; }
-    BufferQueue* getBufferQueue() { return mBufferQueue.get(); }
+    void setProducer(const sp<IGraphicBufferProducer>& producer) { mProducer = producer; }
+    IGraphicBufferProducer* getProducer() { return mProducer.get(); }
 
     void setFrameSync(const sp<JNIDepthCameraFrameSync>& frameSync) { mFrameSync = frameSync; }
     void setBufferFormat(int format) { mFormat = format; }
@@ -209,7 +209,7 @@ private:
 
     List<CpuConsumer::LockedBuffer*> mBuffers;
     sp<CpuConsumer> mConsumer;
-    sp<BufferQueue> mBufferQueue;
+    sp<IGraphicBufferProducer> mProducer;
     sp<JNIDepthCameraFrameSync> mFrameSync;
 
     int mFormat;
@@ -829,7 +829,7 @@ static JNIDepthCameraImageReaderContext* DepthCameraImageReader_getContext(JNIEn
     return ctx;
 }
 
-static BufferQueue* DepthCameraImageReader_getBufferQueue(JNIEnv* env, jobject thiz, int imgType)
+static IGraphicBufferProducer* DepthCameraImageReader_getProducer(JNIEnv* env, jobject thiz, int imgType)
 {
 	ALOGV("%s",__FUNCTION__);
     JNIDepthCameraImageReaderContext* const ctx = DepthCameraImageReader_getContext(env, thiz, imgType);
@@ -837,7 +837,7 @@ static BufferQueue* DepthCameraImageReader_getBufferQueue(JNIEnv* env, jobject t
         jniThrowRuntimeException(env, "ImageReaderContext is not initialized");
         return NULL;
     }
-    return ctx->getBufferQueue();
+    return ctx->getProducer();
 }
 
 static void DepthCameraImageReader_setNativeContext(JNIEnv* env,
@@ -1353,8 +1353,10 @@ static void DepthCameraImageReader_init(JNIEnv* env, jobject thiz,
 
     nativeFormat = Image_getPixelFormat(env, format);
 
-    sp<BufferQueue> bq = new BufferQueue();
-    sp<CpuConsumer> consumer = new CpuConsumer(bq, maxImages,
+    sp<IGraphicBufferProducer> gbProducer;
+    sp<IGraphicBufferConsumer> gbConsumer;
+    BufferQueue::createBufferQueue(&gbProducer, &gbConsumer);
+    sp<CpuConsumer> consumer = new CpuConsumer(gbConsumer, maxImages,
                                                /*controlledByApp*/true);
     if (consumer == NULL) {
         jniThrowRuntimeException(env, "Failed to allocate native CpuConsumer");
@@ -1378,7 +1380,7 @@ static void DepthCameraImageReader_init(JNIEnv* env, jobject thiz,
     ctx->setFrameSync(frameSync);
     frameSync->addImageType(imgType, ctx);
     ctx->setCpuConsumer(consumer);
-    ctx->setBufferQueue(bq);
+    ctx->setProducer(gbProducer);
     consumer->setFrameAvailableListener(ctx);
     DepthCameraImageReader_setNativeContext(env, thiz, ctx, imgType);
     ctx->setBufferFormat(nativeFormat);
@@ -1486,6 +1488,7 @@ static jint DepthCameraImageReader_imageSetup(JNIEnv* env, jobject thiz,
     }
     status_t res = consumer->lockNextBuffer(buffer);
     if (res != NO_ERROR) {
+        ctx->returnLockedBuffer(buffer);
         if (res != BAD_VALUE /*no buffers*/) {
             if (res == NOT_ENOUGH_DATA) {
                 return ACQUIRE_MAX_IMAGES;
@@ -1497,7 +1500,6 @@ static jint DepthCameraImageReader_imageSetup(JNIEnv* env, jobject thiz,
                           res);
             }
         }
-        ctx->returnLockedBuffer(buffer);
         return ACQUIRE_NO_BUFFERS;
     }
 
@@ -1627,14 +1629,14 @@ static jobject DepthCameraImageReader_getSurface(JNIEnv* env, jobject thiz, jint
 {
     ALOGV("%s: ", __FUNCTION__);
 
-    BufferQueue* bq = DepthCameraImageReader_getBufferQueue(env, thiz,imgType);
-    if (bq == NULL) {
+    IGraphicBufferProducer* producer = DepthCameraImageReader_getProducer(env, thiz,imgType);
+    if (producer == NULL) {
         jniThrowRuntimeException(env, "CpuConsumer is uninitialized");
         return NULL;
     }
 
     // Wrap the IGBP in a Java-language Surface.
-    return android_view_Surface_createFromIGraphicBufferProducer(env, bq);
+    return android_view_Surface_createFromIGraphicBufferProducer(env, producer);
 }
 
 static jobject Image_createSurfacePlane(JNIEnv* env, jobject thiz, int idx)
