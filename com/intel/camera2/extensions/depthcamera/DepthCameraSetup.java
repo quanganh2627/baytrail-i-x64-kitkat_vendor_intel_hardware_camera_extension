@@ -13,7 +13,7 @@ import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.Size;
+import android.hardware.camera2.CameraCaptureSession;
 
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
@@ -24,6 +24,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
+import android.util.Size;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -366,7 +367,7 @@ public  class DepthCameraSetup
 	     		mFrameRequestConfig.setColorImageFormat(format);
 	     		mFrameRequestConfig.setColorSize(new Size(width,height));
 	     	}
-	    	mCalibrationData = DepthCameraCharacteristics.getCalibrationData(chars, mFrameRequestConfig);
+		mCalibrationData = DepthCameraCharacteristicsParser.getCalibrationData(chars, mFrameRequestConfig);
 	    	mMaxFrames = config.getMaxFrames();
 	    	if (mMaxFrames < 1) {
 	             throw new IllegalArgumentException(
@@ -1458,7 +1459,8 @@ public  class DepthCameraSetup
 	
 	// creates reader based on depth output settings, configure outputs and returns the reader
     public static DepthFrameReader configureOutputs(CameraDevice device, 
-    		DepthOutputSettings outputSettings, CameraCharacteristics cameraChar ) throws CameraAccessException
+    DepthOutputSettings outputSettings, CameraCharacteristics cameraChar, 
+            CameraCaptureSession.StateCallback listener ) throws CameraAccessException
 	{
     	if (device == null)
     		throw new IllegalArgumentException(
@@ -1472,7 +1474,8 @@ public  class DepthCameraSetup
     	
     	//Frame reader will validate the configurations and throw an exception in case of a mismatch
     	DepthFrameReader newReader = DepthFrameReader.newInstance(outputSettings, cameraChar);
-    	device.configureOutputs(newReader.getSurfaces());
+		List<Surface> targets = newReader.getSurfaces();
+        device.createCaptureSession(targets, listener, null);
 		return newReader;
 	}
              
