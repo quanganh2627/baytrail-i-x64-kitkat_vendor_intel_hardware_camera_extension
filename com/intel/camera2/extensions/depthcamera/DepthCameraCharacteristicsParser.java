@@ -48,10 +48,8 @@ public class DepthCameraCharacteristicsParser
     */
     private static ArrayList<Integer> getNodeIndex(CameraCharacteristics c,int nodeId)
     {
-        List<Key<?> > keys = c.getKeys();
-        if ( keys.contains(DepthCameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES) )
+        try
         {
-
             int[] nodes = c.get(DepthCameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES);
             ArrayList<Integer> res = new ArrayList<Integer>();
             for ( int i=0; i< nodes.length; i++)
@@ -59,8 +57,10 @@ public class DepthCameraCharacteristicsParser
                     res.add(i);
             return res.size() > 0 ? res : null;
         }
-
-        return null;
+        catch ( IllegalArgumentException e)
+        {
+            return null;
+        }
     }
     /**
     *  returns supported formats for the node id
@@ -68,12 +68,10 @@ public class DepthCameraCharacteristicsParser
     */
     public static Size[] getSupportedNodeSizes(CameraCharacteristics c, int nodeId) {
 
-        List<Key<?> > keys = c.getKeys();
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
-        if ( keys.contains(CameraCharacteristics.SCALER_AVAILABLE_PROCESSED_SIZES) 
-            && keys.contains(DepthCameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING) && nodeIdx != null)
+
+        try
         {
-            
             ArrayList<Size> res = new ArrayList<Size>();
 
             Size[] sizes = c.get(CameraCharacteristics.SCALER_AVAILABLE_PROCESSED_SIZES);
@@ -95,6 +93,10 @@ public class DepthCameraCharacteristicsParser
             if ( res.size() != 0 )
                 return res.toArray(new Size[res.size()]);
         }
+        catch ( IllegalArgumentException e)
+        {
+            return null;
+        }
         return null;
     }
     private static int[] convertArrayListToInt(ArrayList<Integer> in)
@@ -112,14 +114,11 @@ public class DepthCameraCharacteristicsParser
     *  returns supported formats for the node id
     *  null if none are available
     */
-    public static int[] getSupportedNodeFormats(CameraCharacteristics c, int nodeId) {
-
-        List<Key<?> > keys = c.getKeys();
+    public static int[] getSupportedNodeFormats(CameraCharacteristics c, int nodeId)
+    {
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
-        if ( keys.contains(CameraCharacteristics.SCALER_AVAILABLE_FORMATS) 
-            && keys.contains(DepthCameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING) && nodeIdx != null)
+        try
         {
-            
             ArrayList<Integer> res = new ArrayList<Integer>();
 
             int[] formats = c.get(CameraCharacteristics.SCALER_AVAILABLE_FORMATS);
@@ -139,6 +138,10 @@ public class DepthCameraCharacteristicsParser
             }
             if ( res.size() != 0 )
                 return convertArrayListToInt(res);
+        }
+        catch ( IllegalArgumentException e)
+        {
+            return null;
         }
         return null;
     }
