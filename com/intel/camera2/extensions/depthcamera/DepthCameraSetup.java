@@ -1128,8 +1128,9 @@ public  class DepthCameraSetup
 
 	        private void createSurfacePlanes() {
 	            mPlanes = new SurfacePlane[DepthFrameReader.this.mNumPlanes[mType] ];
+                int readerFormat = DepthFrameReader.this.getImageFormat(mType);
 	            for (int i = 0; i < DepthFrameReader.this.mNumPlanes[mType]; i++) {
-	                mPlanes[i] = nativeCreatePlane(i);
+	                mPlanes[i] = nativeCreatePlane(i, readerFormat);
 	            }
 	        	return ;
 	        }
@@ -1162,7 +1163,7 @@ public  class DepthCameraSetup
 	                	}
 	                	else
 	                	{
-	                		mBuffer = SurfaceImage.this.nativeImageGetBuffer(mIndex);
+                            mBuffer = SurfaceImage.this.nativeImageGetBuffer(mIndex, SurfaceImage.this.getFormat());
 	                    }
 	                    // Set the byteBuffer order according to host endianness (native order),
 	                    // otherwise, the byteBuffer order defaults to ByteOrder.BIG_ENDIAN.
@@ -1220,8 +1221,8 @@ public  class DepthCameraSetup
 	        private boolean mIsImageValid;
 	        private int mType;
 	        private synchronized native ByteBuffer nativeImageGetUVMapBuffer(DepthFrameReader obj, boolean rectMode, int colorWidth, int colorHeight, int colorFormat);
-	        private synchronized native ByteBuffer nativeImageGetBuffer(int idx);
-	        private synchronized native SurfacePlane nativeCreatePlane(int idx);
+	        private synchronized native ByteBuffer nativeImageGetBuffer(int idx, int readerFormat);
+	        private synchronized native SurfacePlane nativeCreatePlane(int idx, int readerFormat);
 	    }
 
 	    
