@@ -8,8 +8,6 @@ LOCAL_COPY_HEADERS := \
 	libacc/Ilibacc.h
 include $(BUILD_COPY_HEADERS)
 
-
-
 ################# MAKE_LIB ############################
 include $(CLEAR_VARS)
 LOCAL_MODULE := libintelcamera_jni
