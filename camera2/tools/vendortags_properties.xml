@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<metadata xmlns="http://schemas.android.com/service/camera/metadata/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata_properties.xsd">
+
+  <tags>
+    <tag id="AWB">
+        Needed for auto white balance
+    </tag>
+    <tag id="BC">
+        Needed for backwards compatibility with old Java API
+    </tag>
+    <tag id="V1">
+        New features for first camera 2 release (API1)
+    </tag>
+    <tag id="ADV">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="DNG">
+        Needed for DNG file support
+    </tag>
+    <tag id="EXIF">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="HAL2">
+        Entry is only used by camera device HAL 2.x
+    </tag>
+    <tag id="FULL">
+        Entry is required for full hardware level devices, and optional for other hardware levels
+    </tag>
+  </tags>
+
+  <types>
+    <typedef name="enumList">
+      <language name="java">int</language>
+    </typedef>
+    <typedef name="rectangle">
+      <language name="java">android.graphics.Rect</language>
+    </typedef>
+    <typedef name="size">
+      <language name="java">android.hardware.camera2.Size</language>
+    </typedef>
+    <typedef name="string">
+      <language name="java">String</language>
+    </typedef>
+    <typedef name="boolean">
+      <language name="java">boolean</language>
+    </typedef>
+    <typedef name="imageFormat">
+      <language name="java">int</language>
+    </typedef>
+  </types>
+
+  <namespace name="com">
+      <namespace name="intel">
+
+        <section name="aiq">
+          <controls>
+              <entry name="analysisMode" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>OFF
+                  <notes>(default) Do not include AIQ extended results in capture result metadata</notes></value>
+                  <value>ON
+                  <notes>Include AIQ extended result in capture result metadata</notes></value>
+                </enum>
+                <description>Whether the extended AIQ analysis results are provided for each capture request.</description>
+                <details>This is the list of extra tags that will be present in the result:
+
+                           * multiframeHint
+                           * sceneDected
+                           * hdr.preferedExposures
+                </details>
+              </entry>
+          </controls>
+
+          <dynamic>
+              <entry name="multiFrameHint" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>NONE
+                  <notes>(default) No multiframe processing is required</notes></value>
+                  <value>ULL
+                  <notes>Capture would benefit of using Ultra Low Light post processing</notes></value>
+                  <value>HDR
+                  <notes>Capture would benefit of using High Dynamic Range post processing</notes></value>
+                </enum>
+                <description>This reports the recommendation from the Intel 3A to use one of the multi-frame postprocessing algotithms.</description>
+                <details>To be added...
+                </details>
+              </entry>
+
+              <entry name="sceneDetected" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>NONE
+                  <notes>ia_aiq_scene_mode_none</notes></value>
+                  <value>CLOSE_UP_PORTRAIT
+                  <notes>ia_aiq_scene_mode_close_up_portrait</notes></value>
+                  <value>PORTRAIT
+                  <notes>ia_aiq_scene_mode_portrait</notes></value>
+                  <value>LOWLIGHT_PORTRAIT
+                  <notes>ia_aiq_scene_mode_lowlight_portrait</notes></value>
+                  <value>LOWLIGHT
+                  <notes>ia_aiq_scene_mode_low_light</notes></value>
+                  <value>ACTION
+                  <notes>ia_aiq_scene_mode_action</notes></value>
+                  <value>BACKLIGHT
+                  <notes>ia_aiq_scene_mode_backlight</notes></value>
+                  <value>LANDSCAPE
+                  <notes>ia_aiq_scene_mode_landscape</notes></value>
+                  <value>DOCUMENT
+                  <notes>ia_aiq_scene_mode_document</notes></value>
+                  <value>FIREWORK
+                  <notes>ia_aiq_scene_mode_firework</notes></value>
+                  <value>LOWLIGHT_ACTION
+                  <notes>ia_aiq_scene_mode_lowlight_action</notes></value>
+                  <value>BABY
+                  <notes>ia_aiq_scene_mode_baby</notes></value>
+                  <value>BARCODE
+                  <notes>ia_aiq_scene_mode_barcode</notes></value>
+                </enum>
+                <description>This reports the recommended scene mode the user should select for optimal quality.</description>
+                <details>This is the ouput of the Intel Discrete Scene Detection algorithm.
+                </details>
+              </entry>
+          </dynamic>
+        </section>
+
+      <section name="faceEngine">
+        <controls>
+
+            <entry name="smileDetectMode" type="byte" visibility="public" enum="true" type_notes="Smile detection mode">
+              <enum>
+                <value>OFF
+                <notes>Do not include smile detection statistics in capture results</notes></value>
+                <value>ON
+                <notes>Return smile status and score values</notes></value>
+              </enum>
+              <description>Control of Smile detection.</description>
+              <details>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.
+              </details>
+            </entry>
+        </controls>
+  
+        <dynamic>
+            <clone entry="com.intel.faceEngine.smileDetectMode" kind="controls"></clone>
+            <entry name="smileDetectStatus" type="byte" visibility="public" type_notes="Smile detection status" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide a list of smile status of faces. The order of this list is always aligned with the IDs produced by the android-defined metadata tagin. 
+android.statistics.faceIds.</description>
+              <details>True means smiling face.
+                       False means non-smiling face
+              </details>
+            </entry>
+
+            <entry name="smileDetectScores" type="int32" visibility="public" type_notes="Smile detection scores" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</description>
+              <range>[0,100]</range>
+              <details>0 means it’s no smile at all.
+                       100 means fully smiling face.
+              </details>
+            </entry>
+
+            <entry name="faceDetectRipAngles" type="int32" visibility="public"
+                   type_notes="(-180~180) x n, where n is number of faces" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide an list of RIP (Rotation In-Plane) angles from face detection. Represented in degree. Also known as 'rolling'.</description>
+              <units>Degrees</units>
+              <range>[-180,180]</range>
+              <details>The angle is represented as degree. The upright face is 0 degree, clock wise is positive, CC wise is negatives.
+              </details>
+            </entry>
+        </dynamic>
+  
+        <static>
+          <namespace name="info">
+            <entry name="availableSmileDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.smileDetectMode</description>
+              <details>NO is always supported.
+  
+                       YES means the device supports com.intel.faceEngine.smileDetectStatus and com.intel.faceEngine.smileDetectScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableBlinkDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.blinkDetectMode</description>
+              <details>NO is always supported.
+  
+                       YES means the device supports com.intel.faceEngine.blinkDetectStatus and com.intel.faceEngine.blinkDetectScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableFaceRecognize" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.faceRecognizeMode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports com.intel.faceEngine.faceRecognizePersonIds and com.intel.faceEngine.faceRecognizePersonSimilarities outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableObjectTrack" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngineObjectTracking.mode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports com.intel.faceEngine.objectTrackingBoundingRectangles, com.intel.faceEngine.objectTrackingTrackingIds and com.intel.faceEngine.objectTrackingScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availablePanorama" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.panoramaMode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports (TO BE DEFINED)
+              </details>
+            </entry>
+          </namespace>
+        </static>
+  
+      </section>
+
+        <section name="ds4">
+          <controls>
+              <entry name="medianThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="scoreMinThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="scoreMaxThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="neighborThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="lrAgreeThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="textureCountThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="textureDifferenceThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="secondPeakThreshold" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="rgbRectificationMode" type="byte" visibility="public" enum="true"
+                         type_notes="RGB rectification mode">
+                <enum>
+                  <value>OFF
+                  <notes>RGB rectification disabled</notes></value>
+                  <value>ON
+                  <notes>RGB rectification enabled</notes></value>
+                </enum>
+                <details>Enable or disable RGB rectification</details>
+              </entry>
+          </controls>
+          <dynamic>
+            <clone entry="com.intel.ds4.medianThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.scoreMinThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.scoreMaxThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.neighborThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.lrAgreeThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.textureCountThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.textureDifferenceThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.secondPeakThreshold" kind="controls"></clone>
+            <clone entry="com.intel.ds4.rgbRectificationMode" kind="controls"></clone>
+          </dynamic>
+        </section>
+        <section name="depthcommon">
+          <controls>
+              <entry name="depthUnits" type="byte" visibility="public" enum="true">
+              <enum>
+                <value>MICRON
+                <notes>MicroMeters</notes></value>
+                <value>MM
+                <notes>Millimeters</notes></value>
+              </enum>
+              <range>intel.depthcommon.availableDepthUnits</range>
+              <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="disparityOutputMode" type="byte" visibility="public" enum="true"
+                         typedef="boolean">
+                <enum>
+                  <value>OFF
+                  <notes>disparityOutputMode off.</notes></value>
+                  <value>ON
+                  <notes>disparityOutputMode on.</notes></value>
+                </enum>
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="disparityMultiplier" type="double" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="depthMin" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="depthMax" type="int32" visibility="public" >
+                <description>BUGBUG:describe!</description>
+                <details>BUGBUG: Note</details>
+              </entry>
+              <entry name="emitter" type="byte" visibility="public" enum="true"
+                       typedef="boolean">
+              <enum>
+                <value>OFF
+                <notes>Emitter off.</notes></value>
+                <value>ON
+                <notes>Emitter on.</notes></value>
+              </enum>
+              <description>BUGBUG:describe!</description>
+              <details>BUGBUG: Note</details>
+            </entry>
+            <entry name="nodeExposureTime" type="int64" visibility="public" 
+            type_notes="list of pairs, nodeId and nodeExposuretime" container="array">
+              <array>
+                <size>2</size>
+                <size>n</size>
+              </array>
+              <description>Duration each pixel is exposed to
+              light.
+
+              If the sensor can't expose this exact duration, it should shorten the
+              duration exposed to the nearest possible value (rather than expose longer).
+
+              array - Each entry has a pair of node id and nodeExposure time
+              </description>
+              <units>nanoseconds</units>
+              <range>nodeExposureTimeRange</range>
+              <details>1/10000 - 30 sec range. No bulb mode</details>
+            </entry>
+            <entry name="nodeAeMode" type="int64" visibility="public" enum="true"
+            type_notes="list of pairs, nodeid and nodeAEMode" container="array" >
+              <array>
+                <size>2</size>
+                <size>n</size>
+              </array>
+              <enum>
+                <value>OFF
+                  <notes>Autoexposure is disabled;
+                  sensor.sensitivity and sensor.frameDuration are used</notes>
+                </value>
+                <value>ON
+                  <notes>Autoexposure is active</notes>
+                </value>
+              </enum>
+              <description>array of modes.
+              Each entry has a pair of node id and aeMode time
+              Whether AE is currently updating the sensor
+              exposure and sensitivity fields</description>
+            </entry>
+            <entry name="nodeGainFactor" type="rational" visibility="public" 
+            type_notes="list of pairs, nodeid and gainfactor" container="array">
+              <array>
+                <size>2</size>
+                <size>n</size>
+              </array>
+              <description>BUGBUG:describe!</description>
+              <details>BUGBUG: Note</details>
+            </entry>
+            <entry name="nodeFrameCountersMode" type="byte" visibility="public" enum="true"
+                     typedef="boolean">
+              <enum>
+                <value>OFF
+                <notes>No frame counts.</notes></value>
+                <value>ON
+                <notes>Send frame counts.</notes></value>
+              </enum>
+              <description>Per node frame counts should be included</description>
+              <details>Enable / disable boolean</details>
+            </entry>
+            <entry name="frameSyncMode" type="byte" visibility="public" enum="true"
+                     typedef="boolean">
+              <enum>
+                <value>OFF
+                <notes>Disable frame synchronisation.</notes></value>
+                <value>ON
+                <notes>Enable frame synchronisation.</notes></value>
+              </enum>
+              <description>Enable frame synchronisation, based on embedded frame counts</description>
+              <details>Enable / disable boolean</details>
+            </entry>
+
+          </controls>
+          <static>
+            <entry name="moduleId" type="byte" visibility="public" enum="true">
+              <enum>
+                <value>DS
+                <notes>Deap Sea Camera</notes></value>
+                <value>IVCAM
+                <notes>InVision Camera</notes></value>
+              </enum>
+              <description>BUGBUG:describe!</description>
+              <details>BUGBUG: Note</details>
+            </entry>
+            <entry name="calibrationData" type="byte" visibility="public"
+              container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>BUGBUG:describe!</description>
+              <details>BUGBUG: Note</details>
+            </entry>
+            <entry name="availableDepthUnits" type="byte" visibility="public" type_notes="list of enums"
+              container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>BUGBUG:describe!</description>
+              <details>BUGBUG: Note</details>
+            </entry>
+
+            <entry name="availableNodes" type="byte" visibility="public" enum="true" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <enum>
+                <value>COLOR
+                <notes>COLOR Camera</notes></value>
+                <value>DEPTH
+                <notes>depth Camera</notes></value>
+                <value>LEFT_RIGHT
+                <notes>Left-Right Camera</notes></value>
+                <value>CENTER
+                <notes>Center Camera</notes></value>
+              </enum>
+              <description>supported node Ids.
+                    Left/Right relevant for stereo depth cameras, center is for non-stereo depth cameras
+              </description>
+              <details>BUGBUG: Note</details>
+            </entry>
+            <entry name="sizeNodesMapping" type="byte" visibility="public"
+            type_notes="bitmap" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>entry i is a bitmap that relates to entry i in availableProcessedSizes,
+                    bit j in the bitmap relates to the nodeId in entry availableNodes[j].
+                    If bit i is ON then the size is available for the relevant nodeId</description>
+            </entry>
+            <entry name="formatNodesMapping" type="byte" visibility="public"
+            type_notes="bitmap" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>entry i is a bitmap that relates to entry i in availableFormats,
+                    bit j in the bitmap relates to the nodeId in entry availableNodes[j]
+                    If bit i is ON then the format is available for the relevant nodeId</description>
+            </entry>
+            <entry name="nodeExposureTimeRange" type="int64" visibility="public"
+              type_notes="nanoseconds" container="array">
+                <array>
+                  <size>3</size>
+                  <size>n</size>
+                </array>
+                <description>set of ranges of valid exposure
+                times. each entry has 3 values:  node Id, min and max </description>
+                <range>Min &lt;= 100e3 (100 us), Max &gt;= 30e9 (30
+                sec)</range>
+              </entry>
+             <entry name="nodeGainRange" type="int64" visibility="public"
+              type_notes="tuples" container="array">
+                <array>
+                  <size>3</size>
+                  <size>n</size>
+                </array>
+                <description>set of ranges of gain ranges.
+                each entry has 3 values:  node Id, min and max </description>
+              </entry>
+
+          </static>
+          <dynamic>
+            <clone entry="com.intel.depthcommon.depthUnits" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.disparityOutputMode" kind="controls">  </clone>
+            <clone entry="com.intel.depthcommon.disparityMultiplier" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.depthMin" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.depthMax" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.emitter" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.nodeExposureTime" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.nodeAeMode" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.nodeGainFactor" kind="controls"></clone>
+            <clone entry="com.intel.depthcommon.availableNodes" kind="static"></clone>
+
+            <entry name="nodeFrameCounters" type="int32" visibility="public" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>array of per-node frame counts. Node IDs are specified in
+              the availableNodes array, that also has to be repeated in the response
+              metadata exactly as it has been sent with static
+              metadata</description>
+            </entry>
+
+          </dynamic>
+        </section>
+
+
+      </namespace>
+  </namespace>
+</metadata>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<metadata xmlns="http://schemas.android.com/service/camera/metadata/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata_properties.xsd">
+
+  <tags>
+    <tag id="AWB">
+        Needed for auto white balance
+    </tag>
+    <tag id="BC">
+        Needed for backwards compatibility with old Java API
+    </tag>
+    <tag id="V1">
+        New features for first camera 2 release (API1)
+    </tag>
+    <tag id="ADV">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="DNG">
+        Needed for DNG file support
+    </tag>
+    <tag id="EXIF">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="HAL2">
+        Entry is only used by camera device HAL 2.x
+    </tag>
+    <tag id="FULL">
+        Entry is required for full hardware level devices, and optional for other hardware levels
+    </tag>
+  </tags>
+
+  <types>
+    <typedef name="enumList">
+      <language name="java">int</language>
+    </typedef>
+    <typedef name="rectangle">
+      <language name="java">android.graphics.Rect</language>
+    </typedef>
+    <typedef name="size">
+      <language name="java">android.hardware.camera2.Size</language>
+    </typedef>
+    <typedef name="string">
+      <language name="java">String</language>
+    </typedef>
+    <typedef name="boolean">
+      <language name="java">boolean</language>
+    </typedef>
+    <typedef name="imageFormat">
+      <language name="java">int</language>
+    </typedef>
+  </types>
+
+  <namespace name="com">
+     <namespace name="intel">
+      <section name="faceEngine">
+        <controls>
+
+            <entry name="smileDetectMode" type="byte" visibility="public" enum="true" type_notes="Smile detection mode">
+              <enum>
+                <value>OFF
+                <notes>Do not include smile detection statistics in capture results</notes></value>
+                <value>ON
+                <notes>Return smile status and score values</notes></value>
+              </enum>
+              <description>Control of Smile detection.</description>
+              <details>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.
+              </details>
+            </entry>
+        </controls>
+  
+        <dynamic>
+            <clone entry="com.intel.faceEngine.smileDetectMode" kind="controls"></clone>
+            <entry name="smileDetectStatus" type="byte" visibility="public" type_notes="Smile detection status" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide a list of smile status of faces. The order of this list is always aligned with the IDs produced by the android-defined metadata tagin. 
+android.statistics.faceIds.</description>
+              <details>True means smiling face.
+                       False means non-smiling face
+              </details>
+            </entry>
+
+            <entry name="smileDetectScores" type="int32" visibility="public" type_notes="Smile detection scores" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</description>
+              <range>[0,100]</range>
+              <details>0 means it’s no smile at all.
+                       100 means fully smiling face.
+              </details>
+            </entry>
+
+            <entry name="faceDetectRipAngles" type="int32" visibility="public"
+                   type_notes="(-180~180) x n, where n is number of faces" container="array">
+              <array>
+                <size>n</size>
+              </array>
+              <description>This metadata tag will provide an list of RIP (Rotation In-Plane) angles from face detection. Represented in degree. Also known as 'rolling'.</description>
+              <units>Degrees</units>
+              <range>[-180,180]</range>
+              <details>The angle is represented as degree. The upright face is 0 degree, clock wise is positive, CC wise is negatives.
+              </details>
+            </entry>
+        </dynamic>
+  
+        <static>
+          <namespace name="info">
+            <entry name="availableSmileDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.smileDetectMode</description>
+              <details>NO is always supported.
+  
+                       YES means the device supports com.intel.faceEngine.smileDetectStatus and com.intel.faceEngine.smileDetectScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableBlinkDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.blinkDetectMode</description>
+              <details>NO is always supported.
+  
+                       YES means the device supports com.intel.faceEngine.blinkDetectStatus and com.intel.faceEngine.blinkDetectScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableFaceRecognize" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.faceRecognizeMode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports com.intel.faceEngine.faceRecognizePersonIds and com.intel.faceEngine.faceRecognizePersonSimilarities outputs.
+              </details>
+            </entry>
+  
+            <entry name="availableObjectTrack" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngineObjectTracking.mode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports com.intel.faceEngine.objectTrackingBoundingRectangles, com.intel.faceEngine.objectTrackingTrackingIds and com.intel.faceEngine.objectTrackingScores outputs.
+              </details>
+            </entry>
+  
+            <entry name="availablePanorama" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+              <array>
+                <size>n</size>
+              </array>
+              <description>List of enums from com.intel.faceEngine.panoramaMode</description>
+              <details>NO is always supported.
+  
+                       Yes means the device supports (TO BE DEFINED)
+              </details>
+            </entry>
+          </namespace>
+        </static>
+  
+      </section>
+    </namespace>
+  </namespace>
+</metadata>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<metadata xmlns="http://schemas.android.com/service/camera/metadata/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata_properties.xsd">
+
+  <tags>
+    <tag id="AWB">
+        Needed for auto white balance
+    </tag>
+    <tag id="BC">
+        Needed for backwards compatibility with old Java API
+    </tag>
+    <tag id="V1">
+        New features for first camera 2 release (API1)
+    </tag>
+    <tag id="ADV">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="DNG">
+        Needed for DNG file support
+    </tag>
+    <tag id="EXIF">
+      <!-- TODO: fill the tag description -->
+    </tag>
+    <tag id="HAL2">
+        Entry is only used by camera device HAL 2.x
+    </tag>
+    <tag id="FULL">
+        Entry is required for full hardware level devices, and optional for other hardware levels
+    </tag>
+  </tags>
+
+  <types>
+    <typedef name="rectangle">
+      <language name="java">android.graphics.Rect</language>
+    </typedef>
+    <typedef name="size">
+      <language name="java">android.hardware.camera2.Size</language>
+    </typedef>
+    <typedef name="string">
+      <language name="java">String</language>
+    </typedef>
+    <typedef name="boolean">
+      <language name="java">boolean</language>
+    </typedef>
+    <typedef name="imageFormat">
+      <language name="java">int</language>
+    </typedef>
+  </types>
+
+  <namespace name="com">
+      <namespace name="intel">
+        <section name="aiq">
+          <controls>
+              <entry name="analysisMode" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>OFF
+                  <notes>(default) Do not include AIQ extended results in capture result metadata</notes></value>
+                  <value>ON
+                  <notes>Include AIQ extended result in capture result metadata</notes></value>
+                </enum>
+                <description>Whether the extended AIQ analysis results are provided for each capture request.</description>
+                <details>This is the list of extra tags that will be present in the result:
+
+                           * multiframeHint
+                           * sceneDected
+                           * hdr.preferedExposures
+                </details>
+              </entry>
+          </controls>
+
+          <dynamic>
+              <entry name="multiFrameHint" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>NONE
+                  <notes>(default) No multiframe processing is required</notes></value>
+                  <value>ULL
+                  <notes>Capture would benefit of using Ultra Low Light post processing</notes></value>
+                  <value>HDR
+                  <notes>Capture would benefit of using High Dynamic Range post processing</notes></value>
+                </enum>
+                <description>This reports the recommendation from the Intel 3A to use one of the multi-frame postprocessing algotithms.</description>
+                <details>To be added...
+                </details>
+              </entry>
+
+              <entry name="sceneDetected" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>NONE
+                  <notes>ia_aiq_scene_mode_none</notes></value>
+                  <value>CLOSE_UP_PORTRAIT
+                  <notes>ia_aiq_scene_mode_close_up_portrait</notes></value>
+                  <value>PORTRAIT
+                  <notes>ia_aiq_scene_mode_portrait</notes></value>
+                  <value>LOWLIGHT_PORTRAIT
+                  <notes>ia_aiq_scene_mode_lowlight_portrait</notes></value>
+                  <value>LOWLIGHT
+                  <notes>ia_aiq_scene_mode_low_light</notes></value>
+                  <value>ACTION
+                  <notes>ia_aiq_scene_mode_action</notes></value>
+                  <value>BACKLIGHT
+                  <notes>ia_aiq_scene_mode_backlight</notes></value>
+                  <value>LANDSCAPE
+                  <notes>ia_aiq_scene_mode_landscape</notes></value>
+                  <value>DOCUMENT
+                  <notes>ia_aiq_scene_mode_document</notes></value>
+                  <value>FIREWORK
+                  <notes>ia_aiq_scene_mode_firework</notes></value>
+                  <value>LOWLIGHT_ACTION
+                  <notes>ia_aiq_scene_mode_lowlight_action</notes></value>
+                  <value>BABY
+                  <notes>ia_aiq_scene_mode_baby</notes></value>
+                  <value>BARCODE
+                  <notes>ia_aiq_scene_mode_barcode</notes></value>
+                </enum>
+                <description>This reports the recommended scene mode the user should select for optimal quality.</description>
+                <details>This is the ouput of the Intel Discrete Scene Detection algorithm.
+                </details>
+              </entry>
+          </dynamic>
+        </section>
+      </namespace>
+  </namespace>
+</metadata>
