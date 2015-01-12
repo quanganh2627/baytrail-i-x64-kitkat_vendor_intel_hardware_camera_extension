@@ -37,15 +37,8 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
   % endfor
 };
 
-int intel_camera_metadata_section_bounds[INTEL_CAMERA_SECTION_COUNT][2] = {
-  % for i in find_all_sections(metadata):
-    ${"[%s]" %(path_name(i)) | csym,pad(36)} = { ${path_name(i) | csym}_START,
-                                       ${path_name(i) | csym}_END },
-  % endfor
-};
-
 % for sec in find_all_sections(metadata):
-static tag_info_t ${path_name(sec) | csyml}[${path_name(sec) | csym}_END -
+static tag_info_t ${path_name(sec) | csyml}_tags[${path_name(sec) | csym}_END -
         ${path_name(sec) | csym}_START] = {
   % for entry in remove_synthetic(find_unique_entries(sec)):
     [ ${entry.name | csym} - ${path_name(sec) | csym}_START ] =
@@ -55,9 +48,20 @@ static tag_info_t ${path_name(sec) | csyml}[${path_name(sec) | csym}_END -
 
 % endfor
 
-tag_info_t *tag_info[INTEL_CAMERA_SECTION_COUNT] = {
+
+% for sec in find_all_sections(metadata):
+static tag_section_t section_${path_name(sec) | csyml} = {
+    "${path_name(sec)}",
+    (uint32_t) ${path_name(sec) | csym}_START,
+    (uint32_t) ${path_name(sec) | csym}_END,
+    ${path_name(sec) | csyml}_tags
+};
+
+% endfor
+
+tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
   % for i in find_all_sections(metadata):
-    ${path_name(i) | csyml},
+    section_${path_name(i) | csyml},
   % endfor
 };
 

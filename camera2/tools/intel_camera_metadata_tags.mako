@@ -42,7 +42,7 @@
 /**
  * Top level hierarchy definitions for camera metadata. *_INFO sections are for
  * the static metadata that can be retrived without opening the camera device.
- * New sections must be added right before INTEL_DEPTH_SECTION_COUNT to maintain
+ * New sections must be added right before INTEL_CAMERA_SECTION_COUNT to maintain
  * existing enumerations.
  */
 typedef enum intel_camera_metadata_section {
@@ -66,7 +66,7 @@ typedef enum intel_camera_metadata_section_start {
  * Main enum for defining camera metadata tags.  New entries must always go
  * before the section _END tag to preserve existing enumeration values.  In
  * addition, the name and type of the tag needs to be added to
- * src/intel_camera_metadata_tag_info.c
+ * intel_camera_metadata_tag_info.c
  */
 typedef enum intel_camera_metadata_tag {
     % for sec in find_all_sections(metadata):
