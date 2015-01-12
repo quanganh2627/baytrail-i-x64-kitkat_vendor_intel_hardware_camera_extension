@@ -58,50 +58,6 @@ public class IntelCameraMetadata {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEPTHCOMMON_MODULE_ID
-    //
-
-    /**
-     * <p>Deap Sea Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_MODULE_ID
-     */
-    public static final int INTEL_DEPTHCOMMON_MODULE_ID_DS = 0;
-
-    /**
-     * <p>InVision Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_MODULE_ID
-     */
-    public static final int INTEL_DEPTHCOMMON_MODULE_ID_IVCAM = 1;
-
-    //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEPTHCOMMON_AVAILABLE_NODES
-    //
-
-    /**
-     * <p>COLOR Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_AVAILABLE_NODES
-     */
-    public static final int INTEL_DEPTHCOMMON_AVAILABLE_NODES_COLOR = 0;
-
-    /**
-     * <p>depth Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_AVAILABLE_NODES
-     */
-    public static final int INTEL_DEPTHCOMMON_AVAILABLE_NODES_DEPTH = 1;
-
-    /**
-     * <p>Left-Right Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_AVAILABLE_NODES
-     */
-    public static final int INTEL_DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT = 2;
-
-    /**
-     * <p>Center Camera</p>
-     * @see IntelCameraCharacteristics#INTEL_DEPTHCOMMON_AVAILABLE_NODES
-     */
-    public static final int INTEL_DEPTHCOMMON_AVAILABLE_NODES_CENTER = 3;
-
-    //
     // Enumeration values for IntelCaptureRequest#INTEL_AIQ_ANALYSIS_MODE
     //
 
@@ -132,55 +88,6 @@ public class IntelCameraMetadata {
      * @see IntelCaptureRequest#INTEL_FACE_ENGINE_SMILE_DETECT_MODE
      */
     public static final int INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON = 1;
-
-    //
-    // Enumeration values for IntelCaptureRequest#INTEL_DS4_RGB_RECTIFICATION_MODE
-    //
-
-    /**
-     * <p>RGB rectification disabled</p>
-     * @see IntelCaptureRequest#INTEL_DS4_RGB_RECTIFICATION_MODE
-     */
-    public static final int INTEL_DS4_RGB_RECTIFICATION_MODE_OFF = 0;
-
-    /**
-     * <p>RGB rectification enabled</p>
-     * @see IntelCaptureRequest#INTEL_DS4_RGB_RECTIFICATION_MODE
-     */
-    public static final int INTEL_DS4_RGB_RECTIFICATION_MODE_ON = 1;
-
-    //
-    // Enumeration values for IntelCaptureRequest#INTEL_DEPTHCOMMON_DEPTH_UNITS
-    //
-
-    /**
-     * <p>MicroMeters</p>
-     * @see IntelCaptureRequest#INTEL_DEPTHCOMMON_DEPTH_UNITS
-     */
-    public static final int INTEL_DEPTHCOMMON_DEPTH_UNITS_MICRON = 0;
-
-    /**
-     * <p>Millimeters</p>
-     * @see IntelCaptureRequest#INTEL_DEPTHCOMMON_DEPTH_UNITS
-     */
-    public static final int INTEL_DEPTHCOMMON_DEPTH_UNITS_MM = 1;
-
-    //
-    // Enumeration values for IntelCaptureRequest#INTEL_DEPTHCOMMON_NODE_AE_MODE
-    //
-
-    /**
-     * <p>Autoexposure is disabled;
-     * sensor.sensitivity and sensor.frameDuration are used</p>
-     * @see IntelCaptureRequest#INTEL_DEPTHCOMMON_NODE_AE_MODE
-     */
-    public static final int INTEL_DEPTHCOMMON_NODE_AE_MODE_OFF = 0;
-
-    /**
-     * <p>Autoexposure is active</p>
-     * @see IntelCaptureRequest#INTEL_DEPTHCOMMON_NODE_AE_MODE
-     */
-    public static final int INTEL_DEPTHCOMMON_NODE_AE_MODE_ON = 1;
 
     //
     // Enumeration values for IntelCaptureResult#INTEL_AIQ_MULTI_FRAME_HINT

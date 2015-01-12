@@ -31,136 +31,75 @@
  */
 
 const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
-    [INTEL_AIQ]                    = "intel.aiq",
-    [INTEL_FACE_ENGINE]            = "intel.faceEngine",
-    [INTEL_FACE_ENGINE_INFO]       = "intel.faceEngine.info",
-    [INTEL_DS4]                    = "intel.ds4",
-    [INTEL_DEPTHCOMMON]            = "intel.depthcommon",
+    [COM_INTEL_AIQ]                = "com.intel.aiq",
+    [COM_INTEL_FACE_ENGINE]        = "com.intel.faceEngine",
+    [COM_INTEL_FACE_ENGINE_INFO]   = "com.intel.faceEngine.info",
 };
 
-int intel_camera_metadata_section_bounds[INTEL_CAMERA_SECTION_COUNT][2] = {
-    [INTEL_AIQ]                    = { INTEL_AIQ_START,
-                                       INTEL_AIQ_END },
-    [INTEL_FACE_ENGINE]            = { INTEL_FACE_ENGINE_START,
-                                       INTEL_FACE_ENGINE_END },
-    [INTEL_FACE_ENGINE_INFO]       = { INTEL_FACE_ENGINE_INFO_START,
-                                       INTEL_FACE_ENGINE_INFO_END },
-    [INTEL_DS4]                    = { INTEL_DS4_START,
-                                       INTEL_DS4_END },
-    [INTEL_DEPTHCOMMON]            = { INTEL_DEPTHCOMMON_START,
-                                       INTEL_DEPTHCOMMON_END },
-};
-
-static tag_info_t intel_aiq[INTEL_AIQ_END -
-        INTEL_AIQ_START] = {
-    [ COM_INTEL_AIQ_ANALYSIS_MODE - INTEL_AIQ_START ] =
+static tag_info_t com_intel_aiq_tags[COM_INTEL_AIQ_END -
+        COM_INTEL_AIQ_START] = {
+    [ COM_INTEL_AIQ_ANALYSIS_MODE - COM_INTEL_AIQ_START ] =
     { "analysisMode",                  TYPE_BYTE   },
-    [ COM_INTEL_AIQ_MULTI_FRAME_HINT - INTEL_AIQ_START ] =
+    [ COM_INTEL_AIQ_MULTI_FRAME_HINT - COM_INTEL_AIQ_START ] =
     { "multiFrameHint",                TYPE_BYTE   },
-    [ COM_INTEL_AIQ_SCENE_DETECTED - INTEL_AIQ_START ] =
+    [ COM_INTEL_AIQ_SCENE_DETECTED - COM_INTEL_AIQ_START ] =
     { "sceneDetected",                 TYPE_BYTE   },
 };
 
-static tag_info_t intel_face_engine[INTEL_FACE_ENGINE_END -
-        INTEL_FACE_ENGINE_START] = {
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE - INTEL_FACE_ENGINE_START ] =
+static tag_info_t com_intel_face_engine_tags[COM_INTEL_FACE_ENGINE_END -
+        COM_INTEL_FACE_ENGINE_START] = {
+    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectMode",               TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS - INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectStatus",             TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES - INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectScores",             TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES - INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES - COM_INTEL_FACE_ENGINE_START ] =
     { "faceDetectRipAngles",           TYPE_INT32  },
 };
 
-static tag_info_t intel_face_engine_info[INTEL_FACE_ENGINE_INFO_END -
-        INTEL_FACE_ENGINE_INFO_START] = {
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT - INTEL_FACE_ENGINE_INFO_START ] =
+static tag_info_t com_intel_face_engine_info_tags[COM_INTEL_FACE_ENGINE_INFO_END -
+        COM_INTEL_FACE_ENGINE_INFO_START] = {
+    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT - COM_INTEL_FACE_ENGINE_INFO_START ] =
     { "availableSmileDetect",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT - INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT - COM_INTEL_FACE_ENGINE_INFO_START ] =
     { "availableBlinkDetect",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE - INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE - COM_INTEL_FACE_ENGINE_INFO_START ] =
     { "availableFaceRecognize",        TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK - INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_FACE_ENGINE_INFO_START ] =
     { "availableObjectTrack",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA - INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA - COM_INTEL_FACE_ENGINE_INFO_START ] =
     { "availablePanorama",             TYPE_BYTE   },
 };
 
-static tag_info_t intel_ds4[INTEL_DS4_END -
-        INTEL_DS4_START] = {
-    [ COM_INTEL_DS4_MEDIAN_THRESHOLD - INTEL_DS4_START ] =
-    { "medianThreshold",               TYPE_INT32  },
-    [ COM_INTEL_DS4_SCORE_MIN_THRESHOLD - INTEL_DS4_START ] =
-    { "scoreMinThreshold",             TYPE_INT32  },
-    [ COM_INTEL_DS4_SCORE_MAX_THRESHOLD - INTEL_DS4_START ] =
-    { "scoreMaxThreshold",             TYPE_INT32  },
-    [ COM_INTEL_DS4_NEIGHBOR_THRESHOLD - INTEL_DS4_START ] =
-    { "neighborThreshold",             TYPE_INT32  },
-    [ COM_INTEL_DS4_LR_AGREE_THRESHOLD - INTEL_DS4_START ] =
-    { "lrAgreeThreshold",              TYPE_INT32  },
-    [ COM_INTEL_DS4_TEXTURE_COUNT_THRESHOLD - INTEL_DS4_START ] =
-    { "textureCountThreshold",         TYPE_INT32  },
-    [ COM_INTEL_DS4_TEXTURE_DIFFERENCE_THRESHOLD - INTEL_DS4_START ] =
-    { "textureDifferenceThreshold",    TYPE_INT32  },
-    [ COM_INTEL_DS4_SECOND_PEAK_THRESHOLD - INTEL_DS4_START ] =
-    { "secondPeakThreshold",           TYPE_INT32  },
-    [ COM_INTEL_DS4_RGB_RECTIFICATION_MODE - INTEL_DS4_START ] =
-    { "rgbRectificationMode",          TYPE_BYTE   },
+
+
+static tag_section_t section_com_intel_aiq = {
+    "com.intel.aiq",
+    (uint32_t) COM_INTEL_AIQ_START,
+    (uint32_t) COM_INTEL_AIQ_END,
+    com_intel_aiq_tags
 };
 
-static tag_info_t intel_depthcommon[INTEL_DEPTHCOMMON_END -
-        INTEL_DEPTHCOMMON_START] = {
-    [ COM_INTEL_DEPTHCOMMON_DEPTH_UNITS - INTEL_DEPTHCOMMON_START ] =
-    { "depthUnits",                    TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE - INTEL_DEPTHCOMMON_START ] =
-    { "disparityOutputMode",           TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_DISPARITY_MULTIPLIER - INTEL_DEPTHCOMMON_START ] =
-    { "disparityMultiplier",           TYPE_DOUBLE },
-    [ COM_INTEL_DEPTHCOMMON_DEPTH_MIN - INTEL_DEPTHCOMMON_START ] =
-    { "depthMin",                      TYPE_INT32  },
-    [ COM_INTEL_DEPTHCOMMON_DEPTH_MAX - INTEL_DEPTHCOMMON_START ] =
-    { "depthMax",                      TYPE_INT32  },
-    [ COM_INTEL_DEPTHCOMMON_EMITTER - INTEL_DEPTHCOMMON_START ] =
-    { "emitter",                       TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME - INTEL_DEPTHCOMMON_START ] =
-    { "nodeExposureTime",              TYPE_INT64  },
-    [ COM_INTEL_DEPTHCOMMON_NODE_AE_MODE - INTEL_DEPTHCOMMON_START ] =
-    { "nodeAeMode",                    TYPE_INT64  },
-    [ COM_INTEL_DEPTHCOMMON_NODE_GAIN_FACTOR - INTEL_DEPTHCOMMON_START ] =
-    { "nodeGainFactor",                TYPE_RATIONAL
-                },
-    [ COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE - INTEL_DEPTHCOMMON_START ] =
-    { "nodeFrameCountersMode",         TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE - INTEL_DEPTHCOMMON_START ] =
-    { "frameSyncMode",                 TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_MODULE_ID - INTEL_DEPTHCOMMON_START ] =
-    { "moduleId",                      TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_CALIBRATION_DATA - INTEL_DEPTHCOMMON_START ] =
-    { "calibrationData",               TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_AVAILABLE_DEPTH_UNITS - INTEL_DEPTHCOMMON_START ] =
-    { "availableDepthUnits",           TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES - INTEL_DEPTHCOMMON_START ] =
-    { "availableNodes",                TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_SIZE_NODES_MAPPING - INTEL_DEPTHCOMMON_START ] =
-    { "sizeNodesMapping",              TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_FORMAT_NODES_MAPPING - INTEL_DEPTHCOMMON_START ] =
-    { "formatNodesMapping",            TYPE_BYTE   },
-    [ COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME_RANGE - INTEL_DEPTHCOMMON_START ] =
-    { "nodeExposureTimeRange",         TYPE_INT64  },
-    [ COM_INTEL_DEPTHCOMMON_NODE_GAIN_RANGE - INTEL_DEPTHCOMMON_START ] =
-    { "nodeGainRange",                 TYPE_INT64  },
-    [ COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS - INTEL_DEPTHCOMMON_START ] =
-    { "nodeFrameCounters",             TYPE_INT32  },
+static tag_section_t section_com_intel_face_engine = {
+    "com.intel.faceEngine",
+    (uint32_t) COM_INTEL_FACE_ENGINE_START,
+    (uint32_t) COM_INTEL_FACE_ENGINE_END,
+    com_intel_face_engine_tags
+};
+
+static tag_section_t section_com_intel_face_engine_info = {
+    "com.intel.faceEngine.info",
+    (uint32_t) COM_INTEL_FACE_ENGINE_INFO_START,
+    (uint32_t) COM_INTEL_FACE_ENGINE_INFO_END,
+    com_intel_face_engine_info_tags
 };
 
 
-tag_info_t *tag_info[INTEL_CAMERA_SECTION_COUNT] = {
-    intel_aiq,
-    intel_face_engine,
-    intel_face_engine_info,
-    intel_ds4,
-    intel_depthcommon,
+tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
+    section_com_intel_aiq,
+    section_com_intel_face_engine,
+    section_com_intel_face_engine_info,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -303,211 +242,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
         case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA: {
-            break;
-        }
-
-        case COM_INTEL_DS4_MEDIAN_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_SCORE_MIN_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_SCORE_MAX_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_NEIGHBOR_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_LR_AGREE_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_TEXTURE_COUNT_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_TEXTURE_DIFFERENCE_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_SECOND_PEAK_THRESHOLD: {
-            break;
-        }
-        case COM_INTEL_DS4_RGB_RECTIFICATION_MODE: {
-            switch (value) {
-                case COM_INTEL_DS4_RGB_RECTIFICATION_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DS4_RGB_RECTIFICATION_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-
-        case COM_INTEL_DEPTHCOMMON_DEPTH_UNITS: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_DEPTH_UNITS_MICRON:
-                    msg = "MICRON";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_DEPTH_UNITS_MM:
-                    msg = "MM";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_DISPARITY_MULTIPLIER: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_DEPTH_MIN: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_DEPTH_MAX: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_EMITTER: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_EMITTER_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_EMITTER_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_AE_MODE: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_NODE_AE_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_NODE_AE_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_GAIN_FACTOR: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_MODULE_ID: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_MODULE_ID_DS:
-                    msg = "DS";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_MODULE_ID_IVCAM:
-                    msg = "IVCAM";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_CALIBRATION_DATA: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_AVAILABLE_DEPTH_UNITS: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES: {
-            switch (value) {
-                case COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_COLOR:
-                    msg = "COLOR";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_DEPTH:
-                    msg = "DEPTH";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT:
-                    msg = "LEFT_RIGHT";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_CENTER:
-                    msg = "CENTER";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_SIZE_NODES_MAPPING: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_FORMAT_NODES_MAPPING: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME_RANGE: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_GAIN_RANGE: {
-            break;
-        }
-        case COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS: {
             break;
         }
 
