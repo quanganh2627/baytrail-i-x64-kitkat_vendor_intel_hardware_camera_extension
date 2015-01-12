@@ -125,7 +125,9 @@ def path_name(node):
   path.reverse()
   path.append(node)
 
-  return ".".join((i.name for i in path))
+  # add com. prefix manually as the metadata
+  # model does not support it currently
+  return "com." + ".".join((i.name for i in path))
 
 def has_descendants_with_enums(node):
   """
