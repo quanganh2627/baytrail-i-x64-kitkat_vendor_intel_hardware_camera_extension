@@ -52,53 +52,6 @@ const metadata_value_t com_intel_aiq_sceneDetected_values[] = {
                  {"BARCODE", COM_INTEL_AIQ_SCENE_DETECTED_BARCODE },
          };
 
-const metadata_value_t com_intel_depthcommon_availableNodes_values[] = {
-                 {"COLOR", COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_COLOR },
-                 {"DEPTH", COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_DEPTH },
-                 {"LEFT_RIGHT", COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT },
-                 {"CENTER", COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES_CENTER },
-         };
-
-const metadata_value_t com_intel_depthcommon_depthUnits_values[] = {
-                 {"MICRON", COM_INTEL_DEPTHCOMMON_DEPTH_UNITS_MICRON },
-                 {"MM", COM_INTEL_DEPTHCOMMON_DEPTH_UNITS_MM },
-         };
-
-const metadata_value_t com_intel_depthcommon_disparityOutputMode_values[] = {
-                 {"OFF", COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE_OFF },
-                 {"ON", COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE_ON },
-         };
-
-const metadata_value_t com_intel_depthcommon_emitter_values[] = {
-                 {"OFF", COM_INTEL_DEPTHCOMMON_EMITTER_OFF },
-                 {"ON", COM_INTEL_DEPTHCOMMON_EMITTER_ON },
-         };
-
-const metadata_value_t com_intel_depthcommon_frameSyncMode_values[] = {
-                 {"OFF", COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE_OFF },
-                 {"ON", COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE_ON },
-         };
-
-const metadata_value_t com_intel_depthcommon_moduleId_values[] = {
-                 {"DS", COM_INTEL_DEPTHCOMMON_MODULE_ID_DS },
-                 {"IVCAM", COM_INTEL_DEPTHCOMMON_MODULE_ID_IVCAM },
-         };
-
-const metadata_value_t com_intel_depthcommon_nodeAeMode_values[] = {
-                 {"OFF", COM_INTEL_DEPTHCOMMON_NODE_AE_MODE_OFF },
-                 {"ON", COM_INTEL_DEPTHCOMMON_NODE_AE_MODE_ON },
-         };
-
-const metadata_value_t com_intel_depthcommon_nodeFrameCountersMode_values[] = {
-                 {"OFF", COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE_OFF },
-                 {"ON", COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE_ON },
-         };
-
-const metadata_value_t com_intel_ds4_rgbRectificationMode_values[] = {
-                 {"OFF", COM_INTEL_DS4_RGB_RECTIFICATION_MODE_OFF },
-                 {"ON", COM_INTEL_DS4_RGB_RECTIFICATION_MODE_ON },
-         };
-
 const metadata_value_t com_intel_faceEngine_smileDetectMode_values[] = {
                  {"OFF", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF },
                  {"ON", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON },
@@ -113,28 +66,6 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.faceEngine.smileDetectStatus", COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS},
         {"com.intel.faceEngine.smileDetectScores", COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES},
         {"com.intel.faceEngine.faceDetectRipAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES},
-        {"com.intel.ds4.medianThreshold", COM_INTEL_DS4_MEDIAN_THRESHOLD},
-        {"com.intel.ds4.scoreMinThreshold", COM_INTEL_DS4_SCORE_MIN_THRESHOLD},
-        {"com.intel.ds4.scoreMaxThreshold", COM_INTEL_DS4_SCORE_MAX_THRESHOLD},
-        {"com.intel.ds4.neighborThreshold", COM_INTEL_DS4_NEIGHBOR_THRESHOLD},
-        {"com.intel.ds4.lrAgreeThreshold", COM_INTEL_DS4_LR_AGREE_THRESHOLD},
-        {"com.intel.ds4.textureCountThreshold", COM_INTEL_DS4_TEXTURE_COUNT_THRESHOLD},
-        {"com.intel.ds4.textureDifferenceThreshold", COM_INTEL_DS4_TEXTURE_DIFFERENCE_THRESHOLD},
-        {"com.intel.ds4.secondPeakThreshold", COM_INTEL_DS4_SECOND_PEAK_THRESHOLD},
-        {"com.intel.ds4.rgbRectificationMode", COM_INTEL_DS4_RGB_RECTIFICATION_MODE},
-        {"com.intel.depthcommon.depthUnits", COM_INTEL_DEPTHCOMMON_DEPTH_UNITS},
-        {"com.intel.depthcommon.disparityOutputMode", COM_INTEL_DEPTHCOMMON_DISPARITY_OUTPUT_MODE},
-        {"com.intel.depthcommon.disparityMultiplier", COM_INTEL_DEPTHCOMMON_DISPARITY_MULTIPLIER},
-        {"com.intel.depthcommon.depthMin", COM_INTEL_DEPTHCOMMON_DEPTH_MIN},
-        {"com.intel.depthcommon.depthMax", COM_INTEL_DEPTHCOMMON_DEPTH_MAX},
-        {"com.intel.depthcommon.emitter", COM_INTEL_DEPTHCOMMON_EMITTER},
-        {"com.intel.depthcommon.nodeExposureTime", COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME},
-        {"com.intel.depthcommon.nodeAeMode", COM_INTEL_DEPTHCOMMON_NODE_AE_MODE},
-        {"com.intel.depthcommon.nodeGainFactor", COM_INTEL_DEPTHCOMMON_NODE_GAIN_FACTOR},
-        {"com.intel.depthcommon.nodeFrameCountersMode", COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS_MODE},
-        {"com.intel.depthcommon.frameSyncMode", COM_INTEL_DEPTHCOMMON_FRAME_SYNC_MODE},
-        {"com.intel.depthcommon.availableNodes", COM_INTEL_DEPTHCOMMON_AVAILABLE_NODES},
-        {"com.intel.depthcommon.nodeFrameCounters", COM_INTEL_DEPTHCOMMON_NODE_FRAME_COUNTERS},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
@@ -145,16 +76,7 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"faceEngine.info.availableFaceRecognize", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availableObjectTrack", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availablePanorama", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
-    // DS4
-    // DEPTHCOMMON
-    {"depthcommon.moduleId", COM_INTEL_DEPTHCOMMON_MODULE_ID, TYPE_BYTE, com_intel_depthcommon_moduleId_values, 2, false, {0,0,0}, 0 },
-    {"depthcommon.calibrationData", COM_INTEL_DEPTHCOMMON_CALIBRATION_DATA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, 0 },
-    {"depthcommon.availableDepthUnits", COM_INTEL_DEPTHCOMMON_AVAILABLE_DEPTH_UNITS, TYPE_BYTE, com_intel_depthcommon_depthUnits_values, 2, true, {-1,0,0}, 0 },
-    {"depthcommon.sizeNodesMapping", COM_INTEL_DEPTHCOMMON_SIZE_NODES_MAPPING, TYPE_BYTE, NULL, 0, true, {-1,0,0}, 0 },
-    {"depthcommon.formatNodesMapping", COM_INTEL_DEPTHCOMMON_FORMAT_NODES_MAPPING, TYPE_BYTE, NULL, 0, true, {-1,0,0}, 0 },
-    {"depthcommon.nodeExposureTimeRange", COM_INTEL_DEPTHCOMMON_NODE_EXPOSURE_TIME_RANGE, TYPE_INT64, NULL, 0, true, {3,-1,0}, 0 },
-    {"depthcommon.nodeGainRange", COM_INTEL_DEPTHCOMMON_NODE_GAIN_RANGE, TYPE_INT64, NULL, 0, true, {3,-1,0}, 0 },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 12
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
 
