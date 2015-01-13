@@ -298,6 +298,15 @@ public class IntelCamera {
         System.loadLibrary("intelcamera_jni");
     }
 
+    public IntelCamera(int cameraId, int halVersion) {
+        if (halVersion == Camera.CAMERA_HAL_API_VERSION_1_0) {
+            mCameraDevice = android.hardware.Camera.openLegacy(cameraId, halVersion);
+        } else {
+            mCameraDevice = android.hardware.Camera.open(cameraId);
+        }
+        init();
+    }
+
     public IntelCamera(int cameraId) {
         mCameraDevice = android.hardware.Camera.open(cameraId);
         init();
