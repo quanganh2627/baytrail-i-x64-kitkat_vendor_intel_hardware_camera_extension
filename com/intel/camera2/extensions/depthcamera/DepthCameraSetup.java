@@ -159,9 +159,10 @@ public  class DepthCameraSetup
 				Plane[] planes= mDepthImage.getPlanes();
 				if ( planes == null || planes.length == 0 )
 					return;
-				
-				ByteBuffer depthBuff = planes[0].getBuffer(); //assume first plane
-				nativeConvertBuffToRGBFormat(depthBuff, destBuffer, depthBuff.capacity());
+				Plane plane = planes[0];
+				ByteBuffer depthBuff = plane.getBuffer(); //assume first plane
+
+				nativeConvertBuffToRGBFormat(depthBuff, destBuffer, mDepthImage.getWidth(), mDepthImage.getHeight(), plane.getRowStride());
 			}
 
 			@Override
@@ -178,7 +179,7 @@ public  class DepthCameraSetup
 			}
 			private SurfaceImage mDepthImage;
 			
-			private synchronized native void nativeConvertBuffToRGBFormat(ByteBuffer src, ByteBuffer dest, int depthsize); //allocated in java updated in c++ 
+			private synchronized native void nativeConvertBuffToRGBFormat(ByteBuffer src, ByteBuffer dest, int width, int height, int stride); //allocated in java updated in c++ 
 			private synchronized native void nativeConvertUVMapBuffToRGBFormat(ByteBuffer src, ByteBuffer colorPixels, ByteBuffer dest, int dWidth, int dHeight, int cWidth, int cHeight); //allocated in java updated in c++
 		}
 		

@@ -194,7 +194,7 @@ public:
     bool isHelperBufferInitialized() { return mHelperBufferInitialized; }
     void performUVMapping(float* uvMapData, bool isColorRectified, int colorFormat, 
     int colorWidth, int colorHeight, DSCalibRectParameters calibData, uint16_t* depthData,
-    int depthWidth, int depthHeight);
+    int depthWidth, int depthHeight, int depthstride);
 private:
     
     void sprintCalibrationDebug();
@@ -358,10 +358,10 @@ bool JNIDepthCameraImageReaderContext::fillRectParams( DSCalibRectParameters* ca
 
 void JNIDepthCameraImageReaderContext::performUVMapping(float* uvMapData, bool isColorRectified, int colorFormat, 
     int colorWidth, int colorHeight, DSCalibRectParameters calibData, uint16_t* depthData,
-    int depthWidth, int depthHeight)
+    int depthWidth, int depthHeight, int depthStride)
 {
     ALOGV("%s", __FUNCTION__);
-    ALOGI("%s color %dx%d depth %dx%d isColorRectified=%d", __FUNCTION__, colorWidth,colorHeight, depthWidth, depthHeight, isColorRectified);
+    ALOGI("%s color %dx%d depth %dx%d stride %d isColorRectified=%d", __FUNCTION__, colorWidth,colorHeight, depthWidth, depthHeight, depthStride,isColorRectified);
     sprintCalibrationDebug();
 
 #ifdef PRINT_DEBUG
@@ -443,17 +443,17 @@ void JNIDepthCameraImageReaderContext::performUVMapping(float* uvMapData, bool i
     		    	ALOGW("%f %s[%d]",translation[j], "translation", j);
 #endif
     float zImage[3];
-    int i=0;
-
+    int base;
     for (int y = 0; y < depthHeight ; y++)
     {
         for (int x = 0; x < depthWidth; x++)
         {
-        	if ( depthData[i] != 0 )
+            base = y*depthStride;
+					if ( depthData[base+x] != 0 )
         	{
         		zImage[0] = x;
         		zImage[1] = y;
-				zImage[2] = depthData[i];
+				zImage[2] = depthData[base+x];
 
 				if ( isColorRectified )
 				{
@@ -466,7 +466,6 @@ void JNIDepthCameraImageReaderContext::performUVMapping(float* uvMapData, bool i
 							thirdIntrinsicsNonRect, zImage, uvMapData);
 				}
         	}
-        	i++;
             uvMapData+=2;
         }
     }
@@ -1732,14 +1731,14 @@ static void uvMapToARGB8888(const void *inUVMap, const void* inColorPixels,
 }
 static void z16ToRGBA8888(const void *in,
 			    void *out,
-			    int depthsize)
+			    int width, int height, int stride)
 {
 	ALOGV("%s: Start ", __FUNCTION__);
 	const uint16_t *depth = (const uint16_t *)in;
 	uint8_t *rgb = (uint8_t *)out;
 	int nr_valid = 0;
-	unsigned int wh = depthsize/2; //working with int16 not bytes
 	unsigned int i;
+    int r,c;
     int x;
 	static bool init = false;
 
@@ -1751,13 +1750,19 @@ static void z16ToRGBA8888(const void *in,
 	// Build cumulative histogram
 	memset(depth_histogram, 0, hist_size * sizeof(int));
 
-	for (i = 0; i < wh; i++) {
-		uint16_t d = depth[i];
-		if (d) {
-			depth_histogram[d]++;
-			nr_valid++;
-		}
-	}
+    for (r = 0; r < height; r++)
+    {
+        int base = r*stride;
+        for (c = 0; c < width; c++)
+        {
+
+				uint16_t d = depth[base+c];
+				if (d) {
+					depth_histogram[d]++;
+					nr_valid++;
+		    }
+        }
+    }
 	for (i = 1; i < hist_size; i++)
 		depth_histogram[i] += depth_histogram[i - 1];
 
@@ -1768,16 +1773,20 @@ static void z16ToRGBA8888(const void *in,
 
 	// Set rgb values
 	i = 0;
-
-	int rgbsize = depthsize*2; //in bytes, 32 bits , depth is 16 bits
-	for (x = 0; x < rgbsize; x += 4)
-	{
-		uint16_t d = depth[i++];
-		int v = 3 * depth_histogram[d];
-		rgb[x] = depth_colormap[v];
-		rgb[x + 1] = depth_colormap[v + 1];
-		rgb[x + 2] = depth_colormap[v + 2];
-		rgb[x + 3] = 0xff;
+	int rgbsize = width*height*4; //in bytes, 32 bits , depth is 16 bits
+    for (r = 0; r < height; r++)
+    {
+        int base = r*stride;
+        int cbase = r*width*4; //no stride for color
+        for (c = 0; c < width; c++)
+        {
+		    uint16_t d = depth[base+c];
+				int v = 3 * depth_histogram[d];
+				rgb[cbase + c*4] = depth_colormap[v];
+				rgb[cbase + c*4 + 1] = depth_colormap[v + 1];
+				rgb[cbase + c*4 + 2] = depth_colormap[v + 2];
+				rgb[cbase + c*4 + 3] = 0xff;
+        }
 	}
 }
 
@@ -1816,11 +1825,11 @@ static void Image_convertUVMapToRGB(JNIEnv* env, jobject thiz,jobject colorPixel
 	return;
 }
 
-static void Image_convertZ16ToRGB(JNIEnv* env, jobject thiz,jobject src, jobject dst, int depthsize)
+static void Image_convertZ16ToRGB(JNIEnv* env, jobject thiz,jobject src, jobject dst, int width, int height, int stride)
 {
-	if ( depthsize <= 0 )
+	if ( width*height <= 0 )
 	{
-		ALOGW("%s: depth buffer size is not valid: %d", __FUNCTION__, depthsize);
+		ALOGW("%s: depth buffer size is not valid: %d", __FUNCTION__, width*height);
 		return;
 	}
 	void *depthBuf = env->GetDirectBufferAddress(src);
@@ -1836,7 +1845,7 @@ static void Image_convertZ16ToRGB(JNIEnv* env, jobject thiz,jobject src, jobject
 		jniThrowRuntimeException(env, "Can't convert dst direct buffer address");
 		return;
 	}
-	z16ToRGBA8888(depthBuf, rgbBuf, depthsize);
+	z16ToRGBA8888(depthBuf, rgbBuf, width, height, stride);
 	return;
 }
 
@@ -1895,7 +1904,7 @@ static jobject Image_getUVMapByteBuffer(JNIEnv* env, jobject thiz, jobject ctxTh
     //Fill uvMap
     depthCtx->performUVMapping((float*)uvMap ,isColorRectified, colorFormat,
     colorWidth, colorHeight, calibData, depthData,
-    depthCtx->getBufferWidth(), depthCtx->getBufferHeight());
+    depthCtx->getBufferWidth(), depthCtx->getBufferHeight(), buffer->stride);
 
     // Create byteBuffer from native buffer
     size = depthCtx->getBufferWidth()* depthCtx->getBufferHeight() * 2 *sizeof(float);
@@ -1935,7 +1944,7 @@ static JNINativeMethod gImageMethods[] = {
 };
 
 static JNINativeMethod gDepthImageMethods[] = {
-    {"nativeConvertBuffToRGBFormat",   "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)V",   (void*)Image_convertZ16ToRGB },
+    {"nativeConvertBuffToRGBFormat",   "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;III)V",   (void*)Image_convertZ16ToRGB },
     {"nativeConvertUVMapBuffToRGBFormat",   "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;IIII)V",   (void*)Image_convertUVMapToRGB},
 };
 
