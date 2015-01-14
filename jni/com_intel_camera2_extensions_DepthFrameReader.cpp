@@ -952,16 +952,9 @@ static uint32_t Image_getJpegSize(CpuConsumer::LockedBuffer* buffer)
 
     return size;
 }
-static int32_t applyFormatOverrides(int32_t bufferFormat, int32_t readerCtxFormat)
-{
-    if (bufferFormat == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED && readerCtxFormat == HAL_PIXEL_FORMAT_RGBA_8888) {
-        return readerCtxFormat;
-    }
-    return bufferFormat;
-}
 //returns the relevant plane address, idx is the plane idx
 static void Image_getLockedBufferInfo(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, int idx,
-                                uint8_t **base, uint32_t *size, int readerFormat)
+                                uint8_t **base, uint32_t *size)
 {
     ALOG_ASSERT(buffer != NULL, "Input buffer is NULL!!!");
     ALOG_ASSERT(base != NULL, "base is NULL!!!");
@@ -978,7 +971,6 @@ static void Image_getLockedBufferInfo(JNIEnv* env, CpuConsumer::LockedBuffer* bu
 
     dataSize = ySize = cSize = cStride = 0;
     int32_t fmt = buffer->format;
-    fmt = applyFormatOverrides(fmt, readerFormat);
     switch (fmt) {
         case HAL_PIXEL_FORMAT_YCbCr_420_888:
             pData =
@@ -1109,7 +1101,8 @@ static void Image_getLockedBufferInfo(JNIEnv* env, CpuConsumer::LockedBuffer* bu
     *base = pData;
     *size = dataSize;
 }
-static jint Image_imageGetPixelStride(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, int idx, int readerFormat)
+
+static jint Image_imageGetPixelStride(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, int idx)
 {
     ALOGV("%s: buffer index: %d", __FUNCTION__, idx);
     ALOG_ASSERT((idx < IMAGE_READER_MAX_NUM_PLANES) && (idx >= 0), "Index is out of range:%d", idx);
@@ -1118,7 +1111,6 @@ static jint Image_imageGetPixelStride(JNIEnv* env, CpuConsumer::LockedBuffer* bu
     ALOG_ASSERT(buffer != NULL, "buffer is NULL");
 
     int32_t fmt = buffer->format;
-    fmt = applyFormatOverrides(fmt, readerFormat);
     switch (fmt) {
         case HAL_PIXEL_FORMAT_YCbCr_420_888:
             pixelStride = (idx == 0) ? 1 : buffer->chromaStep;
@@ -1168,7 +1160,7 @@ static jint Image_imageGetPixelStride(JNIEnv* env, CpuConsumer::LockedBuffer* bu
     return pixelStride;
 }
 
-static jint Image_imageGetRowStride(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, int idx, int readerFormat)
+static jint Image_imageGetRowStride(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, int idx)
 {
     ALOGV("%s: buffer index: %d", __FUNCTION__, idx);
     ALOG_ASSERT((idx < IMAGE_READER_MAX_NUM_PLANES) && (idx >= 0));
@@ -1177,7 +1169,6 @@ static jint Image_imageGetRowStride(JNIEnv* env, CpuConsumer::LockedBuffer* buff
     ALOG_ASSERT(buffer != NULL, "buffer is NULL");
 
     int32_t fmt = buffer->format;
-    fmt = applyFormatOverrides(fmt, readerFormat);
 
     switch (fmt) {
         case HAL_PIXEL_FORMAT_YCbCr_420_888:
@@ -1555,7 +1546,7 @@ static jint DepthCameraImageReader_imageSetup(JNIEnv* env, jobject thiz,
         return -1;
     }
 
-    if (ctx->getBufferFormat() != buffer->format && ctx->getBufferFormat()  != HAL_PIXEL_FORMAT_RGBA_8888) {
+    if (ctx->getBufferFormat() != buffer->format) {
         // Return the buffer to the queue.
         consumer->unlockBuffer(*buffer);
         ctx->returnLockedBuffer(buffer);
@@ -1647,7 +1638,7 @@ static jobject DepthCameraImageReader_getSurface(JNIEnv* env, jobject thiz, jint
     return android_view_Surface_createFromIGraphicBufferProducer(env, producer);
 }
 
-static jobject Image_createSurfacePlane(JNIEnv* env, jobject thiz, int idx, int readerFormat)
+static jobject Image_createSurfacePlane(JNIEnv* env, jobject thiz, int idx)
 {
     int rowStride, pixelStride;
     ALOGV("%s: buffer index: %d", __FUNCTION__, idx);
@@ -1658,8 +1649,8 @@ static jobject Image_createSurfacePlane(JNIEnv* env, jobject thiz, int idx, int 
     if (buffer == NULL) {
         jniThrowException(env, "java/lang/IllegalStateException", "Image_createSurfacePlane: Image was released");
     }
-    rowStride = Image_imageGetRowStride(env, buffer, idx, readerFormat);
-    pixelStride = Image_imageGetPixelStride(env, buffer, idx, readerFormat);
+    rowStride = Image_imageGetRowStride(env, buffer, idx);
+    pixelStride = Image_imageGetPixelStride(env, buffer, idx);
 
     jobject surfPlaneObj = env->NewObject(gSurfacePlaneClassInfo.clazz,
             gSurfacePlaneClassInfo.ctor, thiz, idx, rowStride, pixelStride);
@@ -1849,7 +1840,7 @@ static void Image_convertZ16ToRGB(JNIEnv* env, jobject thiz,jobject src, jobject
 	return;
 }
 
-static jobject Image_getByteBuffer(JNIEnv* env, jobject thiz, int idx, int readerFormat)
+static jobject Image_getByteBuffer(JNIEnv* env, jobject thiz, int idx)
 {
     uint8_t *base = NULL;
     uint32_t size = 0;
@@ -1864,7 +1855,7 @@ static jobject Image_getByteBuffer(JNIEnv* env, jobject thiz, int idx, int reade
     }
 
     // Create byteBuffer from native buffer
-    Image_getLockedBufferInfo(env, buffer, idx, &base, &size,readerFormat);
+    Image_getLockedBufferInfo(env, buffer, idx, &base, &size);
     byteBuffer = env->NewDirectByteBuffer(base, size);
     // TODO: throw dvm exOutOfMemoryError?
     if ((byteBuffer == NULL) && (env->ExceptionCheck() == false)) {
@@ -1937,9 +1928,9 @@ static JNINativeMethod gDepthImageReaderMethods[] = {
 };
 
 static JNINativeMethod gImageMethods[] = {
-    {"nativeImageGetBuffer",   "(II)Ljava/nio/ByteBuffer;",   (void*)Image_getByteBuffer },
+    {"nativeImageGetBuffer",   "(I)Ljava/nio/ByteBuffer;",   (void*)Image_getByteBuffer },
     {"nativeImageGetUVMapBuffer", "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraSetup$DepthFrameReader;ZIII)Ljava/nio/ByteBuffer;",   (void*)Image_getUVMapByteBuffer },
-    {"nativeCreatePlane",      "(II)Lcom/intel/camera2/extensions/depthcamera/DepthCameraSetup$DepthFrameReader$SurfaceImage$SurfacePlane;",
+    {"nativeCreatePlane",      "(I)Lcom/intel/camera2/extensions/depthcamera/DepthCameraSetup$DepthFrameReader$SurfaceImage$SurfacePlane;",
                                                              (void*)Image_createSurfacePlane },
 };
 
