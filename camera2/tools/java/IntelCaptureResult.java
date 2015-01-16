@@ -144,12 +144,79 @@ public class IntelCaptureResult extends CameraMetadata<CaptureResult.Key<?>> {
             new Key<int[]>("com.intel.faceEngine.smileDetectScores", int[].class);
 
     /**
+     * <p>Control of Blink detection.</p>
+     * <p>When ON, com.intel.faceEngine.blinkDetectStatus (dynamic) and com.intel.faceEngine.blinkDetectScores (dynamic) outputs are valid.</p>
+     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF
+     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_FACE_ENGINE_BLINK_DETECT_MODE =
+            new Key<Integer>("com.intel.faceEngine.blinkDetectMode", int.class);
+
+    /**
+     * <p>This metadata tag will provide a list of blink status of faces. The order of this list is always aligned with the IDs produced by the android-defined metadata tagin.
+     * android.statistics.faceIds.</p>
+     * <p>True means closed eye.
+     * False means open eye.
+     * The meaning of array should be like:
+     * "0th face lefe eye|0th face right eye|1th face left eye|1th face right eye|2th face left eye|2th face  right eye"</p>
+     */
+    @PublicKey
+    public static final Key<byte[]> INTEL_FACE_ENGINE_BLINK_DETECT_STATUS =
+            new Key<byte[]>("com.intel.faceEngine.blinkDetectStatus", byte[].class);
+
+    /**
+     * <p>This metadata tag will provide an list of blink confidence scores. The scores are confidence level that the face is blinking.</p>
+     * <p>0 means closed eye.
+     * 100 means wide-open eye.</p>
+     */
+    @PublicKey
+    public static final Key<int[]> INTEL_FACE_ENGINE_BLINK_DETECT_SCORES =
+            new Key<int[]>("com.intel.faceEngine.blinkDetectScores", int[].class);
+
+    /**
+     * <p>Control of Face recognition.</p>
+     * <p>When ON, com.intel.faceEngine.faceRecognizePersonIds (dynamic) and com.intel.faceEngine.faceRecognizePersonSimilarities (dynamic) outputs are valid.</p>
+     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF
+     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE =
+            new Key<Integer>("com.intel.faceEngine.faceRecognizeMode", int.class);
+
+    /**
+     * <p>This metadata tag will provide a list of person Ids from face recognition. Each person is identified as unique positive integer. This is different from android.statistics.faceIds, which is unique among the tracking session</p>
+     * <p>-10000 means unkown face.
+     * Positive integer means each person id. 0 is illegal.</p>
+     */
+    @PublicKey
+    public static final Key<int[]> INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS =
+            new Key<int[]>("com.intel.faceEngine.faceRecognizePersonIds", int[].class);
+
+    /**
+     * <p>This metadata tag will provide a list of person similarities from face recognition. It is the biggest one of the estimated levels between the input face and the faces in databases. It is good to be tread as a kind of score.</p>
+     * <p>0 is not likely the person
+     * 100 is quite sure of the person</p>
+     */
+    @PublicKey
+    public static final Key<int[]> INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES =
+            new Key<int[]>("com.intel.faceEngine.faceRecognizePersonSimilarities", int[].class);
+
+    /**
      * <p>This metadata tag will provide an list of RIP (Rotation In-Plane) angles from face detection. Represented in degree. Also known as 'rolling'.</p>
      * <p>The angle is represented as degree. The upright face is 0 degree, clock wise is positive, CC wise is negatives.</p>
      */
     @PublicKey
     public static final Key<int[]> INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES =
             new Key<int[]>("com.intel.faceEngine.faceDetectRipAngles", int[].class);
+
+    /**
+     * <p>This metadata tag will provide an list of ROP (Rotation out-of-plane) angles from face detection. Represented in degree. Also known as 'yawing'. Piching is not supported</p>
+     * <p>The frontal face is 0, left profile face is -1, right profile face is 1.</p>
+     */
+    @PublicKey
+    public static final Key<int[]> INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES =
+            new Key<int[]>("com.intel.faceEngine.faceDetectRopAngles", int[].class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

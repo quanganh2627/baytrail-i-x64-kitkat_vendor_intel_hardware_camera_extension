@@ -113,6 +113,26 @@ public final class IntelCaptureRequest extends CameraMetadata<CaptureRequest.Key
     public static final Key<Integer> INTEL_FACE_ENGINE_SMILE_DETECT_MODE =
             new Key<Integer>("com.intel.faceEngine.smileDetectMode", int.class);
 
+    /**
+     * <p>Control of Blink detection.</p>
+     * <p>When ON, com.intel.faceEngine.blinkDetectStatus (dynamic) and com.intel.faceEngine.blinkDetectScores (dynamic) outputs are valid.</p>
+     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF
+     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_FACE_ENGINE_BLINK_DETECT_MODE =
+            new Key<Integer>("com.intel.faceEngine.blinkDetectMode", int.class);
+
+    /**
+     * <p>Control of Face recognition.</p>
+     * <p>When ON, com.intel.faceEngine.faceRecognizePersonIds (dynamic) and com.intel.faceEngine.faceRecognizePersonSimilarities (dynamic) outputs are valid.</p>
+     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF
+     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE =
+            new Key<Integer>("com.intel.faceEngine.faceRecognizeMode", int.class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/
