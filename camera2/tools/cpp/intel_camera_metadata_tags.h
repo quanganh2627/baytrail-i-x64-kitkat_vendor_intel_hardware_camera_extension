@@ -66,9 +66,17 @@ typedef enum intel_camera_metadata_tag {
 
     COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE =         // enum         | public
             COM_INTEL_FACE_ENGINE_START,
+    COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE,          // enum         | public
+    COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE,        // enum         | public
     COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS,        // byte[]       | public
     COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES,        // int32[]      | public
+    COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS,        // byte[]       | public
+    COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES,        // int32[]      | public
+    COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS,  // int32[]      | public
+    COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES,
+                                                      // int32[]      | public
     COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES,     // int32[]      | public
+    COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES,     // int32[]      | public
     COM_INTEL_FACE_ENGINE_END,
 
     COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT = 
@@ -123,6 +131,18 @@ typedef enum intel_camera_metadata_enum_com_intel_face_engine_smile_detect_mode 
     COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF,
     COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON,
 } intel_camera_metadata_enum_com_intel_face_engine_smile_detect_mode_t;
+
+// COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE
+typedef enum intel_camera_metadata_enum_com_intel_face_engine_blink_detect_mode {
+    COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF,
+    COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON,
+} intel_camera_metadata_enum_com_intel_face_engine_blink_detect_mode_t;
+
+// COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE
+typedef enum intel_camera_metadata_enum_com_intel_face_engine_face_recognize_mode {
+    COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF,
+    COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON,
+} intel_camera_metadata_enum_com_intel_face_engine_face_recognize_mode_t;
 
 
 

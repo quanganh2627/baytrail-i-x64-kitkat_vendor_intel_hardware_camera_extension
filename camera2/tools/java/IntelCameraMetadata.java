@@ -90,6 +90,38 @@ public class IntelCameraMetadata {
     public static final int INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON = 1;
 
     //
+    // Enumeration values for IntelCaptureRequest#INTEL_FACE_ENGINE_BLINK_DETECT_MODE
+    //
+
+    /**
+     * <p>Do not include blink detection statistics in capture results</p>
+     * @see IntelCaptureRequest#INTEL_FACE_ENGINE_BLINK_DETECT_MODE
+     */
+    public static final int INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF = 0;
+
+    /**
+     * <p>Return blink status and score values</p>
+     * @see IntelCaptureRequest#INTEL_FACE_ENGINE_BLINK_DETECT_MODE
+     */
+    public static final int INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON = 1;
+
+    //
+    // Enumeration values for IntelCaptureRequest#INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE
+    //
+
+    /**
+     * <p>Do not include face recognition statistics in capture results</p>
+     * @see IntelCaptureRequest#INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE
+     */
+    public static final int INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF = 0;
+
+    /**
+     * <p>Return person id and person similarity </p>
+     * @see IntelCaptureRequest#INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE
+     */
+    public static final int INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON = 1;
+
+    //
     // Enumeration values for IntelCaptureResult#INTEL_AIQ_MULTI_FRAME_HINT
     //
 

@@ -52,6 +52,16 @@ const metadata_value_t com_intel_aiq_sceneDetected_values[] = {
                  {"BARCODE", COM_INTEL_AIQ_SCENE_DETECTED_BARCODE },
          };
 
+const metadata_value_t com_intel_faceEngine_blinkDetectMode_values[] = {
+                 {"OFF", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF },
+                 {"ON", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON },
+         };
+
+const metadata_value_t com_intel_faceEngine_faceRecognizeMode_values[] = {
+                 {"OFF", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF },
+                 {"ON", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON },
+         };
+
 const metadata_value_t com_intel_faceEngine_smileDetectMode_values[] = {
                  {"OFF", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF },
                  {"ON", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON },
@@ -63,17 +73,24 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.aiq.multiFrameHint", COM_INTEL_AIQ_MULTI_FRAME_HINT},
         {"com.intel.aiq.sceneDetected", COM_INTEL_AIQ_SCENE_DETECTED},
         {"com.intel.faceEngine.smileDetectMode", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE},
+        {"com.intel.faceEngine.blinkDetectMode", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE},
+        {"com.intel.faceEngine.faceRecognizeMode", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE},
         {"com.intel.faceEngine.smileDetectStatus", COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS},
         {"com.intel.faceEngine.smileDetectScores", COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES},
+        {"com.intel.faceEngine.blinkDetectStatus", COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS},
+        {"com.intel.faceEngine.blinkDetectScores", COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES},
+        {"com.intel.faceEngine.faceRecognizePersonIds", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS},
+        {"com.intel.faceEngine.faceRecognizePersonSimilarities", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES},
         {"com.intel.faceEngine.faceDetectRipAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES},
+        {"com.intel.faceEngine.faceDetectRopAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
     // AIQ
     // FACE_ENGINE
     {"faceEngine.info.availableSmileDetect", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT, TYPE_BYTE, com_intel_faceEngine_smileDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availableBlinkDetect", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availableFaceRecognize", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
+    {"faceEngine.info.availableBlinkDetect", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, com_intel_faceEngine_blinkDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
+    {"faceEngine.info.availableFaceRecognize", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_faceEngine_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availableObjectTrack", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availablePanorama", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
 };

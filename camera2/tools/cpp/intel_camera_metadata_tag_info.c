@@ -50,12 +50,27 @@ static tag_info_t com_intel_face_engine_tags[COM_INTEL_FACE_ENGINE_END -
         COM_INTEL_FACE_ENGINE_START] = {
     [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectMode",               TYPE_BYTE   },
+    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE - COM_INTEL_FACE_ENGINE_START ] =
+    { "blinkDetectMode",               TYPE_BYTE   },
+    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE - COM_INTEL_FACE_ENGINE_START ] =
+    { "faceRecognizeMode",             TYPE_BYTE   },
     [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectStatus",             TYPE_BYTE   },
     [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES - COM_INTEL_FACE_ENGINE_START ] =
     { "smileDetectScores",             TYPE_INT32  },
+    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS - COM_INTEL_FACE_ENGINE_START ] =
+    { "blinkDetectStatus",             TYPE_BYTE   },
+    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES - COM_INTEL_FACE_ENGINE_START ] =
+    { "blinkDetectScores",             TYPE_INT32  },
+    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS - COM_INTEL_FACE_ENGINE_START ] =
+    { "faceRecognizePersonIds",        TYPE_INT32  },
+    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES - COM_INTEL_FACE_ENGINE_START ] =
+    { "faceRecognizePersonSimilarities",
+                                        TYPE_INT32  },
     [ COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES - COM_INTEL_FACE_ENGINE_START ] =
     { "faceDetectRipAngles",           TYPE_INT32  },
+    [ COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES - COM_INTEL_FACE_ENGINE_START ] =
+    { "faceDetectRopAngles",           TYPE_INT32  },
 };
 
 static tag_info_t com_intel_face_engine_info_tags[COM_INTEL_FACE_ENGINE_INFO_END -
@@ -219,13 +234,58 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
+        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE: {
+            switch (value) {
+                case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
+                case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON:
+                    msg = "ON";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE: {
+            switch (value) {
+                case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
+                case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON:
+                    msg = "ON";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
         case COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS: {
             break;
         }
         case COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES: {
             break;
         }
+        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS: {
+            break;
+        }
+        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES: {
+            break;
+        }
+        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS: {
+            break;
+        }
+        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES: {
+            break;
+        }
         case COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES: {
+            break;
+        }
+        case COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES: {
             break;
         }
 

@@ -137,6 +137,10 @@
           <ul class="toc_section">
             <li
             ><a href="#controls_com.intel.faceEngine.smileDetectMode">com.intel.faceEngine.smileDetectMode</a></li>
+            <li
+            ><a href="#controls_com.intel.faceEngine.blinkDetectMode">com.intel.faceEngine.blinkDetectMode</a></li>
+            <li
+            ><a href="#controls_com.intel.faceEngine.faceRecognizeMode">com.intel.faceEngine.faceRecognizeMode</a></li>
           </ul>
         </li>
         <li>
@@ -149,7 +153,21 @@
             <li
             ><a href="#dynamic_com.intel.faceEngine.smileDetectScores">com.intel.faceEngine.smileDetectScores</a></li>
             <li
+            ><a href="#dynamic_com.intel.faceEngine.blinkDetectMode">com.intel.faceEngine.blinkDetectMode</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.blinkDetectStatus">com.intel.faceEngine.blinkDetectStatus</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.blinkDetectScores">com.intel.faceEngine.blinkDetectScores</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.faceRecognizeMode">com.intel.faceEngine.faceRecognizeMode</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.faceRecognizePersonIds">com.intel.faceEngine.faceRecognizePersonIds</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.faceRecognizePersonSimilarities">com.intel.faceEngine.faceRecognizePersonSimilarities</a></li>
+            <li
             ><a href="#dynamic_com.intel.faceEngine.faceDetectRipAngles">com.intel.faceEngine.faceDetectRipAngles</a></li>
+            <li
+            ><a href="#dynamic_com.intel.faceEngine.faceDetectRopAngles">com.intel.faceEngine.faceDetectRopAngles</a></li>
           </ul>
         </li>
         <li>
@@ -548,6 +566,118 @@
           <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
            <!-- end of entry -->
         
+                
+          <tr class="entry" id="controls_com.intel.faceEngine.blinkDetectMode">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Mode
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Blink detection mode</div>
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>Do not include blink detection statistics in capture results</p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ON</span>
+                    <span class="entry_type_enum_notes"><p>Return blink status and score values</p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>Control of Blink detection.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>When ON,<wbr/> com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Status (dynamic) and com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Scores (dynamic) outputs are valid.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="controls_com.intel.faceEngine.faceRecognizeMode">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Mode
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Face recognition mode</div>
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>Do not include face recognition statistics in capture results</p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ON</span>
+                    <span class="entry_type_enum_notes"><p>Return person id and person similarity </p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>Control of Face recognition.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>When ON,<wbr/> com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Ids (dynamic) and com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Similarities (dynamic) outputs are valid.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
         
 
       <!-- end of kind -->
@@ -736,6 +866,327 @@ False means non-smiling face</p>
            <!-- end of entry -->
         
                 
+          <tr class="entry" id="dynamic_com.intel.faceEngine.blinkDetectMode">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Mode
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Blink detection mode</div>
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>Do not include blink detection statistics in capture results</p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ON</span>
+                    <span class="entry_type_enum_notes"><p>Return blink status and score values</p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>Control of Blink detection.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>When ON,<wbr/> com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Status (dynamic) and com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Scores (dynamic) outputs are valid.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.blinkDetectStatus">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Status
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">byte</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  2 x n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Blink detection status</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>This metadata tag will provide a list of blink status of faces.<wbr/> The order of this list is always aligned with the IDs produced by the android-defined metadata tagin.<wbr/> 
+android.<wbr/>statistics.<wbr/>face<wbr/>Ids.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>True means closed eye.<wbr/>
+False means open eye.<wbr/>
+The meaning of array should be like:
+"0th face lefe eye|<wbr/>0th face right eye|<wbr/>1th face left eye|<wbr/>1th face right eye|<wbr/>2th face left eye|<wbr/>2th face  right eye"</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.blinkDetectScores">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>blink<wbr/>Detect<wbr/>Scores
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  2 x n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Blink detection scores</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>This metadata tag will provide an list of blink confidence scores.<wbr/> The scores are confidence level that the face is blinking.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>[0,<wbr/>100]</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>0 means closed eye.<wbr/>
+100 means wide-open eye.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.faceRecognizeMode">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Mode
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Face recognition mode</div>
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>Do not include face recognition statistics in capture results</p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ON</span>
+                    <span class="entry_type_enum_notes"><p>Return person id and person similarity </p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>Control of Face recognition.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>When ON,<wbr/> com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Ids (dynamic) and com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Similarities (dynamic) outputs are valid.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.faceRecognizePersonIds">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Ids
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Face Recognizer Person Ids</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>This metadata tag will provide a list of person Ids from face recognition.<wbr/> Each person is identified as unique positive integer.<wbr/> This is different from android.<wbr/>statistics.<wbr/>face<wbr/>Ids,<wbr/> which is unique among the tracking session</p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>-10000 means unkown face.<wbr/>
+Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.faceRecognizePersonSimilarities">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Recognize<wbr/>Person<wbr/>Similarities
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">Face Recognizer Person Similarities</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>This metadata tag will provide a list of person similarities from face recognition.<wbr/> It is the biggest one of the estimated levels between the input face and the faces in databases.<wbr/> It is good to be tread as a kind of score.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>[0,<wbr/>100]</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>0 is not likely the person
+100 is quite sure of the person</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
           <tr class="entry" id="dynamic_com.intel.faceEngine.faceDetectRipAngles">
             <td class="entry_name
              " rowspan="3">
@@ -780,6 +1231,57 @@ False means non-smiling face</p>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
               <p>The angle is represented as degree.<wbr/> The upright face is 0 degree,<wbr/> clock wise is positive,<wbr/> CC wise is negatives.<wbr/></p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.faceEngine.faceDetectRopAngles">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>face<wbr/>Engine.<wbr/>face<wbr/>Detect<wbr/>Rop<wbr/>Angles
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+                <div class="entry_type_notes">(-1,<wbr/> 0,<wbr/> 1) x n,<wbr/> where n is number of faces</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>This metadata tag will provide an list of ROP (Rotation out-of-plane) angles from face detection.<wbr/> Represented in degree.<wbr/> Also known as 'yawing'.<wbr/> Piching is not supported</p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>(-1,<wbr/> 0,<wbr/> 1)</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>The frontal face is 0,<wbr/> left profile face is -1,<wbr/> right profile face is 1.<wbr/></p>
             </td>
           </tr>
 
