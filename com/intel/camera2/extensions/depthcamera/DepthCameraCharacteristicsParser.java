@@ -236,7 +236,8 @@ public class DepthCameraCharacteristicsParser
     {
         switch ( auxId )
         {
-           case DepthCameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT:
+           case DepthCameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_LEFT:
+           case DepthCameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_RIGHT:
             	return AUX_STREAM_LEFT_RIGHT_DESC;
             case DepthCameraMetadata.DEPTHCOMMON_AVAILABLE_NODES_CENTER:
                 return AUX_STREAM_CENTER_DESC;

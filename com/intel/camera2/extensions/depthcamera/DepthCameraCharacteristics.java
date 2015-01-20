@@ -16,20 +16,15 @@
 
 package com.intel.camera2.extensions.depthcamera;
 
-import android.hardware.camera2.impl.CameraMetadataNative;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraCharacteristics.Key;
 import android.hardware.camera2.impl.PublicKey;
 import android.hardware.camera2.impl.SyntheticKey;
 import android.hardware.camera2.utils.TypeReference;
-import android.util.Rational;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
- * <p>{@link DS4CameraCharacteristics} objects are immutable.</p>
+ * <p>{@link DepthCameraCharacteristics} objects are immutable.</p>
  */
 public final class DepthCameraCharacteristics extends CameraMetadata<CameraCharacteristics.Key<?>> 
 {
@@ -92,7 +87,8 @@ public final class DepthCameraCharacteristics extends CameraMetadata<CameraChara
      * <p>BUGBUG: Note</p>
      * @see #DEPTHCOMMON_AVAILABLE_NODES_COLOR
      * @see #DEPTHCOMMON_AVAILABLE_NODES_DEPTH
-     * @see #DEPTHCOMMON_AVAILABLE_NODES_LEFT_RIGHT
+     * @see #DEPTHCOMMON_AVAILABLE_NODES_LEFT
+     * @see #DEPTHCOMMON_AVAILABLE_NODES_RIGHT
      * @see #DEPTHCOMMON_AVAILABLE_NODES_CENTER
      */
     @PublicKey
@@ -118,23 +114,35 @@ public final class DepthCameraCharacteristics extends CameraMetadata<CameraChara
             new Key<byte[]>("intel.depthcommon.formatNodesMapping", byte[].class);
 
     /**
-     * <p>set of ranges of valid exposure
-     * times. each entry has 3 values:  node Id, min and max </p>
+     * <p>Vallid depth (image) exposure time ranges </p>
      */
     @PublicKey
-    public static final Key<long[]> DEPTHCOMMON_NODE_EXPOSURE_TIME_RANGE =
-            new Key<long[]>("intel.depthcommon.nodeExposureTimeRange", long[].class);
+    public static final Key<android.util.Range<Long>> DEPTHCOMMON_EXPOSURE_TIME_RANGE =
+            new Key<android.util.Range<Long>>("intel.depthcommon.exposureTimeRange", new TypeReference<android.util.Range<Long>>() {{ }});
 
     /**
-     * <p>set of ranges of gain ranges.
-     * each entry has 3 values:  node Id, min and max </p>
+     * <p>depth gain range </p>
      */
     @PublicKey
-    public static final Key<long[]> DEPTHCOMMON_NODE_GAIN_RANGE =
-            new Key<long[]>("intel.depthcommon.nodeGainRange", long[].class);
+    public static final Key<android.util.Range<Long>> DEPTHCOMMON_GAIN_RANGE =
+            new Key<android.util.Range<Long>>("intel.depthcommon.gainRange", new TypeReference<android.util.Range<Long>>() {{ }});
+
+    /**
+     * <p>Depth ctream configurations supported by the camera i.e. tuples of
+     * (format, width, height, in/out, usage_flag).</p>
+     * @hide
+     */
+    public static final Key<int[]> DEPTHCOMMON_AVAILABLE_STREAM_CONFIGURATIONS =
+            new Key<int[]>("intel.depthcommon.availableStreamConfigurations", int[].class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/
+
+    public static boolean isDepthCamera(CameraCharacteristics c)
+    {
+        //tODOa
+        return false;
+    }
 
 }
