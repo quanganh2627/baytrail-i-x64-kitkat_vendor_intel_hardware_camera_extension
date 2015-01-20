@@ -51,6 +51,8 @@ public class DepthCameraCharacteristicsParser
         try
         {
             int[] nodes = c.get(DepthCameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES);
+            if ( nodes == null )
+                return null;
             ArrayList<Integer> res = new ArrayList<Integer>();
             for ( int i=0; i< nodes.length; i++)
                 if ( nodes[i] == nodeId )
@@ -69,6 +71,10 @@ public class DepthCameraCharacteristicsParser
     public static Size[] getSupportedNodeSizes(CameraCharacteristics c, int nodeId) {
 
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
+        if ( nodeIdx == null )
+        {
+            throw new IllegalStateException("nodeId " + nodeId + " is not available, probably calling getSupportedNodeSizes for non depth camera!!!");
+        }
 
         try
         {
@@ -77,7 +83,7 @@ public class DepthCameraCharacteristicsParser
             Size[] sizes = c.get(CameraCharacteristics.SCALER_AVAILABLE_PROCESSED_SIZES);
             byte[] mappings = c.get(DepthCameraCharacteristics.DEPTHCOMMON_SIZE_NODES_MAPPING);
 
-            if ( sizes.length != mappings.length )
+            if ( mappings == null || sizes.length != mappings.length )
                 throw new IllegalStateException(" availableSizes array size doesn't match the nodesMapping array size!!!");
             for ( int n = 0; n < nodeIdx.size(); n++ )
             {            
@@ -117,6 +123,10 @@ public class DepthCameraCharacteristicsParser
     public static int[] getSupportedNodeFormats(CameraCharacteristics c, int nodeId)
     {
         ArrayList<Integer> nodeIdx = getNodeIndex(c,nodeId);
+        if ( nodeIdx == null )
+        {
+            throw new IllegalStateException("nodeId " + nodeId + " is not available, probably calling getSupportedNodeFormats for non depth camera!!!");
+        }
         try
         {
             ArrayList<Integer> res = new ArrayList<Integer>();
@@ -124,7 +134,7 @@ public class DepthCameraCharacteristicsParser
             int[] formats = c.get(CameraCharacteristics.SCALER_AVAILABLE_FORMATS);
             byte[] mappings = c.get(DepthCameraCharacteristics.DEPTHCOMMON_FORMAT_NODES_MAPPING);
 
-            if ( formats.length != mappings.length )
+            if ( mappings == null || formats.length != mappings.length )
                 throw new IllegalStateException(" availableFormats array size doesn't match the nodesMapping array size!!!");
             for ( int n = 0; n < nodeIdx.size(); n++ )
             {            
