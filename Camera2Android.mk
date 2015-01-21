@@ -7,6 +7,7 @@ LOCAL_SRC_FILES:= \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSConfig.cpp \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSResolutionMode.cpp \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSHelpers.cpp \
+    jni/com_intel_camera2_extensions_DepthCameraCalibrationDataMap.cpp \
     jni/com_intel_camera2_extensions_DepthFrameReader.cpp 
     
 LOCAL_SHARED_LIBRARIES := \
@@ -35,7 +36,7 @@ LOCAL_C_INCLUDES += \
     frameworks/base/include/ \
     libnativehelper/include/ \
     libnativehelper/include/nativehelper/  \
-    vendor/intel/hardware/PRIVATE/ \
+    vendor/intel/hardware/PRIVATE/libds4/v4l_camera/ \
     $(LOCAL_PATH)/libdepthimageutils/Include/DSAPI/ \
     $(LOCAL_PATH)/libdepthimageutils/Include/ \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSAPI/Implementations/ \

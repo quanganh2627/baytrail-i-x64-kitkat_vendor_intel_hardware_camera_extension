@@ -1939,7 +1939,7 @@ static JNINativeMethod gDepthImageMethods[] = {
     {"nativeConvertUVMapBuffToRGBFormat",   "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;IIII)V",   (void*)Image_convertUVMapToRGB},
 };
 
-
+extern int register_intel_camera2_extensions_depthcamera_DepthCameraCalibrationDataMap(JNIEnv *env);
 int register_intel_camera2_extensions_depthcamera_DepthCameraSetup(JNIEnv *env) {
 
 	ALOGV("%s - registering gDepthImageReaderMethods", __FUNCTION__);
@@ -1949,7 +1949,10 @@ int register_intel_camera2_extensions_depthcamera_DepthCameraSetup(JNIEnv *env) 
                    "com/intel/camera2/extensions/depthcamera/DepthCameraSetup$DepthFrameReader$SurfaceImage", gImageMethods, NELEM(gImageMethods));
     int ret3 = AndroidRuntime::registerNativeMethods(env,
                        "com/intel/camera2/extensions/depthcamera/DepthCameraSetup$DepthFrameReader$FrameReaderDepthImage", gDepthImageMethods, NELEM(gDepthImageMethods));
-    return (ret1 || ret2 );
+    if ( ret1 || ret2 || ret3 )
+		ALOGV("%s - registering DepthCameraSetup failed %d, %d , %d", __FUNCTION__, ret1, ret2, ret3);
+
+    return (ret1 || ret2 || ret3);
 }
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -1965,6 +1968,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 
     if (register_intel_camera2_extensions_depthcamera_DepthCameraSetup(env) < 0) {
         ALOGE("ERROR: native registration failed\n");
+        goto fail;
+    }
+    if (register_intel_camera2_extensions_depthcamera_DepthCameraCalibrationDataMap(env) < 0) {
+        ALOGE("ERROR: native registration of DepthCameraCalibrationDataMap failed\n");
         goto fail;
     }
     result = JNI_VERSION_1_4;
