@@ -40,6 +40,8 @@ static tag_info_t com_intel_aiq_tags[COM_INTEL_AIQ_END -
         COM_INTEL_AIQ_START] = {
     [ COM_INTEL_AIQ_ANALYSIS_MODE - COM_INTEL_AIQ_START ] =
     { "analysisMode",                  TYPE_BYTE   },
+    [ COM_INTEL_AIQ_COLOR_EFFECT - COM_INTEL_AIQ_START ] =
+    { "colorEffect",                   TYPE_BYTE   },
     [ COM_INTEL_AIQ_MULTI_FRAME_HINT - COM_INTEL_AIQ_START ] =
     { "multiFrameHint",                TYPE_BYTE   },
     [ COM_INTEL_AIQ_SCENE_DETECTED - COM_INTEL_AIQ_START ] =
@@ -133,6 +135,37 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
                     break;
                 case COM_INTEL_AIQ_ANALYSIS_MODE_ON:
                     msg = "ON";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+        case COM_INTEL_AIQ_COLOR_EFFECT: {
+            switch (value) {
+                case COM_INTEL_AIQ_COLOR_EFFECT_SKY_BLUE:
+                    msg = "SKY_BLUE";
+                    ret = 0;
+                    break;
+                case COM_INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN:
+                    msg = "GRASS_GREEN";
+                    ret = 0;
+                    break;
+                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN:
+                    msg = "SKIN_WHITEN";
+                    ret = 0;
+                    break;
+                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW:
+                    msg = "SKIN_WHITEN_LOW";
+                    ret = 0;
+                    break;
+                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH:
+                    msg = "SKIN_WHITEN_HIGH";
+                    ret = 0;
+                    break;
+                case COM_INTEL_AIQ_COLOR_EFFECT_VIVID:
+                    msg = "VIVID";
                     ret = 0;
                     break;
                 default:
