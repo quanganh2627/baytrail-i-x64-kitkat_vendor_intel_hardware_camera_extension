@@ -176,6 +176,78 @@ function copy_directory() {
     return $retval
 }
 
+function combine_xml_files() {
+    local files="$@"
+    local tmp_name=$(mktemp -t tmp.XXXXXXXX)
+    local tmp_tidy=$(mktemp -t tmp.XXXXXXXX)
+
+    # combine sections
+    for file in ${files[@]}; do
+        cat $file >> $tmp_name
+    done
+
+    # indent the sections before inserting into main xml
+    sed 's/\(^.\+$\)/        \1/' $tmp_name > $tmp_tidy
+    insert_xml_file "$tmp_tidy" "$fwkdir/vendortags_properties.xml" || exit 1
+}
+
+# Insert a file into the middle of another, starting at the line containing the
+# start delim and ending on the end delim
+function insert_xml_file() {
+    local src_part="$1"
+    local dst_file="$2"
+    local start_delim="<!--@O~"
+    local end_delim="~O@-->"
+
+    local start_line="$(grep -n -F "${start_delim}" "${dst_file}" | cut -d: -f1)"
+    local end_line="$(grep -n -F "${end_delim}" "${dst_file}" | cut -d: -f1)"
+
+    # Keep the delimeters in the destination file
+    (( start_line+=4 ))
+    (( end_line-=2 ))
+
+    # Do some basic sanity checks
+
+    if [[ -z "$start_line" ]]; then
+       echo "No starting delimiter found in ${dst_file}" >& 2
+       echo "FAIL: Errors in inserting into $(relpath ${dst_file})" >& 2
+       return 1
+    fi
+
+    if [[ -z "$end_line" ]]; then
+       echo "No ending delimiter found in ${dst_file}" >& 2
+       echo "FAIL: Errors in inserting into $(relpath ${dst_file})" >& 2
+       return 1
+    fi
+
+    if [[ "$start_line" -ge "$end_line" ]]; then
+       echo "Starting delim later than ending delim: $start_line vs $end_line" >& 2
+       echo "FAIL: Errors in inserting into $(relpath ${dst_file})" >& 2
+       return 1
+    fi
+
+    local tmp_name=$(mktemp -t XXXXXXXX)
+
+    # Compose the three parts of the final file together
+
+    head -n "$start_line" "${dst_file}" > "${tmp_name}"
+    cat "${src_part}" >> "${tmp_name}"
+    tail -n "+${end_line}" "${dst_file}" >> "${tmp_name}"
+
+    # And replace the destination file with the new version
+
+    mv "${tmp_name}" "${dst_file}"
+    echo "OK: Inserted input XML files (${input_xml_files[@]}) into $(relpath "$dst_file")"
+    out_files+=$'\n'" $dst_file"
+}
+
+
+# Combine input XML files
+input_xml_files=('vendortags_properties_aiq.xml'
+                 'vendortags_properties_face.xml')
+
+combine_xml_files ${input_xml_files[@]}
+
 $thisdir/metadata-check-dependencies || exit 1
 $thisdir/metadata-validate $thisdir/vendortags_properties.xml || exit 1
 #$thisdir/intel-metadata-parser-sanity-check || exit 1
