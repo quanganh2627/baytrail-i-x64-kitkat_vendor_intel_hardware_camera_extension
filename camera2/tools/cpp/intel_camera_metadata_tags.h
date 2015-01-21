@@ -60,6 +60,7 @@ typedef enum intel_camera_metadata_section_start {
 typedef enum intel_camera_metadata_tag {
     COM_INTEL_AIQ_ANALYSIS_MODE =                     // enum         | public
             COM_INTEL_AIQ_START,
+    COM_INTEL_AIQ_COLOR_EFFECT,                       // enum         | public
     COM_INTEL_AIQ_MULTI_FRAME_HINT,                   // enum         | public
     COM_INTEL_AIQ_SCENE_DETECTED,                     // enum         | public
     COM_INTEL_AIQ_END,
@@ -100,6 +101,16 @@ typedef enum intel_camera_metadata_enum_com_intel_aiq_analysis_mode {
     COM_INTEL_AIQ_ANALYSIS_MODE_OFF,
     COM_INTEL_AIQ_ANALYSIS_MODE_ON,
 } intel_camera_metadata_enum_com_intel_aiq_analysis_mode_t;
+
+// COM_INTEL_AIQ_COLOR_EFFECT
+typedef enum intel_camera_metadata_enum_com_intel_aiq_color_effect {
+    COM_INTEL_AIQ_COLOR_EFFECT_SKY_BLUE,
+    COM_INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN,
+    COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN,
+    COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW,
+    COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH,
+    COM_INTEL_AIQ_COLOR_EFFECT_VIVID,
+} intel_camera_metadata_enum_com_intel_aiq_color_effect_t;
 
 // COM_INTEL_AIQ_MULTI_FRAME_HINT
 typedef enum intel_camera_metadata_enum_com_intel_aiq_multi_frame_hint {

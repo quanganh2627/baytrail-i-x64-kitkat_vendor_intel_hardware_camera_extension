@@ -30,6 +30,15 @@ const metadata_value_t com_intel_aiq_analysisMode_values[] = {
                  {"ON", COM_INTEL_AIQ_ANALYSIS_MODE_ON },
          };
 
+const metadata_value_t com_intel_aiq_colorEffect_values[] = {
+                 {"SKY_BLUE", COM_INTEL_AIQ_COLOR_EFFECT_SKY_BLUE },
+                 {"GRASS_GREEN", COM_INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN },
+                 {"SKIN_WHITEN", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN },
+                 {"SKIN_WHITEN_LOW", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW },
+                 {"SKIN_WHITEN_HIGH", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH },
+                 {"VIVID", COM_INTEL_AIQ_COLOR_EFFECT_VIVID },
+         };
+
 const metadata_value_t com_intel_aiq_multiFrameHint_values[] = {
                  {"NONE", COM_INTEL_AIQ_MULTI_FRAME_HINT_NONE },
                  {"ULL", COM_INTEL_AIQ_MULTI_FRAME_HINT_ULL },
@@ -70,6 +79,7 @@ const metadata_value_t com_intel_faceEngine_smileDetectMode_values[] = {
 
 const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.aiq.analysisMode", COM_INTEL_AIQ_ANALYSIS_MODE},
+        {"com.intel.aiq.colorEffect", COM_INTEL_AIQ_COLOR_EFFECT},
         {"com.intel.aiq.multiFrameHint", COM_INTEL_AIQ_MULTI_FRAME_HINT},
         {"com.intel.aiq.sceneDetected", COM_INTEL_AIQ_SCENE_DETECTED},
         {"com.intel.faceEngine.smileDetectMode", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE},

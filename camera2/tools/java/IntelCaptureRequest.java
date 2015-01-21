@@ -104,6 +104,20 @@ public final class IntelCaptureRequest extends CameraMetadata<CaptureRequest.Key
             new Key<Integer>("com.intel.aiq.analysisMode", int.class);
 
     /**
+     * <p>This reports the recommended color effects the user should select for optimal quality.</p>
+     * <p>To be added...</p>
+     * @see #INTEL_AIQ_COLOR_EFFECT_SKY_BLUE
+     * @see #INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN
+     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN
+     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW
+     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH
+     * @see #INTEL_AIQ_COLOR_EFFECT_VIVID
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_AIQ_COLOR_EFFECT =
+            new Key<Integer>("com.intel.aiq.colorEffect", int.class);
+
+    /**
      * <p>Control of Smile detection.</p>
      * <p>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.</p>
      * @see #INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF

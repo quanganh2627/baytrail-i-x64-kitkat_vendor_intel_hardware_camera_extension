@@ -74,6 +74,46 @@ public class IntelCameraMetadata {
     public static final int INTEL_AIQ_ANALYSIS_MODE_ON = 1;
 
     //
+    // Enumeration values for IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+    //
+
+    /**
+     * <p>ia_aiq_color_effect_sky_blue</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_SKY_BLUE = 0;
+
+    /**
+     * <p>ia_aiq_color_effect_grass_green</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN = 1;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN = 2;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten_low</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW = 3;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten_high</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH = 4;
+
+    /**
+     * <p>ia_aiq_color_effect_vivid</p>
+     * @see IntelCaptureRequest#INTEL_AIQ_COLOR_EFFECT
+     */
+    public static final int INTEL_AIQ_COLOR_EFFECT_VIVID = 5;
+
+    //
     // Enumeration values for IntelCaptureRequest#INTEL_FACE_ENGINE_SMILE_DETECT_MODE
     //
 
