@@ -6,7 +6,6 @@ LOCAL_COPY_HEADERS := \
 	include/intel_camera_extensions.h \
 	include/android_hardware_Camera.h \
 	libacc/Ilibacc.h
-LOCAL_MULTILIB := 32
 include $(BUILD_COPY_HEADERS)
 
 ################# MAKE_LIB ############################
@@ -27,7 +26,6 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
 	$(LOCAL_PATH)/libacc \
 	$(call include-path-for, frameworks-base-core)
-LOCAL_MULTILIB := 32
 include $(BUILD_SHARED_LIBRARY)
 
 ################# MAKE_XML ############################
