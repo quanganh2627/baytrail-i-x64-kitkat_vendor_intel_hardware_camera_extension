@@ -1,4 +1,4 @@
-<section name="aiq">
+<section name="statistics">
   <controls>
       <entry name="analysisMode" type="byte" visibility="public" enum="true" >
         <enum>

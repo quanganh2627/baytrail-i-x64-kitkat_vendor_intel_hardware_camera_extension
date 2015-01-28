@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package com.intel.camera2.extensions.intelcamera;
+package com.intel.camera2.extensions;
 
-import android.hardware.camera2.impl.CameraMetadataNative;
-import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureRequest.Key;
-import android.hardware.camera2.impl.PublicKey;
-import android.hardware.camera2.impl.SyntheticKey;
-import android.hardware.camera2.utils.HashCodeHelpers;
-import android.hardware.camera2.utils.TypeReference;
-import java.util.Objects;
-import android.util.Rational;
 
 /**
  * <p>An immutable package of settings and outputs needed to capture a single
@@ -58,28 +49,8 @@ import android.util.Rational;
  * @see CameraDevice#createCaptureRequest
  */
 
-public final class IntelCaptureRequest extends CameraMetadata<CaptureRequest.Key<?>>
+public final class CaptureRequestIntelKeys extends CameraMetadataIntel
 {
-    /**
-     * {@inheritDoc}
-     * @hide
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected <T> T getProtected(Key<?> key) {
-        return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @hide
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected Class<Key<?>> getKeyClass() {
-        Object thisClass = Key.class;
-        return (Class<Key<?>>)thisClass;
-    }
 
     /*@O~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * The key entries below this point are generated from metadata
@@ -96,56 +67,51 @@ public final class IntelCaptureRequest extends CameraMetadata<CaptureRequest.Key
      * <li>sceneDected</li>
      * <li>hdr.preferedExposures</li>
      * </ul>
-     * @see #INTEL_AIQ_ANALYSIS_MODE_OFF
-     * @see #INTEL_AIQ_ANALYSIS_MODE_ON
+     * @see #INTEL_STATISTICS_ANALYSIS_MODE_OFF
+     * @see #INTEL_STATISTICS_ANALYSIS_MODE_ON
      */
-    @PublicKey
-    public static final Key<Integer> INTEL_AIQ_ANALYSIS_MODE =
-            new Key<Integer>("com.intel.aiq.analysisMode", int.class);
+    public static final Key<Integer> INTEL_STATISTICS_ANALYSIS_MODE =
+            new Key<Integer>("com.intel.statistics.analysisMode", int.class);
 
     /**
      * <p>This reports the recommended color effects the user should select for optimal quality.</p>
      * <p>To be added...</p>
-     * @see #INTEL_AIQ_COLOR_EFFECT_SKY_BLUE
-     * @see #INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN
-     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN
-     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW
-     * @see #INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH
-     * @see #INTEL_AIQ_COLOR_EFFECT_VIVID
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH
+     * @see #INTEL_STATISTICS_COLOR_EFFECT_VIVID
      */
-    @PublicKey
-    public static final Key<Integer> INTEL_AIQ_COLOR_EFFECT =
-            new Key<Integer>("com.intel.aiq.colorEffect", int.class);
+    public static final Key<Integer> INTEL_STATISTICS_COLOR_EFFECT =
+            new Key<Integer>("com.intel.statistics.colorEffect", int.class);
 
     /**
      * <p>Control of Smile detection.</p>
-     * <p>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.</p>
-     * @see #INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF
-     * @see #INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON
+     * <p>When ON, com.intel.cv.smileDetectStatus (dynamic) and com.intel.cv.smileDetectScores (dynamic) outputs are valid.</p>
+     * @see #INTEL_CV_SMILE_DETECT_MODE_OFF
+     * @see #INTEL_CV_SMILE_DETECT_MODE_ON
      */
-    @PublicKey
-    public static final Key<Integer> INTEL_FACE_ENGINE_SMILE_DETECT_MODE =
-            new Key<Integer>("com.intel.faceEngine.smileDetectMode", int.class);
+    public static final Key<Integer> INTEL_CV_SMILE_DETECT_MODE =
+            new Key<Integer>("com.intel.cv.smileDetectMode", int.class);
 
     /**
      * <p>Control of Blink detection.</p>
-     * <p>When ON, com.intel.faceEngine.blinkDetectStatus (dynamic) and com.intel.faceEngine.blinkDetectScores (dynamic) outputs are valid.</p>
-     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF
-     * @see #INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON
+     * <p>When ON, com.intel.cv.blinkDetectStatus (dynamic) and com.intel.cv.blinkDetectScores (dynamic) outputs are valid.</p>
+     * @see #INTEL_CV_BLINK_DETECT_MODE_OFF
+     * @see #INTEL_CV_BLINK_DETECT_MODE_ON
      */
-    @PublicKey
-    public static final Key<Integer> INTEL_FACE_ENGINE_BLINK_DETECT_MODE =
-            new Key<Integer>("com.intel.faceEngine.blinkDetectMode", int.class);
+    public static final Key<Integer> INTEL_CV_BLINK_DETECT_MODE =
+            new Key<Integer>("com.intel.cv.blinkDetectMode", int.class);
 
     /**
      * <p>Control of Face recognition.</p>
-     * <p>When ON, com.intel.faceEngine.faceRecognizePersonIds (dynamic) and com.intel.faceEngine.faceRecognizePersonSimilarities (dynamic) outputs are valid.</p>
-     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF
-     * @see #INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON
+     * <p>When ON, com.intel.cv.faceRecognizePersonIds (dynamic) and com.intel.cv.faceRecognizePersonSimilarities (dynamic) outputs are valid.</p>
+     * @see #INTEL_CV_FACE_RECOGNIZE_MODE_OFF
+     * @see #INTEL_CV_FACE_RECOGNIZE_MODE_ON
      */
-    @PublicKey
-    public static final Key<Integer> INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE =
-            new Key<Integer>("com.intel.faceEngine.faceRecognizeMode", int.class);
+    public static final Key<Integer> INTEL_CV_FACE_RECOGNIZE_MODE =
+            new Key<Integer>("com.intel.cv.faceRecognizeMode", int.class);
 
     /**
      * <p>Control of Dual camera.</p>
@@ -154,7 +120,6 @@ public final class IntelCaptureRequest extends CameraMetadata<CaptureRequest.Key
      * @see #INTEL_DUAL_DUAL_CAMERA_MODE_OFF
      * @see #INTEL_DUAL_DUAL_CAMERA_MODE_ON
      */
-    @PublicKey
     public static final Key<Integer> INTEL_DUAL_DUAL_CAMERA_MODE =
             new Key<Integer>("com.intel.dual.dualCameraMode", int.class);
 

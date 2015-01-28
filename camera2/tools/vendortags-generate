@@ -32,7 +32,7 @@ fi
 thisdir=$(cd "$(dirname "$0")"; pwd)
 fwkdir="$thisdir"
 fwkdir_html="$thisdir/html"
-outdir="$thisdir/system-media-camera-docs_intermediates"
+outdir="$thisdir/intermediates"
 out_files=()
 
 function relpath() {
@@ -243,8 +243,8 @@ function insert_xml_file() {
 
 
 # Combine input XML files
-input_xml_files=('vendortags_properties_aiq.xml'
-                 'vendortags_properties_face.xml'
+input_xml_files=('vendortags_properties_statistics.xml'
+                 'vendortags_properties_cv.xml'
                  'vendortags_properties_dual.xml')
 
 combine_xml_files ${input_xml_files[@]}
@@ -264,14 +264,14 @@ gen_file vendor_metadata_info_autogen.mako "cpp/VendorMetadataInfoAutoGen.h" || 
 # Generate Java API definitions
 mkdir -p "${outdir}"
 gen_file_abs IntelCameraMetadataEnums.mako "$outdir/IntelCameraMetadataEnums.java.part" no || exit 1
-gen_file_abs IntelCameraCharacteristicsKeys.mako "$outdir/IntelCameraCharacteristicsKeys.java.part" no || exit 1
-gen_file_abs IntelCaptureRequestKeys.mako "$outdir/IntelCaptureRequestKeys.java.part" no || exit 1
-gen_file_abs IntelCaptureResultKeys.mako "$outdir/IntelCaptureResultKeys.java.part" no || exit 1
+gen_file_abs IntelCameraCharacteristicsKeys.mako "$outdir/CameraCharacteristicsIntelKeys.java.part" no || exit 1
+gen_file_abs IntelCaptureRequestKeys.mako "$outdir/CaptureRequestIntelKeys.java.part" no || exit 1
+gen_file_abs IntelCaptureResultKeys.mako "$outdir/CaptureResultIntelKeys.java.part" no || exit 1
 
-insert_file "$outdir/IntelCameraMetadataEnums.java.part" "$fwkdir/java/IntelCameraMetadata.java" || exit 1
-insert_file "$outdir/IntelCameraCharacteristicsKeys.java.part" "$fwkdir/java/IntelCameraCharacteristics.java" || exit 1
-insert_file "$outdir/IntelCaptureRequestKeys.java.part" "$fwkdir/java/IntelCaptureRequest.java" || exit 1
-insert_file "$outdir/IntelCaptureResultKeys.java.part" "$fwkdir/java/IntelCaptureResult.java" || exit 1
+insert_file "$outdir/IntelCameraMetadataEnums.java.part" "$fwkdir/java/CameraMetadataIntel.java" || exit 1
+insert_file "$outdir/CameraCharacteristicsIntelKeys.java.part" "$fwkdir/java/CameraCharacteristicsIntelKeys.java" || exit 1
+insert_file "$outdir/CaptureRequestIntelKeys.java.part" "$fwkdir/java/CaptureRequestIntelKeys.java" || exit 1
+insert_file "$outdir/CaptureResultIntelKeys.java.part" "$fwkdir/java/CaptureResultIntelKeys.java" || exit 1
 
 
 echo ""

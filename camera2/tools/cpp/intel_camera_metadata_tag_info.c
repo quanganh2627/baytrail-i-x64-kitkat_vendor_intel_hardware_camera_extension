@@ -31,63 +31,63 @@
  */
 
 const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
-    [COM_INTEL_AIQ]                = "com.intel.aiq",
-    [COM_INTEL_FACE_ENGINE]        = "com.intel.faceEngine",
-    [COM_INTEL_FACE_ENGINE_INFO]   = "com.intel.faceEngine.info",
+    [COM_INTEL_STATISTICS]         = "com.intel.statistics",
+    [COM_INTEL_CV]                 = "com.intel.cv",
+    [COM_INTEL_CV_INFO]            = "com.intel.cv.info",
     [COM_INTEL_DUAL]               = "com.intel.dual",
     [COM_INTEL_DUAL_INFO]          = "com.intel.dual.info",
 };
 
-static tag_info_t com_intel_aiq_tags[COM_INTEL_AIQ_END -
-        COM_INTEL_AIQ_START] = {
-    [ COM_INTEL_AIQ_ANALYSIS_MODE - COM_INTEL_AIQ_START ] =
+static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
+        COM_INTEL_STATISTICS_START] = {
+    [ COM_INTEL_STATISTICS_ANALYSIS_MODE - COM_INTEL_STATISTICS_START ] =
     { "analysisMode",                  TYPE_BYTE   },
-    [ COM_INTEL_AIQ_COLOR_EFFECT - COM_INTEL_AIQ_START ] =
+    [ COM_INTEL_STATISTICS_COLOR_EFFECT - COM_INTEL_STATISTICS_START ] =
     { "colorEffect",                   TYPE_BYTE   },
-    [ COM_INTEL_AIQ_MULTI_FRAME_HINT - COM_INTEL_AIQ_START ] =
+    [ COM_INTEL_STATISTICS_MULTI_FRAME_HINT - COM_INTEL_STATISTICS_START ] =
     { "multiFrameHint",                TYPE_BYTE   },
-    [ COM_INTEL_AIQ_SCENE_DETECTED - COM_INTEL_AIQ_START ] =
+    [ COM_INTEL_STATISTICS_SCENE_DETECTED - COM_INTEL_STATISTICS_START ] =
     { "sceneDetected",                 TYPE_BYTE   },
 };
 
-static tag_info_t com_intel_face_engine_tags[COM_INTEL_FACE_ENGINE_END -
-        COM_INTEL_FACE_ENGINE_START] = {
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE - COM_INTEL_FACE_ENGINE_START ] =
+static tag_info_t com_intel_cv_tags[COM_INTEL_CV_END -
+        COM_INTEL_CV_START] = {
+    [ COM_INTEL_CV_SMILE_DETECT_MODE - COM_INTEL_CV_START ] =
     { "smileDetectMode",               TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_BLINK_DETECT_MODE - COM_INTEL_CV_START ] =
     { "blinkDetectMode",               TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_FACE_RECOGNIZE_MODE - COM_INTEL_CV_START ] =
     { "faceRecognizeMode",             TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_SMILE_DETECT_STATUS - COM_INTEL_CV_START ] =
     { "smileDetectStatus",             TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_SMILE_DETECT_SCORES - COM_INTEL_CV_START ] =
     { "smileDetectScores",             TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_BLINK_DETECT_STATUS - COM_INTEL_CV_START ] =
     { "blinkDetectStatus",             TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_BLINK_DETECT_SCORES - COM_INTEL_CV_START ] =
     { "blinkDetectScores",             TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_FACE_RECOGNIZE_PERSON_IDS - COM_INTEL_CV_START ] =
     { "faceRecognizePersonIds",        TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_FACE_RECOGNIZE_PERSON_SIMILARITIES - COM_INTEL_CV_START ] =
     { "faceRecognizePersonSimilarities",
                                         TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_FACE_DETECT_RIP_ANGLES - COM_INTEL_CV_START ] =
     { "faceDetectRipAngles",           TYPE_INT32  },
-    [ COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES - COM_INTEL_FACE_ENGINE_START ] =
+    [ COM_INTEL_CV_FACE_DETECT_ROP_ANGLES - COM_INTEL_CV_START ] =
     { "faceDetectRopAngles",           TYPE_INT32  },
 };
 
-static tag_info_t com_intel_face_engine_info_tags[COM_INTEL_FACE_ENGINE_INFO_END -
-        COM_INTEL_FACE_ENGINE_INFO_START] = {
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT - COM_INTEL_FACE_ENGINE_INFO_START ] =
+static tag_info_t com_intel_cv_info_tags[COM_INTEL_CV_INFO_END -
+        COM_INTEL_CV_INFO_START] = {
+    [ COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT - COM_INTEL_CV_INFO_START ] =
     { "availableSmileDetect",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT - COM_INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT - COM_INTEL_CV_INFO_START ] =
     { "availableBlinkDetect",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE - COM_INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE - COM_INTEL_CV_INFO_START ] =
     { "availableFaceRecognize",        TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_CV_INFO_START ] =
     { "availableObjectTrack",          TYPE_BYTE   },
-    [ COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA - COM_INTEL_FACE_ENGINE_INFO_START ] =
+    [ COM_INTEL_CV_INFO_AVAILABLE_PANORAMA - COM_INTEL_CV_INFO_START ] =
     { "availablePanorama",             TYPE_BYTE   },
 };
 
@@ -105,25 +105,25 @@ static tag_info_t com_intel_dual_info_tags[COM_INTEL_DUAL_INFO_END -
 
 
 
-static tag_section_t section_com_intel_aiq = {
-    "com.intel.aiq",
-    (uint32_t) COM_INTEL_AIQ_START,
-    (uint32_t) COM_INTEL_AIQ_END,
-    com_intel_aiq_tags
+static tag_section_t section_com_intel_statistics = {
+    "com.intel.statistics",
+    (uint32_t) COM_INTEL_STATISTICS_START,
+    (uint32_t) COM_INTEL_STATISTICS_END,
+    com_intel_statistics_tags
 };
 
-static tag_section_t section_com_intel_face_engine = {
-    "com.intel.faceEngine",
-    (uint32_t) COM_INTEL_FACE_ENGINE_START,
-    (uint32_t) COM_INTEL_FACE_ENGINE_END,
-    com_intel_face_engine_tags
+static tag_section_t section_com_intel_cv = {
+    "com.intel.cv",
+    (uint32_t) COM_INTEL_CV_START,
+    (uint32_t) COM_INTEL_CV_END,
+    com_intel_cv_tags
 };
 
-static tag_section_t section_com_intel_face_engine_info = {
-    "com.intel.faceEngine.info",
-    (uint32_t) COM_INTEL_FACE_ENGINE_INFO_START,
-    (uint32_t) COM_INTEL_FACE_ENGINE_INFO_END,
-    com_intel_face_engine_info_tags
+static tag_section_t section_com_intel_cv_info = {
+    "com.intel.cv.info",
+    (uint32_t) COM_INTEL_CV_INFO_START,
+    (uint32_t) COM_INTEL_CV_INFO_END,
+    com_intel_cv_info_tags
 };
 
 static tag_section_t section_com_intel_dual = {
@@ -142,9 +142,9 @@ static tag_section_t section_com_intel_dual_info = {
 
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
-    section_com_intel_aiq,
-    section_com_intel_face_engine,
-    section_com_intel_face_engine_info,
+    section_com_intel_statistics,
+    section_com_intel_cv,
+    section_com_intel_cv_info,
     section_com_intel_dual,
     section_com_intel_dual_info,
 };
@@ -157,13 +157,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
     int ret = -1;
 
     switch(tag) {
-        case COM_INTEL_AIQ_ANALYSIS_MODE: {
+        case COM_INTEL_STATISTICS_ANALYSIS_MODE: {
             switch (value) {
-                case COM_INTEL_AIQ_ANALYSIS_MODE_OFF:
+                case COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_ANALYSIS_MODE_ON:
+                case COM_INTEL_STATISTICS_ANALYSIS_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;
@@ -172,29 +172,29 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_AIQ_COLOR_EFFECT: {
+        case COM_INTEL_STATISTICS_COLOR_EFFECT: {
             switch (value) {
-                case COM_INTEL_AIQ_COLOR_EFFECT_SKY_BLUE:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE:
                     msg = "SKY_BLUE";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN:
                     msg = "GRASS_GREEN";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN:
                     msg = "SKIN_WHITEN";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW:
                     msg = "SKIN_WHITEN_LOW";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH:
                     msg = "SKIN_WHITEN_HIGH";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_COLOR_EFFECT_VIVID:
+                case COM_INTEL_STATISTICS_COLOR_EFFECT_VIVID:
                     msg = "VIVID";
                     ret = 0;
                     break;
@@ -203,17 +203,17 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_AIQ_MULTI_FRAME_HINT: {
+        case COM_INTEL_STATISTICS_MULTI_FRAME_HINT: {
             switch (value) {
-                case COM_INTEL_AIQ_MULTI_FRAME_HINT_NONE:
+                case COM_INTEL_STATISTICS_MULTI_FRAME_HINT_NONE:
                     msg = "NONE";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_MULTI_FRAME_HINT_ULL:
+                case COM_INTEL_STATISTICS_MULTI_FRAME_HINT_ULL:
                     msg = "ULL";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_MULTI_FRAME_HINT_HDR:
+                case COM_INTEL_STATISTICS_MULTI_FRAME_HINT_HDR:
                     msg = "HDR";
                     ret = 0;
                     break;
@@ -222,57 +222,57 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_AIQ_SCENE_DETECTED: {
+        case COM_INTEL_STATISTICS_SCENE_DETECTED: {
             switch (value) {
-                case COM_INTEL_AIQ_SCENE_DETECTED_NONE:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_NONE:
                     msg = "NONE";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_CLOSE_UP_PORTRAIT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_CLOSE_UP_PORTRAIT:
                     msg = "CLOSE_UP_PORTRAIT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_PORTRAIT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_PORTRAIT:
                     msg = "PORTRAIT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT_PORTRAIT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_PORTRAIT:
                     msg = "LOWLIGHT_PORTRAIT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT:
                     msg = "LOWLIGHT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_ACTION:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_ACTION:
                     msg = "ACTION";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_BACKLIGHT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_BACKLIGHT:
                     msg = "BACKLIGHT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_LANDSCAPE:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_LANDSCAPE:
                     msg = "LANDSCAPE";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_DOCUMENT:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_DOCUMENT:
                     msg = "DOCUMENT";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_FIREWORK:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_FIREWORK:
                     msg = "FIREWORK";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT_ACTION:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_ACTION:
                     msg = "LOWLIGHT_ACTION";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_BABY:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_BABY:
                     msg = "BABY";
                     ret = 0;
                     break;
-                case COM_INTEL_AIQ_SCENE_DETECTED_BARCODE:
+                case COM_INTEL_STATISTICS_SCENE_DETECTED_BARCODE:
                     msg = "BARCODE";
                     ret = 0;
                     break;
@@ -282,13 +282,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
 
-        case COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE: {
+        case COM_INTEL_CV_SMILE_DETECT_MODE: {
             switch (value) {
-                case COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF:
+                case COM_INTEL_CV_SMILE_DETECT_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON:
+                case COM_INTEL_CV_SMILE_DETECT_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;
@@ -297,13 +297,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE: {
+        case COM_INTEL_CV_BLINK_DETECT_MODE: {
             switch (value) {
-                case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF:
+                case COM_INTEL_CV_BLINK_DETECT_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON:
+                case COM_INTEL_CV_BLINK_DETECT_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;
@@ -312,13 +312,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE: {
+        case COM_INTEL_CV_FACE_RECOGNIZE_MODE: {
             switch (value) {
-                case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF:
+                case COM_INTEL_CV_FACE_RECOGNIZE_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON:
+                case COM_INTEL_CV_FACE_RECOGNIZE_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;
@@ -327,44 +327,44 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             }
             break;
         }
-        case COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS: {
+        case COM_INTEL_CV_SMILE_DETECT_STATUS: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES: {
+        case COM_INTEL_CV_SMILE_DETECT_SCORES: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS: {
+        case COM_INTEL_CV_BLINK_DETECT_STATUS: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES: {
+        case COM_INTEL_CV_BLINK_DETECT_SCORES: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS: {
+        case COM_INTEL_CV_FACE_RECOGNIZE_PERSON_IDS: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES: {
+        case COM_INTEL_CV_FACE_RECOGNIZE_PERSON_SIMILARITIES: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES: {
+        case COM_INTEL_CV_FACE_DETECT_RIP_ANGLES: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES: {
+        case COM_INTEL_CV_FACE_DETECT_ROP_ANGLES: {
             break;
         }
 
-        case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT: {
+        case COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT: {
+        case COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE: {
+        case COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK: {
+        case COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK: {
             break;
         }
-        case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA: {
+        case COM_INTEL_CV_INFO_AVAILABLE_PANORAMA: {
             break;
         }
 
