@@ -8,7 +8,10 @@ LOCAL_SRC_FILES:= \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSResolutionMode.cpp \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSHelpers.cpp \
     jni/com_intel_camera2_extensions_DepthCameraCalibrationDataMap.cpp \
-    jni/com_intel_camera2_extensions_DepthFrameReader.cpp 
+#    jni/com_intel_camera2_extensions_DepthSurfaceConfiguration.cpp \
+    jni/com_intel_camera2_extensions_SurfaceQuery.cpp \
+    jni/com_intel_camera2_extensions_DepthCameraImageReader.cpp 
+#    jni/com_intel_camera2_extensions_DepthFrameReader.cpp 
     
 LOCAL_SHARED_LIBRARIES := \
     libandroid_runtime \
@@ -22,8 +25,8 @@ LOCAL_SHARED_LIBRARIES := \
     libgui \
     libcamera_client 
      
-LOCAL_REQUIRED_MODULES := \
-    libexif_jni
+#LOCAL_REQUIRED_MODULES := \
+#    libexif_jni
 
 LOCAL_C_INCLUDES += \
     system/core/include/ \
@@ -37,6 +40,7 @@ LOCAL_C_INCLUDES += \
     libnativehelper/include/ \
     libnativehelper/include/nativehelper/  \
     vendor/intel/hardware/PRIVATE/libds4/v4l_camera/ \
+    vendor/intel/hardware/PRIVATE/libds4/v4l_camera/service \
     $(LOCAL_PATH)/libdepthimageutils/Include/DSAPI/ \
     $(LOCAL_PATH)/libdepthimageutils/Include/ \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSAPI/Implementations/ \
@@ -46,14 +50,15 @@ LOCAL_C_INCLUDES += \
     $(JNI_H_INCLUDE) 
     
 
-#LOCAL_CFLAGS += 
+LOCAL_CFLAGS += -g -ggdb -O0
 
 LOCAL_SHARED_LIBRARIES += \
-	libstlport
+    libstlport \
+    libv4lcamera_client
 
 LOCAL_C_INCLUDES += \
-       	external/stlport/stlport \
-        bionic
+    external/stlport/stlport \
+    bionic
 
 LOCAL_MODULE:= libinteldepthcamera_jni
 

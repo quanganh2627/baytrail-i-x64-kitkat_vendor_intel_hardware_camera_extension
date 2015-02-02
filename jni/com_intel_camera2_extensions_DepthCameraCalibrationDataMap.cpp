@@ -56,18 +56,18 @@ static struct {
 static struct {
     jclass clazz;
     jmethodID ctor;
-} gExtrinsicParamsClassInfo; 
+} gExtrinsicParamsClassInfo;
 static struct {
     jclass clazz;
     jmethodID ctor;
     jmethodID setDepthIntrinsics;
     jmethodID setColorIntrinsics;
     jmethodID setAuxIntrinsics;
-   
+
     jmethodID setDepthToColorExtrinsics;
     jmethodID setDepthToWorldExtrinsics;
-   
-} gCameraCalibrationDataClassInfo; 
+
+} gCameraCalibrationDataClassInfo;
 
 static struct {
     jfieldID mNativeContext;
@@ -86,7 +86,7 @@ public:
           DSCalibRectParameters*  tmp = (DSCalibRectParameters*) data;
           memcpy(&mCalibrationData, tmp, sizeof(DSCalibRectParameters));
           sprintCalibrationDebug();
-        }  
+        }
     }
 
     virtual ~JNIDepthCameraCalibrationDataMap() {}
@@ -94,7 +94,7 @@ public:
     DSCalibRectParameters getCalibrationData()  { return mCalibrationData; }
 
 private:
-    
+
     void sprintCalibrationDebug();
     DSCalibRectParameters  mCalibrationData;
 };
@@ -225,14 +225,14 @@ static bool fillRectParams( DSCalibRectParameters* calib_params, unsigned int wi
     float calib_ratio;
     bool scale_rectified = true;
     // First look for an exact match resolution
-    for (i = 0; i < calib_params->numIntrinsicsThird; i++) 
+    for (i = 0; i < calib_params->numIntrinsicsThird; i++)
     {
         for (j = 0; j < calib_params->numRectifiedModesThird; j++)
         {
             if ((calib_params->modesThird[0][i][j].rw == width) &&
-                (calib_params->modesThird[0][i][j].rh == height)) 
+                (calib_params->modesThird[0][i][j].rh == height))
             {
-                
+
                 DSCalibIntrinsicsRectified* rectified = &calib_params->modesThird[0][i][j];
                 params_rectified->rfx = rectified->rfx;
                 params_rectified->rfy = rectified->rfy;
@@ -277,7 +277,7 @@ static bool fillRectParams( DSCalibRectParameters* calib_params, unsigned int wi
             ALOGD("%s(): Extrapolating rectification data for %dx%d from entry %d (%dx%d)",
                     __func__, width, height, i, calib_params->intrinsicsThird[i].w,
                     calib_params->intrinsicsThird[i].h);
-            
+
             scaleRectParams(&calib_params->intrinsicsThird[i],
                               &calib_params->modesThird[0][i][0],
                               (const double *)&calib_params->Rthird[0],
@@ -315,7 +315,7 @@ static void DepthCameraCalibrationDataMap_setNativeContext(JNIEnv* env,
 static void DepthCameraCalibrationDataMap_init(JNIEnv* env, jobject thiz,
                              jbyteArray calibdata)
 {
-    
+
     jclass clazz = env->GetObjectClass(thiz);
     if (clazz == NULL) {
         jniThrowRuntimeException(env, "Can't find intel/camera2/extensions/DepthCamera/DepthCameraCalibrationDataMap");
@@ -329,36 +329,8 @@ static void DepthCameraCalibrationDataMap_init(JNIEnv* env, jobject thiz,
     env->ReleaseByteArrayElements(calibdata, calibdataByte, 0);
 
     DepthCameraCalibrationDataMap_setNativeContext(env, thiz, ctx);
-    
+
 }
-static jint DepthCameraCalibrationDataMap_getSurfaceWidth(JNIEnv* env, jobject thiz, jobject surface)
-{
-    ALOGV("%s: ", __FUNCTION__);
-    sp<ANativeWindow> anw = android_view_Surface_getNativeWindow(env, surface);
-    int width;
-
-    if ((anw->query(anw.get(), NATIVE_WINDOW_WIDTH, &width)) != OK) {
-           ALOGE("%s: Failed to query Surface width", __FUNCTION__);
-           return 0;
-    }
-
-    return width;
-}
-
-static jint DepthCameraCalibrationDataMap_getSurfaceHeight(JNIEnv* env, jobject thiz, jobject surface)
-{
-    ALOGV("%s: ", __FUNCTION__);
-    sp<ANativeWindow> anw = android_view_Surface_getNativeWindow(env, surface);
-    int height;
-
-    if ((anw->query(anw.get(), NATIVE_WINDOW_WIDTH, &height)) != OK) {
-           ALOGE("%s: Failed to query Surface height", __FUNCTION__);
-           return 0;
-    }
-
-    return height;
-}
-
 
 
 static void DepthCameraCalibrationDataMap_classInit(JNIEnv* env, jclass clazz)
@@ -377,7 +349,7 @@ static void DepthCameraCalibrationDataMap_classInit(JNIEnv* env, jclass clazz)
     gIntriniscParamsClassInfo.clazz = (jclass) env->NewGlobalRef(intrinsicsClazz);
     gIntriniscParamsClassInfo.ctor = env->GetMethodID(gIntriniscParamsClassInfo.clazz, "<init>",
         "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap;FFFF[DIII)V");
-    LOG_ALWAYS_FATAL_IF(gIntriniscParamsClassInfo.ctor == NULL, 
+    LOG_ALWAYS_FATAL_IF(gIntriniscParamsClassInfo.ctor == NULL,
             "Can not find IntrinsicParams constructor");
     jclass extrinsicsClazz = env->FindClass("com/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$ExtrinsicParams");
     LOG_ALWAYS_FATAL_IF(extrinsicsClazz == NULL, "Can not find ExtrinsicParams class");
@@ -385,50 +357,50 @@ static void DepthCameraCalibrationDataMap_classInit(JNIEnv* env, jclass clazz)
     gExtrinsicParamsClassInfo.clazz = (jclass) env->NewGlobalRef(extrinsicsClazz);
     gExtrinsicParamsClassInfo.ctor = env->GetMethodID(gExtrinsicParamsClassInfo.clazz, "<init>",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap;[F[D)V");
-    LOG_ALWAYS_FATAL_IF(gExtrinsicParamsClassInfo.ctor == NULL, 
+    LOG_ALWAYS_FATAL_IF(gExtrinsicParamsClassInfo.ctor == NULL,
             "Can not find ExtrinsicParams constructor");
- 
+
     jclass calibDataClazz = env->FindClass("com/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$DepthCameraCalibrationData");
     LOG_ALWAYS_FATAL_IF(calibDataClazz == NULL, "Can not find DepthCameraCalibrationData class");
-    // FindClass only gives a local reference of jclass object.           
+    // FindClass only gives a local reference of jclass object.
     gCameraCalibrationDataClassInfo.clazz = (jclass) env->NewGlobalRef(calibDataClazz);
     gCameraCalibrationDataClassInfo.ctor = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "<init>",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap;)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.ctor == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.ctor == NULL,
             "Can not find DepthCameraCalibrationData constructor");
-    
+
 
     gCameraCalibrationDataClassInfo.setDepthIntrinsics = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "setDepthCameraIntrinsics",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$IntrinsicParams;)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthIntrinsics == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthIntrinsics == NULL,
             "Can not find setDepthCameraIntrinsics");
 
     gCameraCalibrationDataClassInfo.setColorIntrinsics = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "setColorCameraIntrinsics",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$IntrinsicParams;)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setColorIntrinsics == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setColorIntrinsics == NULL,
             "Can not find setColorCameraIntrinsics");
 
     gCameraCalibrationDataClassInfo.setAuxIntrinsics = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "setAuxCamerasIntrinisics",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$IntrinsicParams;I)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setAuxIntrinsics == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setAuxIntrinsics == NULL,
             "Can not find setAuxCamerasIntrinisics");
 
 
     gCameraCalibrationDataClassInfo.setDepthToColorExtrinsics = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "setDepthToColorExtrinsics",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$ExtrinsicParams;)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthToColorExtrinsics == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthToColorExtrinsics == NULL,
             "Can not find setDepthToColorExtrinsics");
 
     gCameraCalibrationDataClassInfo.setDepthToWorldExtrinsics = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "setDepthToWorldExtrinsics",
             "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$ExtrinsicParams;)V");
-    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthToWorldExtrinsics == NULL, 
+    LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.setDepthToWorldExtrinsics == NULL,
             "Can not find setDepthToWorldExtrinsics");
-} 
+}
 
 static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, jobject thiz,
                                jint colorWidth,jint colorHeight, jint depthWidth, jint depthHeight, jboolean isRectified, jint cameraId)
 {
-  
+
   //initialize calibration data class
   JNIDepthCameraCalibrationDataMap* ctx = DepthCameraCalibrationDataMap_getContext(env, thiz);
   if (ctx == NULL) {
@@ -480,7 +452,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
   DSCalibIntrinsicsRectified thirdIntrinsicsRec;
   if ( !fillRectParams(&calibData,colorWidth, colorHeight, &thirdIntrinsicsNonRect, &thirdIntrinsicsRec) )
         return NULL;
-  
+
   //call constructor for intrinisics for depth
   jobject colorIntrObj;
   jdoubleArray distortionDoubleArray = env->NewDoubleArray(5);
@@ -490,13 +462,13 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
             NULL /*no distortion */,thirdIntrinsicsRec.rw, thirdIntrinsicsRec.rh,cameraId );
   else
   {
-    
+
     env->SetDoubleArrayRegion(distortionDoubleArray, 0 , 5, thirdIntrinsicsNonRect.k );
     colorIntrObj = env->NewObject(gIntriniscParamsClassInfo.clazz,
             gIntriniscParamsClassInfo.ctor, thiz, thirdIntrinsicsNonRect.fx, thirdIntrinsicsNonRect.fy, thirdIntrinsicsNonRect.px, thirdIntrinsicsNonRect.py,
             distortionDoubleArray ,thirdIntrinsicsNonRect.w, thirdIntrinsicsNonRect.h,cameraId );
   }
-  
+
   if ( colorIntrObj == NULL )
   {
     ALOGE("%s failed to construct the intrinsic object for color - rectification mode %d", __FUNCTION__ , isRectified);
@@ -521,7 +493,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
     translation[1] = (float) dtranslation[1];
     translation[2] = (float) dtranslation[2];
   }
-  
+
   jdoubleArray rotationDoubleArray = env->NewDoubleArray(9);
   env->SetDoubleArrayRegion(rotationDoubleArray, 0 , 9, rotation);
   jfloatArray translationFloatArray = env->NewFloatArray(3);
@@ -545,7 +517,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
   env->SetFloatArrayRegion(translationFloatArray, 0, 3, translation);
   jobject depthToWorldExtrObj = env->NewObject(gExtrinsicParamsClassInfo.clazz,
             gExtrinsicParamsClassInfo.ctor, thiz, translationFloatArray, rotationDoubleArray);
-  
+
   if ( depthToWorldExtrObj == NULL )
   {
     ALOGE("%s failed to construct the extrinsic object for depth to world ", __FUNCTION__ );
@@ -563,7 +535,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
     ALOGE("%s failed to construct the intrinsic object for right", __FUNCTION__ );
     return NULL;
   }
-  
+
   //Left
   DSCalibIntrinsicsNonRectified leftIntr = calibData.intrinsicsLeft;
   env->SetDoubleArrayRegion(distortionDoubleArray, 0 , 5, leftIntr.k );
@@ -594,8 +566,6 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
 static JNINativeMethod gDepthCameraCalibrationDataMap[] = {
     {"nativeClassInit", "()V", (void*)DepthCameraCalibrationDataMap_classInit },
     {"nativeCalibrationDataMapClassInit","([B)V" , (void*)DepthCameraCalibrationDataMap_init},
-    {"nativeGetSurfaceWidth", "(Landroid/view/Surface;)I", (void*)DepthCameraCalibrationDataMap_getSurfaceWidth },
-    {"nativeGetSurfaceHeight", "(Landroid/view/Surface;)I", (void*)DepthCameraCalibrationDataMap_getSurfaceHeight },        
     {"nativeGetCalibrationData", "(IIIIZI)Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap$DepthCameraCalibrationData;", (void*)DepthCameraCalibrationDataMap_getCalibrationData }
 };
 
@@ -603,7 +573,7 @@ int register_intel_camera2_extensions_depthcamera_DepthCameraCalibrationDataMap(
 
     return AndroidRuntime::registerNativeMethods(env,
                    "com/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap", gDepthCameraCalibrationDataMap, NELEM(gDepthCameraCalibrationDataMap));
-    
+
 }
 
 // jint JNI_OnLoad(JavaVM* vm, void* reserved) in com_intel_camera2_extensions_DepthCameraImageReader.cpp
