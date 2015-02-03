@@ -218,6 +218,17 @@ public class IntelCaptureResult extends CameraMetadata<CaptureResult.Key<?>> {
     public static final Key<int[]> INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES =
             new Key<int[]>("com.intel.faceEngine.faceDetectRopAngles", int[].class);
 
+    /**
+     * <p>Control of Dual camera.</p>
+     * <p>When ON, the camera HAL can support dual camera mode.<br />
+     * </p>
+     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_OFF
+     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_DUAL_DUAL_CAMERA_MODE =
+            new Key<Integer>("com.intel.dual.dualCameraMode", int.class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

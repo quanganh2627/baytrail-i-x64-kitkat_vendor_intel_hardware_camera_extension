@@ -61,6 +61,16 @@ const metadata_value_t com_intel_aiq_sceneDetected_values[] = {
                  {"BARCODE", COM_INTEL_AIQ_SCENE_DETECTED_BARCODE },
          };
 
+const metadata_value_t com_intel_dual_dualCameraMode_values[] = {
+                 {"OFF", COM_INTEL_DUAL_DUAL_CAMERA_MODE_OFF },
+                 {"ON", COM_INTEL_DUAL_DUAL_CAMERA_MODE_ON },
+         };
+
+const metadata_value_t com_intel_dual_info_availableDualCameraMode_values[] = {
+                 {"OFF", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF },
+                 {"ON", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON },
+         };
+
 const metadata_value_t com_intel_faceEngine_blinkDetectMode_values[] = {
                  {"OFF", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF },
                  {"ON", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON },
@@ -93,6 +103,7 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.faceEngine.faceRecognizePersonSimilarities", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES},
         {"com.intel.faceEngine.faceDetectRipAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES},
         {"com.intel.faceEngine.faceDetectRopAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES},
+        {"com.intel.dual.dualCameraMode", COM_INTEL_DUAL_DUAL_CAMERA_MODE},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
@@ -103,7 +114,9 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"faceEngine.info.availableFaceRecognize", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_faceEngine_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availableObjectTrack", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"faceEngine.info.availablePanorama", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
+    // DUAL
+    {"dual.info.availableDualCameraMode", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_dual_info_availableDualCameraMode_values, 2, false, {0,0,0}, 0 },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 6
 

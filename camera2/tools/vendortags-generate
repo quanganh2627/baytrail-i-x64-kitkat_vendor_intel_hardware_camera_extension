@@ -244,7 +244,8 @@ function insert_xml_file() {
 
 # Combine input XML files
 input_xml_files=('vendortags_properties_aiq.xml'
-                 'vendortags_properties_face.xml')
+                 'vendortags_properties_face.xml'
+                 'vendortags_properties_dual.xml')
 
 combine_xml_files ${input_xml_files[@]}
 
