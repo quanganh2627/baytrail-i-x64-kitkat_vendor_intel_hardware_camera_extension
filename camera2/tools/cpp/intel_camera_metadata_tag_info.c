@@ -34,6 +34,8 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
     [COM_INTEL_AIQ]                = "com.intel.aiq",
     [COM_INTEL_FACE_ENGINE]        = "com.intel.faceEngine",
     [COM_INTEL_FACE_ENGINE_INFO]   = "com.intel.faceEngine.info",
+    [COM_INTEL_DUAL]               = "com.intel.dual",
+    [COM_INTEL_DUAL_INFO]          = "com.intel.dual.info",
 };
 
 static tag_info_t com_intel_aiq_tags[COM_INTEL_AIQ_END -
@@ -89,6 +91,18 @@ static tag_info_t com_intel_face_engine_info_tags[COM_INTEL_FACE_ENGINE_INFO_END
     { "availablePanorama",             TYPE_BYTE   },
 };
 
+static tag_info_t com_intel_dual_tags[COM_INTEL_DUAL_END -
+        COM_INTEL_DUAL_START] = {
+    [ COM_INTEL_DUAL_DUAL_CAMERA_MODE - COM_INTEL_DUAL_START ] =
+    { "dualCameraMode",                TYPE_BYTE   },
+};
+
+static tag_info_t com_intel_dual_info_tags[COM_INTEL_DUAL_INFO_END -
+        COM_INTEL_DUAL_INFO_START] = {
+    [ COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DUAL_INFO_START ] =
+    { "availableDualCameraMode",       TYPE_BYTE   },
+};
+
 
 
 static tag_section_t section_com_intel_aiq = {
@@ -112,11 +126,27 @@ static tag_section_t section_com_intel_face_engine_info = {
     com_intel_face_engine_info_tags
 };
 
+static tag_section_t section_com_intel_dual = {
+    "com.intel.dual",
+    (uint32_t) COM_INTEL_DUAL_START,
+    (uint32_t) COM_INTEL_DUAL_END,
+    com_intel_dual_tags
+};
+
+static tag_section_t section_com_intel_dual_info = {
+    "com.intel.dual.info",
+    (uint32_t) COM_INTEL_DUAL_INFO_START,
+    (uint32_t) COM_INTEL_DUAL_INFO_END,
+    com_intel_dual_info_tags
+};
+
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_aiq,
     section_com_intel_face_engine,
     section_com_intel_face_engine_info,
+    section_com_intel_dual,
+    section_com_intel_dual_info,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -335,6 +365,38 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
         case COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA: {
+            break;
+        }
+
+        case COM_INTEL_DUAL_DUAL_CAMERA_MODE: {
+            switch (value) {
+                case COM_INTEL_DUAL_DUAL_CAMERA_MODE_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DUAL_DUAL_CAMERA_MODE_ON:
+                    msg = "ON";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+
+        case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
+            switch (value) {
+                case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON:
+                    msg = "ON";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
             break;
         }
 

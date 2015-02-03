@@ -355,6 +355,41 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
             </namespace>
           </static>
         </section>
+        <section name="dual">
+          <controls>
+              <entry name="dualCameraMode" type="byte" visibility="public" enum="true" >
+                <enum>
+                  <value>OFF
+                  <notes>(default) Dual camera mode is off.</notes></value>
+                  <value>ON
+                  <notes>Dual camera mode is on</notes></value>
+                </enum>
+                <description>Control of Dual camera.</description>
+                <details>When ON, the camera HAL can support dual camera mode.  </details>
+              </entry>
+          </controls>
+
+          <dynamic>
+              <clone entry="com.intel.dual.dualCameraMode" kind="controls"></clone>
+          </dynamic>
+
+          <static>
+            <namespace name="info">
+              <entry name="availableDualCameraMode" type="byte" visibility="public" type_notes="List of enums" enum="true">
+                <enum>
+                  <value>OFF
+                  <notes>Dual camera mode is off.</notes></value>
+                  <value>ON
+                  <notes>Dual camera mode is on</notes></value>
+                </enum>
+                <description>List of enums from com.intel.faceEngine.dualCameraMode</description>
+                <details>OFF is always supported.
+                </details>
+              </entry>
+            </namespace>
+          </static>
+
+        </section>
       <!--@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
       * End generated code
       *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@-->

@@ -105,6 +105,16 @@ public final class IntelCameraCharacteristics extends CameraMetadata<CameraChara
     public static final Key<int[]> INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA =
             new Key<int[]>("com.intel.faceEngine.info.availablePanorama", int[].class);
 
+    /**
+     * <p>List of enums from com.intel.faceEngine.dualCameraMode</p>
+     * <p>OFF is always supported.</p>
+     * @see #INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF
+     * @see #INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON
+     */
+    @PublicKey
+    public static final Key<Integer> INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE =
+            new Key<Integer>("com.intel.dual.info.availableDualCameraMode", int.class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

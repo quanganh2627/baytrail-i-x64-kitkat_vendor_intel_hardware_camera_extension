@@ -58,6 +58,22 @@ public class IntelCameraMetadata {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
+    // Enumeration values for IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+    //
+
+    /**
+     * <p>Dual camera mode is off.</p>
+     * @see IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     */
+    public static final int INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF = 0;
+
+    /**
+     * <p>Dual camera mode is on</p>
+     * @see IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     */
+    public static final int INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON = 1;
+
+    //
     // Enumeration values for IntelCaptureRequest#INTEL_AIQ_ANALYSIS_MODE
     //
 
@@ -160,6 +176,22 @@ public class IntelCameraMetadata {
      * @see IntelCaptureRequest#INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE
      */
     public static final int INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON = 1;
+
+    //
+    // Enumeration values for IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+    //
+
+    /**
+     * <p>(default) Dual camera mode is off.</p>
+     * @see IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+     */
+    public static final int INTEL_DUAL_DUAL_CAMERA_MODE_OFF = 0;
+
+    /**
+     * <p>Dual camera mode is on</p>
+     * @see IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+     */
+    public static final int INTEL_DUAL_DUAL_CAMERA_MODE_ON = 1;
 
     //
     // Enumeration values for IntelCaptureResult#INTEL_AIQ_MULTI_FRAME_HINT
