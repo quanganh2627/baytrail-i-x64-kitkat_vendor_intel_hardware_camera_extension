@@ -19,16 +19,16 @@ import static com.android.internal.util.Preconditions.*;
 
 public class DepthCameraStreamConfigurationMap
 {
-    public static int COLOR_STREAM_SOURCE_ID = 0x0;
-    public static int DEPTH_STREAM_SOURCE_ID = 0x1;
-    public static int LEFT_STREAM_SOURCE_ID  = 0x2;
-    public static int RIGHT_STREAM_SOURCE_ID = 0x3;
+    final public static int COLOR_STREAM_SOURCE_ID = 0x0;
+    final public static int DEPTH_STREAM_SOURCE_ID = 0x1;
+    final public static int LEFT_STREAM_SOURCE_ID  = 0x2;
+    final public static int RIGHT_STREAM_SOURCE_ID = 0x3;
 
     // these values should match the ones defined in the HAL layer TODO
 
-    private static int LEFT_USAGE_BIT_VAL           = 0x10000000;
-    private static int RIGHT_USAGE_BIT_VAL          = 0x20000000;
-    private static int DEPTH_PREVIEW_USAGE_BIT_VAL  = LEFT_USAGE_BIT_VAL | RIGHT_USAGE_BIT_VAL;
+    final private static int LEFT_USAGE_BIT_VAL           = 0x10000000;
+    final private static int RIGHT_USAGE_BIT_VAL          = 0x20000000;
+    final private static int DEPTH_PREVIEW_USAGE_BIT_VAL  = LEFT_USAGE_BIT_VAL | RIGHT_USAGE_BIT_VAL;
 
     public class DepthStreamConfiguration
     {
@@ -49,12 +49,13 @@ public class DepthCameraStreamConfigurationMap
      * @hide
      */
     public DepthStreamConfiguration(
-            final int format, final int width, final int height, final boolean input, final int usage) {
+            final int format, final int width, final int height, final boolean input, final int minDuration, final int usage) {
         mFormat = checkFormat(format);
         mWidth = checkArgumentPositive(width, "width must be positive");
         mHeight = checkArgumentPositive(height, "height must be positive");
         mInput = input;
-        mUsageVal = usage;
+        mMinDuration = checkArgumentNonnegative(minDuration, "minDuration must be non-negative");
+        mUsageVal = checkUsage(usage);
         //Log.d(TAG,"New depth stream configuration: \n" + toString() );
     }
 
@@ -63,6 +64,19 @@ public class DepthCameraStreamConfigurationMap
         return "Format: " + Integer.toHexString(mFormat) + " Size: " + mWidth + "x" + mHeight + " input: " + mInput + " usage: " + mUsageVal;
     }
 
+    private int checkUsage(int usage)
+    {
+        switch( usage ){
+            case LEFT_USAGE_BIT_VAL:
+            case RIGHT_USAGE_BIT_VAL:
+            case DEPTH_PREVIEW_USAGE_BIT_VAL:
+            case 0:
+                return usage;
+            default:
+                throw new IllegalArgumentException(String.format(
+                        "non valid value for usage 0x%x", usage));
+        }
+    }
     private int checkFormat(int format)
     {
         switch (format) {
@@ -79,8 +93,8 @@ public class DepthCameraStreamConfigurationMap
 
     }
      private int checkArgumentFormat(int format) {
-       if (!ImageFormat.isPublicFormat(format) && !PixelFormat.isPublicFormat(format) && !DepthImageFormat.isPublicFormat(format)
-                && format != 0x20203859 /*Y8*/ && format != 0x20363159 /*Y16*/ ) { //TODO resolve this issue
+       if (!ImageFormat.isPublicFormat(format) && !PixelFormat.isPublicFormat(format) && !DepthImageFormat.isPublicFormat(format) &&
+         format != 0x20203859 /*Y8*/ && format != 0x20363159 /*Y16*/ ) { //TODO resolve this issue
             throw new IllegalArgumentException(String.format(
                     "format 0x%x was not defined in either ImageFormat or PixelFormat or DepthImageFormat", format));
         }
@@ -153,7 +167,10 @@ public class DepthCameraStreamConfigurationMap
     public boolean isOutput() {
         return !mInput;
     }
-
+    public int getMinDuration()
+    {
+        return mMinDuration;
+    }
     public int getUsageVal()
     {
         return mUsageVal;
@@ -179,6 +196,7 @@ public class DepthCameraStreamConfigurationMap
                     mWidth == other.mWidth &&
                     mHeight == other.mHeight &&
                     mInput == other.mInput &&
+                    mMinDuration == other.mMinDuration &&
                     mUsageVal == other.mUsageVal;
         }
         return false;
@@ -189,13 +207,20 @@ public class DepthCameraStreamConfigurationMap
      */
     @Override
     public int hashCode() {
-        return HashCodeHelpers.hashCode(mFormat, mWidth, mHeight, mInput ? 1 : 0, mUsageVal);
+        int p[] = new int[6];
+        p[0] = mFormat;
+        p[1] = mWidth;
+        p[2] = mHeight;
+        p[3] = mInput ?1 : 0;
+        p[4] = mMinDuration;
+        return HashCodeHelpers.hashCode(p);
     }
 
     private final int mFormat;
     private final int mWidth;
     private final int mHeight;
     private final boolean mInput;
+    private final int mMinDuration;
     private final int mUsageVal;
     }
     private DepthStreamConfiguration unmarshalItem(int[] data, int base)
@@ -205,12 +230,13 @@ public class DepthCameraStreamConfigurationMap
          int width  = data[base + 1];
          int height = data[base + 2];
          boolean input = data[base + 3] != 0;
-         int usage = data[base + 4];
-         return new DepthStreamConfiguration(format,width,height,input,usage);
+         int minDuration = data[base + 4];
+         int usage = data[base + 5];
+         return new DepthStreamConfiguration(format,width,height,input,minDuration,usage);
     }
     private int getElementSize()
     {
-        return 5;
+        return 6;
     }
 
     private void mapItem(DepthStreamConfiguration item)
@@ -230,7 +256,9 @@ public class DepthCameraStreamConfigurationMap
                      + item.getUsageVal() + "!");
         }
         else
-            throw new IllegalArgumentException("Illegal content of depth stream configuration! format " + Integer.toHexString(item.getFormat() ) + " usage " + Integer.toHexString(item.getUsageVal())  );
+            throw new IllegalArgumentException("Illegal content of depth stream configuration! format "
+                + Integer.toHexString(item.getFormat() ) + " usage " + Integer.toHexString(item.getUsageVal())  );
+
         if ( sourceId != -1 )
         {
             ArrayList<DepthStreamConfiguration> configList;
@@ -305,14 +333,29 @@ public class DepthCameraStreamConfigurationMap
                 res[i++] = format;
             return res;
         }
-        return null;
+        throw new IllegalArgumentException(String.format(
+                "sourceId %d is not supported by this depth stream configuration map", sourceId));
+
     }
 
 
-    public long getOutputMinFrameDuration(int depthStreamId, int format, Size size)
+    public long getOutputMinFrameDuration(int sourceId, int format, Size size)
     {
-        //TODO
-        return 0;
+        checkNotNull(size, "size must not be null");
+        if (mDepthStreamConfigurations.containsKey(sourceId))
+        {
+            ArrayList<DepthStreamConfiguration> configList = mDepthStreamConfigurations.get(sourceId);
+
+            for (DepthStreamConfiguration s : configList)
+            {
+                if ( s.getWidth() == size.getWidth() && s.getHeight() == size.getHeight() && format == s.getFormat() && s.isOutput() )
+                    return s.getMinDuration();
+            }
+            throw new IllegalArgumentException(String.format(
+                "source Id %d, format %x and size (%dx%d) are not supported output by this depth stream configuration map", sourceId, format, size.getWidth(), size.getHeight()));
+        }
+        throw new IllegalArgumentException(String.format(
+                "source Id %d is not supported by this depth stream configuration map", sourceId));
     }
 
 
@@ -328,13 +371,27 @@ public class DepthCameraStreamConfigurationMap
             res = resSet.toArray(res);
             return res;
         }
-        return null;
+        throw new IllegalArgumentException(String.format(
+                "source Id %d and format %x are not supported by this depth stream configuration map", sourceId, format));
     }
 
-    public long getOutputStallDuration(int depthStreamId,int format, Size size)
+    public long getOutputStallDuration(int sourceId, int format, Size size)
     {
-       //TODO
-        return 0;
+        checkNotNull(size, "size must not be null");
+        if (mDepthStreamConfigurations.containsKey(sourceId))
+        {
+            ArrayList<DepthStreamConfiguration> configList = mDepthStreamConfigurations.get(sourceId);
+
+            for (DepthStreamConfiguration s : configList)
+            {
+                if ( s.getWidth() == size.getWidth() && s.getHeight() == size.getHeight() && format == s.getFormat() )
+                    return 0; //stall is 0 zero for all our valid configurations
+            }
+            throw new IllegalArgumentException(String.format(
+                "source Id %d, format %x and size (%dx%d) are not supported by this depth stream configuration map", sourceId, format, size.getWidth(), size.getHeight()));
+        }
+        throw new IllegalArgumentException(String.format(
+                "source Id %d is not supported by this depth stream configuration map", sourceId));
     }
 
     public boolean isOutputSupportedFor(int sourceId, int format)
@@ -346,8 +403,10 @@ public class DepthCameraStreamConfigurationMap
             for (DepthStreamConfiguration s : configList)
                 if (s.getFormat() == format)
                     return true;
+            return false;
         }
-        return false;
+        throw new IllegalArgumentException(String.format(
+                "source Id %d is not supported by this depth stream configuration map", sourceId));
     }
 
     public int getUsageMask(int sourceId, int format)
@@ -365,9 +424,8 @@ public class DepthCameraStreamConfigurationMap
 
     public boolean isOutputSupportedFor(int sourceId, Surface surface)
     {
-        if ( surface == null )
-             throw new IllegalArgumentException("Illegal surface == null !" );
-         if (mDepthStreamConfigurations.containsKey(sourceId))
+        checkNotNull(surface, "surface must not be null");
+        if (mDepthStreamConfigurations.containsKey(sourceId))
         {
             int format = nativeGetSurfaceFormat(surface);
             int width = nativeGetSurfaceWidth(surface);
@@ -378,20 +436,18 @@ public class DepthCameraStreamConfigurationMap
             for (DepthStreamConfiguration s : configList)
                 if (s.getFormat() == format && s.getWidth() == width && s.getHeight() == height)
                     return true;
+            return false;
         }
 
-        return false;
+        throw new IllegalArgumentException(String.format(
+                "source Id %d is not supported by this depth stream configuration map", sourceId));
     }
 
 
     static {
             System.loadLibrary("inteldepthcamera_jni");
     }
-    /* TODO
-    add this to com_intel_camera2_DepthSurfaceConfiguration register function
-     return AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraStreamConfigurationMap", gDepthSurfaceConfiguration, NELEM(gDepthSurfaceConfiguration));
-    */
+
     private synchronized native int nativeGetSurfaceFormat(Surface s);
     private synchronized native int nativeGetSurfaceWidth(Surface s);
     private synchronized native int nativeGetSurfaceHeight(Surface s);
