@@ -8,11 +8,10 @@ LOCAL_SRC_FILES:= \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSResolutionMode.cpp \
     libdepthimageutils/Devel/Source/DSAPI/Implementations/DSHelpers.cpp \
     jni/com_intel_camera2_extensions_DepthCameraCalibrationDataMap.cpp \
-#    jni/com_intel_camera2_extensions_DepthSurfaceConfiguration.cpp \
+    jni/com_intel_camera2_extensions_DepthSurfaceConfiguration.cpp \
     jni/com_intel_camera2_extensions_SurfaceQuery.cpp \
-    jni/com_intel_camera2_extensions_DepthCameraImageReader.cpp 
-#    jni/com_intel_camera2_extensions_DepthFrameReader.cpp 
-    
+    jni/com_intel_camera2_extensions_DepthCameraImageReader.cpp
+
 LOCAL_SHARED_LIBRARIES := \
     libandroid_runtime \
     libnativehelper \
@@ -23,10 +22,7 @@ LOCAL_SHARED_LIBRARIES := \
     liblog \
     libcutils \
     libgui \
-    libcamera_client 
-     
-#LOCAL_REQUIRED_MODULES := \
-#    libexif_jni
+    libcamera_client
 
 LOCAL_C_INCLUDES += \
     system/core/include/ \
@@ -47,8 +43,7 @@ LOCAL_C_INCLUDES += \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSUVC/API/ \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSDevice/ \
     $(PV_INCLUDES) \
-    $(JNI_H_INCLUDE) 
-    
+    $(JNI_H_INCLUDE)
 
 LOCAL_CFLAGS += -g -ggdb -O0
 

@@ -1024,9 +1024,8 @@ int register_intel_camera2_extensions_depthcamera_DepthCameraImageReader(JNIEnv 
 
 //externs to register all functions
 extern int register_intel_camera2_extensions_depthcamera_DepthCameraCalibrationDataMap(JNIEnv *env);
-//extern int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env) ;
-extern int register_intel_camera2_extensions_depthcamera_SurfaceQuery(JNIEnv *env) ;
-
+extern int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env);
+extern int register_intel_camera2_extensions_depthcamera_SurfaceQuery(JNIEnv *env);
 
 jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
@@ -1047,9 +1046,9 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
         ALOGE("ERROR: native registration of DepthCameraCalibrationDataMap failed\n");
         goto fail;
     }
-//    if (register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(env) < 0) {
-//        ALOGE("ERROR: native registration of DepthSurfaceConfiguration failed\n");
-//        goto fail;
+    if (register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(env) < 0) {
+        ALOGE("ERROR: native registration of DepthSurfaceConfiguration failed\n");
+        goto fail;
     }
     if (register_intel_camera2_extensions_depthcamera_DepthCameraImageReader(env) < 0) {
         ALOGE("ERROR: native registration of DepthCameraImageReader failed\n");
