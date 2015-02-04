@@ -744,20 +744,17 @@ public class DepthCameraImageReader implements AutoCloseable {
 	    public Plane[] getPlanes() {
 	        return mImage.getPlanes();
 	    }
-
-	    @Override
-	    public Point projectWorldToImageCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrincs,DepthCameraCalibrationDataMap.Point3DF pos3d)
-	    {
-	    	//TODO
-	    	return null;
-	    }
-
+	
 		// row , column , depth => point cloud in world coordinates (camera coordinates)
-	    @Override
-		public DepthCameraCalibrationDataMap.Point3DF projectImageToWorldCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrincs ,Point pos2d)
+		@Override 
+		public Point3DF projectImageToWorldCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrinsics ,Point pos2d)
 		{
-			//TODO
-			return null;
+			float z = getZ(pos2d.x, pos2d.y);
+			PointF principalP = zIntrinsics.getPrincipalPoint();
+			PointF focalL = zIntrinsics.getFocalLength();
+			float x = z * (pos2d.x - principalP.x) / focalL.x;
+			float y = z * (pos2d.y - principalP.y) / focalL.y;
+			return new Point3DF(x,y,z);
 		}
 
 		//wether the color is rectified or not can be "understood" from the parameters (distortion is null	)

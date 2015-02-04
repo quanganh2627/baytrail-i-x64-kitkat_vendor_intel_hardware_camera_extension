@@ -365,7 +365,7 @@ static void DepthCameraCalibrationDataMap_classInit(JNIEnv* env, jclass clazz)
     // FindClass only gives a local reference of jclass object.
     gCameraCalibrationDataClassInfo.clazz = (jclass) env->NewGlobalRef(calibDataClazz);
     gCameraCalibrationDataClassInfo.ctor = env->GetMethodID(gCameraCalibrationDataClassInfo.clazz, "<init>",
-            "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap;)V");
+            "(Lcom/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap;F)V");
     LOG_ALWAYS_FATAL_IF(gCameraCalibrationDataClassInfo.ctor == NULL,
             "Can not find DepthCameraCalibrationData constructor");
 
@@ -550,7 +550,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
   }
   //call constructor for CalibrationData
   jobject calibrationDataMapObj = env->NewObject(gCameraCalibrationDataClassInfo.clazz,
-            gCameraCalibrationDataClassInfo.ctor, thiz);
+            gCameraCalibrationDataClassInfo.ctor, thiz,calibData.B[0] );
 
   env->CallVoidMethod(calibrationDataMapObj, gCameraCalibrationDataClassInfo.setDepthIntrinsics, depthIntrObj );
   env->CallVoidMethod(calibrationDataMapObj, gCameraCalibrationDataClassInfo.setColorIntrinsics, colorIntrObj );
