@@ -21,43 +21,53 @@
 #include <utils/List.h>
 #include <utils/String8.h>
 #include <cstdio>
+#include <gui/Surface.h>
+#include <camera3.h>
 #include <android_runtime/AndroidRuntime.h>
+#include <android_runtime/android_view_Surface.h>
+
 #include <jni.h>
 #include <JNIHelp.h>
 #include <stdint.h>
 #include <inttypes.h>
 
-#include "ICameraHAL.h"
+#include "ufo/graphics.h"
+
 // ----------------------------------------------------------------------------
 
 using namespace android;
-static void DepthSurfaceConfiguration_configureUsageBits(JNIEnv* env, jobject thiz, jintArray jconfigurations)
+static void DepthSurfaceConfiguration_configureSurfaceUsageBits(JNIEnv* env, jobject thiz, jobject jsurface, jint usageBits)
 {
-  ALOGV("%s: ", __FUNCTION__);
+    int res;
+    int32_t currUsageBits;
 
-  sp<IServiceManager> sm = defaultServiceManager();
-  sp<IBinder> binder = sm->getService(String16(CAMERA_HAL_SERVICE_NAME));
-  if(binder == 0)
-    jniThrowRuntimeException(env, "Camera HAL Service Binder not found");
+    ALOGV("%s: ", __FUNCTION__);
+    ALOGI("%s: usagebits 0x%x ", __FUNCTION__, usageBits);
 
-  const sp<ICameraHAL>& bts = interface_cast<ICameraHAL>(binder);
+    sp<IGraphicBufferProducer> gbp;
+    sp<Surface> surface;
+    if (jsurface) {
+        surface = android_view_Surface_getSurface(env, jsurface);
+        if (surface != NULL) {
+            gbp = surface->getIGraphicBufferProducer();
+        }
+    }
+    if ((res = gbp->query(NATIVE_WINDOW_CONSUMER_USAGE_BITS, &currUsageBits)) != OK)
+    {
+        ALOGE("%s Failed to query consumer usage bis", __FUNCTION__);
+        return;
+    }
 
-  jsize len = env->GetArrayLength(jconfigurations);
-  int i=0;
-  // Get the elements
-  jint* jintConfigurations = env->GetIntArrayElements(jconfigurations, 0);
-  for ( i =0; i < len; i++ )
-    bts->setStreamFlags(i, jintConfigurations[i]);
-  env->ReleaseIntArrayElements(jconfigurations, jintConfigurations, 0);
-
+    int32_t newConsumerBits = currUsageBits | usageBits;
+    gbp->setConsumerUsageBits(newConsumerBits);
 }
 
 static JNINativeMethod gDepthSurfaceConfiguration[] = {
-    {"nativeConfigureUsageBits", "([I)V", (void*)DepthSurfaceConfiguration_configureUsageBits },
+    {"nativeConfigureSurface", "(Landroid/view/Surface;I)V", (void*)DepthSurfaceConfiguration_configureSurfaceUsageBits },
 };
 
-int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env) {
-
+int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env)
+{
     return AndroidRuntime::registerNativeMethods(env,
                    "com/intel/camera2/extensions/depthcamera/DepthCameraCaptureSessionConfiguration$ConfigureDepthSurface", gDepthSurfaceConfiguration, NELEM(gDepthSurfaceConfiguration));
 

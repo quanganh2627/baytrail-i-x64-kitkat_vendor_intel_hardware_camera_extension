@@ -16,40 +16,26 @@ import android.os.Handler;
 
 public class DepthCameraCaptureSessionConfiguration
 {
+    //recieves List of <Surface, sourceId> pairs
+    //The depthMap can be obtained from the device.getId() and then create a manager and getting the DepthConfigurationMap
+
     private static class ConfigureDepthSurface
     {
-        public List<Surface> configureDepthSurfaces(List<Pair<Surface, Integer> > targetsSourceIdMap, DepthCameraStreamConfigurationMap depthConfigMap)
+        public Surface configureDepthSurface(Surface s, int sourceId, DepthCameraStreamConfigurationMap depthConfigMap)
         {
-            int[] usages = new int[targetsSourceIdMap.size()]; //to send to depth camera binder
-            List<Surface> targets  = new ArrayList<Surface>(); //to be returned to createCapture
-            Pair<Surface, Integer> item;
-            Surface surface;
-            int sourceId;
-            int format;
-
-            for (int i = 0; i < targetsSourceIdMap.size(); i++)
-            {
-                item = targetsSourceIdMap.get(i);
-                surface = item.first;
-                sourceId = item.second;
-
-                format = nativeGetSurfaceFormat(surface);
-                usages[i] = depthConfigMap.getUsageMask(sourceId,format);
-                targets.add(surface);
-                Log.d("DepthCameraCaptureSessionConfiguration", "format 0x" + Integer.toHexString(format) +  "usageMask 0x" + Integer.toHexString(usages[i]));
-            }
-
-            nativeConfigureUsageBits(usages);
-
-            return targets;
+            int format = nativeGetSurfaceFormat(s);
+            int usageMask = depthConfigMap.getUsageMask(sourceId,format);
+            nativeConfigureSurface(s,usageMask);
+            return s;
         }
         private synchronized native int nativeGetSurfaceFormat(Surface s);
-        private synchronized native void nativeConfigureUsageBits(int[] usageMask);
+        private synchronized native void nativeConfigureSurface(Surface s, int usageMask);
 
         static {
             System.loadLibrary("inteldepthcamera_jni");
         }
     }
+
     public static void createDepthCaptureSession(CameraDevice device, CameraCharacteristics camChars, List<Pair<Surface, Integer> > targetsSourceIdMap,
              CameraCaptureSession.StateCallback callback, Handler handler) throws CameraAccessException
 
@@ -61,7 +47,15 @@ public class DepthCameraCaptureSessionConfiguration
         DepthCameraStreamConfigurationMap depthConfigMap = new DepthCameraStreamConfigurationMap(camChars);
         //for each surface in the list, configure
         ConfigureDepthSurface configUtil = new ConfigureDepthSurface();
-
-        device.createCaptureSession(configUtil.configureDepthSurfaces(targetsSourceIdMap, depthConfigMap) , callback, handler);
+        List<Surface> targets  = new ArrayList<Surface>();
+        for ( int i=0; i < targetsSourceIdMap.size(); i++ )
+        {
+            Pair<Surface, Integer> item = targetsSourceIdMap.get(i);
+            Surface surface = item.first;
+            int sourceId = item.second;
+            surface = configUtil.configureDepthSurface(surface, sourceId, depthConfigMap);
+            targets.add(surface);
+        }
+        device.createCaptureSession(targets, callback, handler);
     }
 }
