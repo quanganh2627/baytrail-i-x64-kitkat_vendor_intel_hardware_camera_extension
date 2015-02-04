@@ -39,8 +39,6 @@
 #include "ufo/graphics.h"
 
 #include "DSCalibRectParametersUtil.h"
-#include "DSConfig.h"
-#include "CalibRectParametersIO.h"
 
 #define ALIGN(x, mask) ( ((x) + (mask) - 1) & ~((mask) - 1) )
 

@@ -37,8 +37,7 @@
 
 #include "ufo/graphics.h"
 
-#include "DSCalibRectParametersUtil.h"
-#include "CalibRectParametersIO.h"
+#include "DSCalibRectParameters.h"
 #include "DSMath.h"
 
 #include "ds4/ds4_camera_metadata_tags.h"

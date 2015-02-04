@@ -4,9 +4,6 @@ include $(CLEAR_VARS)
 
 
 LOCAL_SRC_FILES:= \
-    libdepthimageutils/Devel/Source/DSAPI/Implementations/DSConfig.cpp \
-    libdepthimageutils/Devel/Source/DSAPI/Implementations/DSResolutionMode.cpp \
-    libdepthimageutils/Devel/Source/DSAPI/Implementations/DSHelpers.cpp \
     jni/com_intel_camera2_extensions_DepthCameraCalibrationDataMap.cpp \
     jni/com_intel_camera2_extensions_DepthSurfaceConfiguration.cpp \
     jni/com_intel_camera2_extensions_SurfaceQuery.cpp \
@@ -38,17 +35,13 @@ LOCAL_C_INCLUDES += \
     vendor/intel/hardware/PRIVATE/libds4/v4l_camera/ \
     vendor/intel/hardware/PRIVATE/libds4/v4l_camera/service \
     $(LOCAL_PATH)/libdepthimageutils/Include/DSAPI/ \
-    $(LOCAL_PATH)/libdepthimageutils/Include/ \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSAPI/Implementations/ \
-    $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSUVC/API/ \
-    $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSDevice/ \
     $(PV_INCLUDES) \
     $(JNI_H_INCLUDE)
 
-LOCAL_CFLAGS += -g -ggdb -O0
+#LOCAL_CFLAGS += -g -ggdb -O0
 
 LOCAL_SHARED_LIBRARIES += \
-    libstlport \
     libv4lcamera_client
 
 LOCAL_C_INCLUDES += \
