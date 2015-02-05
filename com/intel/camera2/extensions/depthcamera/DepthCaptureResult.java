@@ -20,10 +20,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.CaptureResult.Key;
 import android.hardware.camera2.impl.PublicKey;
-import android.hardware.camera2.impl.SyntheticKey;
 import android.util.Rational;
-
-import java.util.List;
 
 /**
  * <p>The subset of the results of a single image capture from the depth image sensor.</p>

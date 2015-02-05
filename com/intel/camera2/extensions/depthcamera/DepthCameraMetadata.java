@@ -17,7 +17,7 @@
 package com.intel.camera2.extensions.depthcamera;
 
 /**
-    Enumeration values for Depth camera settings
+ Enumeration values for Depth camera settings
  **/
 
 public class DepthCameraMetadata {

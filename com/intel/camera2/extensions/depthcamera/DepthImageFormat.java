@@ -10,8 +10,8 @@ public class DepthImageFormat extends ImageFormat {
     public static final int Z16 = 0x111;
 
     /**
-    * UVMap format 64bit each inlcudes 2 floats- size is resolution of Depth
-    */
+     * UVMap format 64bit each inlcudes 2 floats- size is resolution of Depth
+     */
     public static final int UVMAP = 0x112;
 
     public static int getBitsPerPixel(int format) {

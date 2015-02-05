@@ -20,8 +20,6 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureRequest.Key;
 import android.hardware.camera2.impl.PublicKey;
-import android.hardware.camera2.impl.SyntheticKey;
-import java.util.Objects;
 import android.util.Rational;
 
 /**

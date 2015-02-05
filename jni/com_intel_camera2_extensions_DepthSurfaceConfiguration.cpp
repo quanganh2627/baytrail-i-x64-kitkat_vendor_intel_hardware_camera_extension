@@ -42,7 +42,7 @@ static void DepthSurfaceConfiguration_configureSurfaceUsageBits(JNIEnv* env, job
     int32_t currUsageBits;
 
     ALOGV("%s: ", __FUNCTION__);
-    ALOGI("%s: usagebits 0x%x ", __FUNCTION__, usageBits);
+    ALOGV("%s: usagebits 0x%x ", __FUNCTION__, usageBits);
 
     sp<IGraphicBufferProducer> gbp;
     sp<Surface> surface;
@@ -69,7 +69,7 @@ static JNINativeMethod gDepthSurfaceConfiguration[] = {
 int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env)
 {
     return AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraCaptureSessionConfiguration$ConfigureDepthSurface", gDepthSurfaceConfiguration, NELEM(gDepthSurfaceConfiguration));
+            "com/intel/camera2/extensions/depthcamera/DepthCameraCaptureSessionConfiguration$ConfigureDepthSurface", gDepthSurfaceConfiguration, NELEM(gDepthSurfaceConfiguration));
 
 }
 

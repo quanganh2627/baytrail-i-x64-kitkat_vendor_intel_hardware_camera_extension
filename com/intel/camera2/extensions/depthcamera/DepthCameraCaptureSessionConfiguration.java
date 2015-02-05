@@ -1,18 +1,15 @@
 package com.intel.camera2.extensions.depthcamera;
 
-import android.view.Surface;
-import android.util.Pair;
-import java.util.List;
-import java.util.ArrayList;
-
-import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.util.Log;
-import android.content.Context;
 import android.os.Handler;
+import android.util.Pair;
+import android.view.Surface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DepthCameraCaptureSessionConfiguration
 {
@@ -48,7 +45,7 @@ public class DepthCameraCaptureSessionConfiguration
         //for each surface in the list, configure
         ConfigureDepthSurface configUtil = new ConfigureDepthSurface();
         List<Surface> targets  = new ArrayList<Surface>();
-        for ( int i=0; i < targetsSourceIdMap.size(); i++ )
+        for (int i=0; i < targetsSourceIdMap.size(); i++)
         {
             Pair<Surface, Integer> item = targetsSourceIdMap.get(i);
             Surface surface = item.first;

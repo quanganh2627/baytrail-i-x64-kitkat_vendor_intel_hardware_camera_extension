@@ -1,8 +1,8 @@
 package com.intel.camera2.extensions.depthcamera;
 import android.util.FloatMath;
 /**
-* Point3DF holds 3D float coordinates
-*/
+ * Point3DF holds 3D float coordinates
+ */
 public class Point3DF
 {
     public float x;
@@ -11,7 +11,7 @@ public class Point3DF
 
     public Point3DF() {}
 
-    public Point3DF(float x, float y, float z ) {
+    public Point3DF(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;

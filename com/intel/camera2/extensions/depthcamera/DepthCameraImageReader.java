@@ -1,18 +1,18 @@
 package com.intel.camera2.extensions.depthcamera;
 
 import android.graphics.ImageFormat;
-import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.media.Image;
+import android.media.Image.Plane;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.view.Surface;
-import android.media.Image;
+
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import android.graphics.PointF;
-import android.graphics.Point;
-import android.media.Image.Plane;
 
 
 //TODO update documentation
@@ -99,14 +99,14 @@ public class DepthCameraImageReader implements AutoCloseable {
 
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException(
-                "The image dimensions must be positive");
+                    "The image dimensions must be positive");
         }
         if (mMaxImages < 1) {
             throw new IllegalArgumentException(
-                "Maximum outstanding image count must be at least 1");
+                    "Maximum outstanding image count must be at least 1");
         }
 
-        if ( !DepthImageFormat.isPublicFormat(format) ) {
+        if (!DepthImageFormat.isPublicFormat(format)) {
             throw new IllegalArgumentException(
                     "format is not supported since it is not one of the formats defined in DepthImageFormat");
         }
@@ -201,9 +201,9 @@ public class DepthCameraImageReader implements AutoCloseable {
     }
     private Image convertSurfaceImageToDepthCameraImage(SurfaceImage si)
     {
-    	if ( si.getFormat() == DepthImageFormat.Z16 )
-    		return new DepthImageImpl(si);
-    	return new  UVMAPImageImpl(si);
+        if (si.getFormat() == DepthImageFormat.Z16)
+            return new DepthImageImpl(si);
+        return new  UVMAPImageImpl(si);
     }
     /**
      * <p>
@@ -345,7 +345,7 @@ public class DepthCameraImageReader implements AutoCloseable {
                 throw new IllegalStateException(
                         String.format(
                                 "maxImages (%d) has already been acquired, " +
-                                "call #close before acquiring more.", mMaxImages));
+                                        "call #close before acquiring more.", mMaxImages));
             default:
                 throw new AssertionError("Unknown nativeImageSetup return code " + status);
         }
@@ -355,14 +355,14 @@ public class DepthCameraImageReader implements AutoCloseable {
      * <p>Return the frame to the ImageReader for reuse.</p>
      */
     private void releaseImage(Image i) {
-        if (! (i instanceof SurfaceImage) ) {
+        if (! (i instanceof SurfaceImage)) {
             throw new IllegalArgumentException(
-                "This image was not produced by an ImageReader");
+                    "This image was not produced by an ImageReader");
         }
         SurfaceImage si = (SurfaceImage) i;
         if (si.getReader() != this) {
             throw new IllegalArgumentException(
-                "This image was not produced by this ImageReader");
+                    "This image was not produced by this ImageReader");
         }
 
         si.clearSurfacePlanes();
@@ -697,104 +697,104 @@ public class DepthCameraImageReader implements AutoCloseable {
         private synchronized native SurfacePlane nativeCreatePlane(int idx, int readerFormat);
 
         public synchronized native void nativeCalcUVMapVal(double[] rotation, float[] translation, float depthfx, float depthfy, float deothpx, float depthpy, float colorfx, float colorfy,
-                                                                float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int x, int y, ByteBuffer res);
+                                                           float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int x, int y, ByteBuffer res);
         public synchronized native void nativeCalcUVMapValForRegion(double[] rotation, float[] translation, float depthfx, float depthfy, float deothpx, float depthpy, float colorfx, float colorfy,
-                                                                float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int originx, int originy,
-                                                                int widht, int height, ByteBuffer res);
+                                                                    float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int originx, int originy,
+                                                                    int widht, int height, ByteBuffer res);
     }
     private class DepthImageImpl extends DepthImage
     {
-    	public DepthImageImpl(SurfaceImage image)
-    	{
-    		if ( image == null )
-    			throw new IllegalArgumentException(
-            		"image cannot be null");
-    		mImage = image;
-    	}
-    	@Override
-	    public void close() {
-	        mImage.close();
-	    }
+        public DepthImageImpl(SurfaceImage image)
+        {
+            if (image == null)
+                throw new IllegalArgumentException(
+                        "image cannot be null");
+            mImage = image;
+        }
+        @Override
+        public void close() {
+            mImage.close();
+        }
 
-	    public DepthCameraImageReader getReader() {
-	        return mImage.getReader();
-	    }
+        public DepthCameraImageReader getReader() {
+            return mImage.getReader();
+        }
 
-	    @Override
-	    public int getFormat() {
-	        return mImage.getFormat();
-	    }
+        @Override
+        public int getFormat() {
+            return mImage.getFormat();
+        }
 
-	    @Override
-	    public int getWidth() {
-	     	return mImage.getWidth();
-	    }
+        @Override
+        public int getWidth() {
+            return mImage.getWidth();
+        }
 
-	    @Override
-	    public int getHeight() {
-	        return mImage.getHeight();
-	    }
+        @Override
+        public int getHeight() {
+            return mImage.getHeight();
+        }
 
-	    @Override
-	    public long getTimestamp() {
-	       return mImage.getTimestamp();
-	    }
+        @Override
+        public long getTimestamp() {
+            return mImage.getTimestamp();
+        }
 
-	    @Override
-	    public Plane[] getPlanes() {
-	        return mImage.getPlanes();
-	    }
-	
-		// row , column , depth => point cloud in world coordinates (camera coordinates)
-		@Override 
-		public Point3DF projectImageToWorldCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrinsics ,Point pos2d)
-		{
-			float z = getZ(pos2d.x, pos2d.y);
-			PointF principalP = zIntrinsics.getPrincipalPoint();
-			PointF focalL = zIntrinsics.getFocalLength();
-			float x = z * (pos2d.x - principalP.x) / focalL.x;
-			float y = z * (pos2d.y - principalP.y) / focalL.y;
-			return new Point3DF(x,y,z);
-		}
+        @Override
+        public Plane[] getPlanes() {
+            return mImage.getPlanes();
+        }
 
-		//wether the color is rectified or not can be "understood" from the parameters (distortion is null	)
-		@Override
-		public PointF mapDepthToColorCoordinates(DepthCameraCalibrationDataMap.DepthCameraCalibrationData calibrationData, Point p )
-		{
+        // row , column , depth => point cloud in world coordinates (camera coordinates)
+        @Override
+        public Point3DF projectImageToWorldCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrinsics ,Point pos2d)
+        {
+            float z = getZ(pos2d.x, pos2d.y);
+            PointF principalP = zIntrinsics.getPrincipalPoint();
+            PointF focalL = zIntrinsics.getFocalLength();
+            float x = z * (pos2d.x - principalP.x) / focalL.x;
+            float y = z * (pos2d.y - principalP.y) / focalL.y;
+            return new Point3DF(x,y,z);
+        }
+
+        //wether the color is rectified or not can be "understood" from the parameters (distortion is null	)
+        @Override
+        public PointF mapDepthToColorCoordinates(DepthCameraCalibrationDataMap.DepthCameraCalibrationData calibrationData, Point p)
+        {
             DepthCameraCalibrationDataMap.ExtrinsicParams extrinsics = calibrationData.getDepthToColorExtrinsics();
             DepthCameraCalibrationDataMap.IntrinsicParams colorIntr = calibrationData.getColorCameraIntrinsics();
             DepthCameraCalibrationDataMap.IntrinsicParams depthIntr = calibrationData.getDepthCameraIntrinsics();
-            if ( p.x < 0 || p.y < 0 )
+            if (p.x < 0 || p.y < 0)
                 throw new IllegalArgumentException("origin x,y cannot be negative!");
-            if ( p.x >= getWidth() || p.y  >= getHeight() )
+            if (p.x >= getWidth() || p.y  >= getHeight())
                 throw new IllegalArgumentException("point exceeds the depth image limits!");
 
             double[][] rotation = extrinsics.getRotation();
             double[] rotation1D = new double[9];
-            for ( int i=0; i <3; i++)
-                for ( int j=0; j<3; j++)
+            for (int i=0; i <3; i++)
+                for (int j=0; j<3; j++)
                     rotation1D[i*3+j] = rotation[i][j];
 
             ByteBuffer resByteBuffer = ByteBuffer.allocateDirect(4*2); //uvmap is 2 floats = float = 4bytes
             mImage.nativeCalcUVMapVal(rotation1D,
-                                            extrinsics.getTranslation(),
-                                            depthIntr.getFocalLength().x, depthIntr.getFocalLength().y, //depth focal
-                                            depthIntr.getPrincipalPoint().x, depthIntr.getPrincipalPoint().y, //depth principal
-                                            colorIntr.getFocalLength().x, colorIntr.getFocalLength().y, //color focal
-                                            colorIntr.getPrincipalPoint().x, colorIntr.getPrincipalPoint().y, //color principal
-                                            colorIntr.getDistortion(),
-                                            colorIntr.getResolution().getWidth(), colorIntr.getResolution().getHeight(),
-                                            colorIntr.isRectified(),
-                                            p.x , p.y, resByteBuffer); //depth coordinatesvalue
+                    extrinsics.getTranslation(),
+                    depthIntr.getFocalLength().x, depthIntr.getFocalLength().y, //depth focal
+                    depthIntr.getPrincipalPoint().x, depthIntr.getPrincipalPoint().y, //depth principal
+                    colorIntr.getFocalLength().x, colorIntr.getFocalLength().y, //color focal
+                    colorIntr.getPrincipalPoint().x, colorIntr.getPrincipalPoint().y, //color principal
+                    colorIntr.getDistortion(),
+                    colorIntr.getResolution().getWidth(), colorIntr.getResolution().getHeight(),
+                    colorIntr.isRectified(),
+                    p.x , p.y, resByteBuffer); //depth coordinatesvalue
 
             return new PointF(resByteBuffer.getFloat(), resByteBuffer.getFloat());
-		}
-		@Override
-		public PointF[][]  mapDepthToColorCoordinates(DepthCameraCalibrationDataMap.DepthCameraCalibrationData calibrationData, Point origin, int width, int height )
-		{
-            if ( origin.x < 0 || origin.y < 0 )
+        }
+        @Override
+        public PointF[][]  mapDepthToColorCoordinates(DepthCameraCalibrationDataMap.DepthCameraCalibrationData calibrationData, Point origin, int width, int height)
+        {
+            if (origin.x < 0 || origin.y < 0)
                 throw new IllegalArgumentException("origin x,y cannot be negative!");
-            if ( origin.x + width >= getWidth() || origin.y + height >= getHeight() )
+            if (origin.x + width >= getWidth() || origin.y + height >= getHeight())
                 throw new IllegalArgumentException("rectangle area is exceeds the depth image limits!");
 
             ByteBuffer resByteBuffer = ByteBuffer.allocateDirect(width*height*4*2); //uvmap is 2 floats = float = 4bytes
@@ -804,132 +804,132 @@ public class DepthCameraImageReader implements AutoCloseable {
 
             double[][] rotation = extrinsics.getRotation();
             double[] rotation1D = new double[9];
-            for ( int i=0; i <3; i++)
-                for ( int j=0; j<3; j++)
+            for (int i=0; i <3; i++)
+                for (int j=0; j<3; j++)
                     rotation1D[i*3+j] = rotation[i][j];
 
             mImage.nativeCalcUVMapValForRegion(rotation1D,
-                                            extrinsics.getTranslation(),
-                                            depthIntr.getFocalLength().x, depthIntr.getFocalLength().y, //depth focal
-                                            depthIntr.getPrincipalPoint().x, depthIntr.getPrincipalPoint().y, //depth principal
-                                            colorIntr.getFocalLength().x, colorIntr.getFocalLength().y, //color focal
-                                            colorIntr.getPrincipalPoint().x, colorIntr.getPrincipalPoint().y, //color principal
-                                            colorIntr.getDistortion(),
-                                            colorIntr.getResolution().getWidth(), colorIntr.getResolution().getHeight(),
-                                            colorIntr.isRectified(),
-                                            origin.x, origin.y , width, height, resByteBuffer);
+                    extrinsics.getTranslation(),
+                    depthIntr.getFocalLength().x, depthIntr.getFocalLength().y, //depth focal
+                    depthIntr.getPrincipalPoint().x, depthIntr.getPrincipalPoint().y, //depth principal
+                    colorIntr.getFocalLength().x, colorIntr.getFocalLength().y, //color focal
+                    colorIntr.getPrincipalPoint().x, colorIntr.getPrincipalPoint().y, //color principal
+                    colorIntr.getDistortion(),
+                    colorIntr.getResolution().getWidth(), colorIntr.getResolution().getHeight(),
+                    colorIntr.isRectified(),
+                    origin.x, origin.y , width, height, resByteBuffer);
 
             PointF[][] res = new PointF[height][width];
-            for ( int i=0; i< height; i++)
-                for ( int j=0; j< width; j++)
+            for (int i=0; i< height; i++)
+                for (int j=0; j< width; j++)
                 {
                     res[i][j].x = resByteBuffer.getFloat(); //gets next float and increases position by 4
                     res[i][j].y = resByteBuffer.getFloat();
                 }
 
-			return res;
-		}
-		@Override
-		public int getZ(int x, int y)
-		{
-			if ( mImage.isImageValid() )
+            return res;
+        }
+        @Override
+        public int getZ(int x, int y)
+        {
+            if (mImage.isImageValid())
             {
-				Plane[] planes = mImage.getPlanes();
-				if ( planes != null )
-				{
-					Plane depthPlane = planes[0];
-					if ( depthPlane == null )
-						throw new IllegalStateException("Depth plane is null");
+                Plane[] planes = mImage.getPlanes();
+                if (planes != null)
+                {
+                    Plane depthPlane = planes[0];
+                    if (depthPlane == null)
+                        throw new IllegalStateException("Depth plane is null");
 
                     int zPos = y*depthPlane.getRowStride() + x*depthPlane.getPixelStride();
-                    if ( zPos + depthPlane.getPixelStride() > depthPlane.getBuffer().capacity() )
+                    if (zPos + depthPlane.getPixelStride() > depthPlane.getBuffer().capacity())
                     {
                         throw new IllegalArgumentException(
-                        "uvMap x,y indexes are out of boundaries of the uvmap buffer");
+                                "uvMap x,y indexes are out of boundaries of the uvmap buffer");
                     }
-					return depthPlane.getBuffer().getInt(zPos);
-				}
-				else
-					throw new IllegalStateException("Depth plane is null");
+                    return depthPlane.getBuffer().getInt(zPos);
+                }
+                else
+                    throw new IllegalStateException("Depth plane is null");
 
-			}
-	        throw new IllegalStateException("getZ - Image is already released");
-		}
+            }
+            throw new IllegalStateException("getZ - Image is already released");
+        }
 
-		//Surface Image
-	    private SurfaceImage mImage;
+        //Surface Image
+        private SurfaceImage mImage;
     }
 
     private class UVMAPImageImpl extends UVMAPImage
     {
-    	public UVMAPImageImpl(SurfaceImage image)
-    	{
-    		if ( image == null )
-    			throw new IllegalArgumentException(
-            		"image cannot be null");
-    		mImage = image;
-    	}
-    	@Override
-	    public void close() {
-	        mImage.close();
-	    }
+        public UVMAPImageImpl(SurfaceImage image)
+        {
+            if (image == null)
+                throw new IllegalArgumentException(
+                        "image cannot be null");
+            mImage = image;
+        }
+        @Override
+        public void close() {
+            mImage.close();
+        }
 
-	    public DepthCameraImageReader getReader() {
-	        return mImage.getReader();
-	    }
+        public DepthCameraImageReader getReader() {
+            return mImage.getReader();
+        }
 
-	    @Override
-	    public int getFormat() {
-	        return mImage.getFormat();
-	    }
+        @Override
+        public int getFormat() {
+            return mImage.getFormat();
+        }
 
-	    @Override
-	    public int getWidth() {
-	     	return mImage.getWidth();
-	    }
+        @Override
+        public int getWidth() {
+            return mImage.getWidth();
+        }
 
-	    @Override
-	    public int getHeight() {
-	        return mImage.getHeight();
-	    }
+        @Override
+        public int getHeight() {
+            return mImage.getHeight();
+        }
 
-	    @Override
-	    public long getTimestamp() {
-	       return mImage.getTimestamp();
-	    }
+        @Override
+        public long getTimestamp() {
+            return mImage.getTimestamp();
+        }
 
-	    @Override
-	    public Plane[] getPlanes() {
-	        return mImage.getPlanes();
-	    }
+        @Override
+        public Plane[] getPlanes() {
+            return mImage.getPlanes();
+        }
 
-		@Override
-	    public PointF getUV(int x,int y)
-	    {
-            if ( mImage.isImageValid() )
+        @Override
+        public PointF getUV(int x,int y)
+        {
+            if (mImage.isImageValid())
             {
-    	    	Plane[] p = mImage.getPlanes();
-                if ( p == null )
-                        throw new IllegalStateException("UVMAPImage plane is null!!");
+                Plane[] p = mImage.getPlanes();
+                if (p == null)
+                    throw new IllegalStateException("UVMAPImage plane is null!!");
 
                 Plane uvmapPlane = p[0];
                 ByteBuffer uvMapBuffer = uvmapPlane.getBuffer();
                 int uPos = y * uvmapPlane.getRowStride() + x * uvmapPlane.getPixelStride();
-                if ( uPos + uvmapPlane.getPixelStride() > uvMapBuffer.capacity() )
+                if (uPos + uvmapPlane.getPixelStride() > uvMapBuffer.capacity())
                 {
                     throw new IllegalArgumentException(
-                    "uvMap x,y indexes are out of boundaries of the uvmap buffer");
+                            "uvMap x,y indexes are out of boundaries of the uvmap buffer");
                 }
-                return new PointF( uvMapBuffer.getFloat(uPos) , uvMapBuffer.getFloat(uPos + 4) );
+                return new PointF(uvMapBuffer.getFloat(uPos) , uvMapBuffer.getFloat(uPos + 4));
             }
             throw new IllegalStateException("getUV - Image is already released");
-	    }
-		//Surface Image
-	    private SurfaceImage mImage;
+        }
+        //Surface Image
+        private SurfaceImage mImage;
     }
 
     private synchronized native void nativeInit(Object weakSelf, int w, int h,
-                                                    int fmt, int maxImgs);
+                                                int fmt, int maxImgs);
     private synchronized native void nativeClose();
     private synchronized native void nativeReleaseImage(Image i);
     private synchronized native Surface nativeGetSurface();

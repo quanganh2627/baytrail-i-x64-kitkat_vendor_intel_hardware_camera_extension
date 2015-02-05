@@ -36,7 +36,6 @@
 #include <inttypes.h>
 
 #include "ufo/graphics.h"
-#define ALIGN(x, mask) ( ((x) + (mask) - 1) & ~((mask) - 1) )
 
 // ----------------------------------------------------------------------------
 
@@ -48,8 +47,8 @@ static jint SurfaceQuery_getSurfaceFormat(JNIEnv* env, jobject thiz, jobject sur
     int format;
 
     if ((anw->query(anw.get(), NATIVE_WINDOW_FORMAT, &format)) != OK) {
-           ALOGE("%s: Failed to query Surface height", __FUNCTION__);
-           return 0;
+        ALOGE("%s: Failed to query Surface height", __FUNCTION__);
+        return 0;
     }
 
     return format;
@@ -61,8 +60,8 @@ static jint SurfaceQuery_getSurfaceWidth(JNIEnv* env, jobject thiz, jobject surf
     int width;
 
     if ((anw->query(anw.get(), NATIVE_WINDOW_WIDTH, &width)) != OK) {
-           ALOGE("%s: Failed to query Surface width", __FUNCTION__);
-           return 0;
+        ALOGE("%s: Failed to query Surface width", __FUNCTION__);
+        return 0;
     }
 
     return width;
@@ -75,8 +74,8 @@ static jint SurfaceQuery_getSurfaceHeight(JNIEnv* env, jobject thiz, jobject sur
     int height;
 
     if ((anw->query(anw.get(), NATIVE_WINDOW_WIDTH, &height)) != OK) {
-           ALOGE("%s: Failed to query Surface height", __FUNCTION__);
-           return 0;
+        ALOGE("%s: Failed to query Surface height", __FUNCTION__);
+        return 0;
     }
 
     return height;
@@ -97,15 +96,15 @@ static JNINativeMethod gSurfaceQuery_2[] = {
 int register_intel_camera2_extensions_depthcamera_SurfaceQuery(JNIEnv *env) {
 
     int ret1 = AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraCaptureSessionConfiguration$ConfigureDepthSurface", gSurfaceQuery_1, NELEM(gSurfaceQuery_1));
+               "com/intel/camera2/extensions/depthcamera/DepthCameraCaptureSessionConfiguration$ConfigureDepthSurface", gSurfaceQuery_1, NELEM(gSurfaceQuery_1));
     int ret2 = AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap", gSurfaceQuery_2, NELEM(gSurfaceQuery_2));
+               "com/intel/camera2/extensions/depthcamera/DepthCameraCalibrationDataMap", gSurfaceQuery_2, NELEM(gSurfaceQuery_2));
     int ret3 = AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraStreamConfigurationMap", gSurfaceQuery_2, NELEM(gSurfaceQuery_2));
+               "com/intel/camera2/extensions/depthcamera/DepthCameraStreamConfigurationMap", gSurfaceQuery_2, NELEM(gSurfaceQuery_2));
     int ret4 = AndroidRuntime::registerNativeMethods(env,
-                   "com/intel/camera2/extensions/depthcamera/DepthCameraStreamConfigurationMap", gSurfaceQuery_1, NELEM(gSurfaceQuery_1));
-    if ( ret1 || ret2 || ret3 || ret4 )
-      ALOGV("%s - registering SurfaceQuery failed %d, %d , %d, %d", __FUNCTION__, ret1, ret2, ret3, ret4);
+               "com/intel/camera2/extensions/depthcamera/DepthCameraStreamConfigurationMap", gSurfaceQuery_1, NELEM(gSurfaceQuery_1));
+    if (ret1 || ret2 || ret3 || ret4)
+        ALOGV("%s - registering SurfaceQuery failed %d, %d , %d, %d", __FUNCTION__, ret1, ret2, ret3, ret4);
 
     return (ret1 || ret2 || ret3);
 

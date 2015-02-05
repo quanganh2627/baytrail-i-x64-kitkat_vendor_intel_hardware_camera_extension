@@ -41,11 +41,7 @@ LOCAL_C_INCLUDES += \
 
 #LOCAL_CFLAGS += -g -ggdb -O0
 
-LOCAL_SHARED_LIBRARIES += \
-    libv4lcamera_client
-
 LOCAL_C_INCLUDES += \
-    external/stlport/stlport \
     bionic
 
 LOCAL_MODULE:= libinteldepthcamera_jni

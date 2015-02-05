@@ -16,11 +16,10 @@
 
 package com.intel.camera2.extensions.depthcamera;
 
-import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraCharacteristics.Key;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.impl.PublicKey;
-import android.hardware.camera2.impl.SyntheticKey;
 import android.hardware.camera2.utils.TypeReference;
 
 /**
