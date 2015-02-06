@@ -697,7 +697,8 @@ public class DepthCameraImageReader implements AutoCloseable {
         private synchronized native SurfacePlane nativeCreatePlane(int idx, int readerFormat);
 
         public synchronized native void nativeCalcUVMapVal(double[] rotation, float[] translation, float depthfx, float depthfy, float deothpx, float depthpy, float colorfx, float colorfy,
-                                                           float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int x, int y, ByteBuffer res);
+                                                           float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int x, int y, ByteBuffer res, int depth
+                                                           , int width, int height);
         public synchronized native void nativeCalcUVMapValForRegion(double[] rotation, float[] translation, float depthfx, float depthfy, float deothpx, float depthpy, float colorfx, float colorfy,
                                                                     float colorpx, float colorpy, double[] distortion, int colorWidth, int colorHeight, boolean rectified, int originx, int originy,
                                                                     int widht, int height, ByteBuffer res);
@@ -749,11 +750,20 @@ public class DepthCameraImageReader implements AutoCloseable {
         @Override
         public Point3DF projectImageToWorldCoordinates(DepthCameraCalibrationDataMap.IntrinsicParams zIntrinsics ,Point pos2d)
         {
+            if (pos2d.x < 0 || pos2d.y < 0)
+                throw new IllegalArgumentException("origin x,y cannot be negative!");
+            if (pos2d.y >= getHeight() || pos2d.x  >= getWidth())
+                throw new IllegalArgumentException("point exceeds the depth image limits! "  + pos2d.x + " " + pos2d.y);
+
             float z = getZ(pos2d.x, pos2d.y);
             PointF principalP = zIntrinsics.getPrincipalPoint();
             PointF focalL = zIntrinsics.getFocalLength();
-            float x = z * (pos2d.x - principalP.x) / focalL.x;
-            float y = z * (pos2d.y - principalP.y) / focalL.y;
+            float x = 0;
+            if (focalL.x != 0)
+                x = z * (pos2d.x - principalP.x) / focalL.x;
+            float y = 0;
+            if (focalL.y != 0)
+                y =z * (pos2d.y - principalP.y) / focalL.y;
             return new Point3DF(x,y,z);
         }
 
@@ -766,8 +776,8 @@ public class DepthCameraImageReader implements AutoCloseable {
             DepthCameraCalibrationDataMap.IntrinsicParams depthIntr = calibrationData.getDepthCameraIntrinsics();
             if (p.x < 0 || p.y < 0)
                 throw new IllegalArgumentException("origin x,y cannot be negative!");
-            if (p.x >= getWidth() || p.y  >= getHeight())
-                throw new IllegalArgumentException("point exceeds the depth image limits!");
+            if (p.y >= getHeight() || p.x  >= getWidth())
+                throw new IllegalArgumentException("point exceeds the depth image limits! "  + p.x + " " + p.y);
 
             double[][] rotation = extrinsics.getRotation();
             double[] rotation1D = new double[9];
@@ -776,6 +786,7 @@ public class DepthCameraImageReader implements AutoCloseable {
                     rotation1D[i*3+j] = rotation[i][j];
 
             ByteBuffer resByteBuffer = ByteBuffer.allocateDirect(4*2); //uvmap is 2 floats = float = 4bytes
+            resByteBuffer.order(ByteOrder.nativeOrder());
             mImage.nativeCalcUVMapVal(rotation1D,
                     extrinsics.getTranslation(),
                     depthIntr.getFocalLength().x, depthIntr.getFocalLength().y, //depth focal
@@ -785,7 +796,7 @@ public class DepthCameraImageReader implements AutoCloseable {
                     colorIntr.getDistortion(),
                     colorIntr.getResolution().getWidth(), colorIntr.getResolution().getHeight(),
                     colorIntr.isRectified(),
-                    p.x , p.y, resByteBuffer); //depth coordinatesvalue
+                    p.x , p.y, resByteBuffer, getZ(p.x,p.y), getWidth(), getHeight() ); //depth coordinatesvalue
 
             return new PointF(resByteBuffer.getFloat(), resByteBuffer.getFloat());
         }
@@ -794,10 +805,12 @@ public class DepthCameraImageReader implements AutoCloseable {
         {
             if (origin.x < 0 || origin.y < 0)
                 throw new IllegalArgumentException("origin x,y cannot be negative!");
-            if (origin.x + width >= getWidth() || origin.y + height >= getHeight())
-                throw new IllegalArgumentException("rectangle area is exceeds the depth image limits!");
+            if (origin.x + width > getWidth() || origin.y + height > getHeight())
+                throw new IllegalArgumentException("rectangle area is exceeds the depth image limits " + origin.x + " " + origin.y);
 
             ByteBuffer resByteBuffer = ByteBuffer.allocateDirect(width*height*4*2); //uvmap is 2 floats = float = 4bytes
+            resByteBuffer.order(ByteOrder.nativeOrder());
+
             DepthCameraCalibrationDataMap.ExtrinsicParams extrinsics = calibrationData.getDepthToColorExtrinsics();
             DepthCameraCalibrationDataMap.IntrinsicParams colorIntr = calibrationData.getColorCameraIntrinsics();
             DepthCameraCalibrationDataMap.IntrinsicParams depthIntr = calibrationData.getDepthCameraIntrinsics();
@@ -823,6 +836,7 @@ public class DepthCameraImageReader implements AutoCloseable {
             for (int i=0; i< height; i++)
                 for (int j=0; j< width; j++)
                 {
+                    res[i][j] = new PointF();
                     res[i][j].x = resByteBuffer.getFloat(); //gets next float and increases position by 4
                     res[i][j].y = resByteBuffer.getFloat();
                 }
@@ -845,9 +859,9 @@ public class DepthCameraImageReader implements AutoCloseable {
                     if (zPos + depthPlane.getPixelStride() > depthPlane.getBuffer().capacity())
                     {
                         throw new IllegalArgumentException(
-                                "uvMap x,y indexes are out of boundaries of the uvmap buffer");
+                                "x,y indexes are out of boundaries of the depth buffer zpos " + zPos + " capacity " + depthPlane.getBuffer().capacity());
                     }
-                    return depthPlane.getBuffer().getInt(zPos);
+                    return depthPlane.getBuffer().getChar(zPos);
                 }
                 else
                     throw new IllegalStateException("Depth plane is null");

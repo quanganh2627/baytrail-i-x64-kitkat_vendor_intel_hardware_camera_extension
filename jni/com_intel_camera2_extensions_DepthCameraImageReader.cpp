@@ -429,11 +429,11 @@ static jint Image_imageGetRowStride(JNIEnv* env, CpuConsumer::LockedBuffer* buff
     switch (fmt) {
         case HAL_PIXEL_FORMAT_Z16_INTEL:
             ALOG_ASSERT(idx == 0, "Wrong index: %d", idx);
-            rowStride = buffer->stride;
+            rowStride = buffer->stride * 2;
             break;
         case HAL_PIXEL_FORMAT_UVMAP64_INTEL:
             ALOG_ASSERT(idx == 0, "Wrong index: %d", idx);
-            rowStride = buffer->stride * sizeof(float);
+            rowStride = buffer->stride * sizeof(float) *2;
             break;
         default:
             jniThrowExceptionFmt(env, "java/lang/UnsupportedOperationException",
@@ -779,7 +779,7 @@ void MyDumpAsTCSV (const DSCalibIntrinsicsNonRectified &cri, char*name)
     ALOGW("%d %s%s", (int)cri.h, name, "_h");
 }
 
-void MyDumpAsTCSV (const DSCalibIntrinsicsRectified &crm, char* name)
+void MyDumpAsTCSV_RECT (const DSCalibIntrinsicsRectified &crm, char* name)
 {
 
     ALOGW("%f %s%s", crm.rfx, name, "_rfx");
@@ -826,16 +826,13 @@ void convertToIntrinsicsNonRectified(float fx, float fy, float px, float py, dou
         res->k[i] = distortion[i];
 }
 
-void getIntrinsicsAndExtrinsics(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, jdoubleArray jrotation, jfloatArray jtranslation, float depthfx,
+
+void getIntrinsicsAndExtrinsics(JNIEnv* env, int width, int height, jdoubleArray jrotation, jfloatArray jtranslation, float depthfx,
                                 float depthfy, float depthpx, float depthpy, float colorfx, float colorfy,
                                 float colorpx, float colorpy, jdoubleArray jdistortion, int colorWidth, int colorHeight,
                                 bool rectified, DSCalibIntrinsicsRectified* zIntrinsics, DSCalibIntrinsicsNonRectified* thirdIntrinsicsNonRect,
                                 DSCalibIntrinsicsRectified* thirdIntrinsicsRec, double* rotation, double* translation)
 {
-
-    if (buffer == NULL) {
-        jniThrowException(env, "java/lang/IllegalStateException", "Image was released");
-    }
 
     //converting rotation
 
@@ -846,7 +843,7 @@ void getIntrinsicsAndExtrinsics(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, 
     env->ReleaseDoubleArrayElements(jrotation, jdoubleRotation, 0);
 
 
-    convertToIntrinsicsRectified(depthfx, depthfy, depthpx, depthpy, buffer->width, buffer->height, zIntrinsics);
+    convertToIntrinsicsRectified(depthfx, depthfy, depthpx, depthpy, width, height, zIntrinsics);
 
     //converting translation
 
@@ -880,8 +877,8 @@ void getIntrinsicsAndExtrinsics(JNIEnv* env, CpuConsumer::LockedBuffer* buffer, 
     }
 
 #ifdef PRINT_DEBUG
-    MyDumpAsTCSV(zIntrinsics, "zIntrinsics");
-    MyDumpAsTCSV(thirdIntrinsicsNonRect, "thirdIntrinsicsNonRect");
+    MyDumpAsTCSV_RECT(*zIntrinsics, "zIntrinsics");
+    MyDumpAsTCSV(*thirdIntrinsicsNonRect, "thirdIntrinsicsNonRect");
 
     for (int j = 0; j < 9; j++)
         ALOGW("%f %s[%d]", rotation[j], "rotation", j);
@@ -904,7 +901,11 @@ static void Image_getUVMapPerRegion(JNIEnv* env, jobject thiz, jdoubleArray jrot
     //Depth Intrinsics
     CpuConsumer::LockedBuffer* buffer = Image_getLockedBuffer(env, thiz);
 
-    getIntrinsicsAndExtrinsics(env, buffer,  jrotation,  jtranslation,  depthfx,
+    if (!buffer) {
+        ALOGW("Image already released!!!");
+        return;
+    }
+    getIntrinsicsAndExtrinsics(env, buffer->width , buffer->height,  jrotation,  jtranslation,  depthfx,
                                depthfy,  depthpx,  depthpy,  colorfx,  colorfy,
                                colorpx,  colorpy,  jdistortion,  colorWidth,  colorHeight,
                                rectified, &zIntrinsics, &thirdIntrinsicsNonRect, &thirdIntrinsicsRec, rotation, translation);
@@ -923,7 +924,8 @@ static void Image_getUVMapPerRegion(JNIEnv* env, jobject thiz, jdoubleArray jrot
             if (zImage[0] >= buffer->width || zImage[1] >= buffer->height)
                 jniThrowRuntimeException(env, "Array indexes out of bound!");
 
-            zImage[2] = depthData[(int) (zImage[1] * buffer->width + zImage[0])];
+            zImage[2] = (int) depthData[(int) (zImage[1] * buffer->width + zImage[0])];
+
             if (zImage[2] != 0)
             {
                 if (rectified)
@@ -937,6 +939,10 @@ static void Image_getUVMapPerRegion(JNIEnv* env, jobject thiz, jdoubleArray jrot
                             thirdIntrinsicsNonRect, zImage, res);
                 }
             }
+            else
+            {
+                res[0] = res[1] = 0;
+            }
             res += 2;
         }
 }
@@ -944,7 +950,7 @@ static void Image_getUVMapPerRegion(JNIEnv* env, jobject thiz, jdoubleArray jrot
 static void Image_getUVMapPerPoint(JNIEnv* env, jobject thiz, jdoubleArray jrotation, jfloatArray jtranslation, float depthfx,
                                    float depthfy, float depthpx, float depthpy, float colorfx, float colorfy,
                                    float colorpx, float colorpy, jdoubleArray jdistortion, int colorWidth, int colorHeight,
-                                   bool rectified, int x, int y,  jobject dest)
+                                   bool rectified, int x, int y,  jobject dest, int depth , int width, int height)
 {
     // Get a class reference for java.lang.Integer
     DSCalibIntrinsicsRectified zIntrinsics;
@@ -954,22 +960,22 @@ static void Image_getUVMapPerPoint(JNIEnv* env, jobject thiz, jdoubleArray jrota
     double rotation[9];
     double translation[3];
 
-    CpuConsumer::LockedBuffer* buffer = Image_getLockedBuffer(env, thiz);
-    getIntrinsicsAndExtrinsics(env, buffer,  jrotation,  jtranslation,  depthfx,
+    getIntrinsicsAndExtrinsics(env, width, height,  jrotation,  jtranslation,  depthfx,
                                depthfy,  depthpx,  depthpy,  colorfx,  colorfy,
                                colorpx,  colorpy,  jdistortion,  colorWidth,  colorHeight,
                                rectified, &zIntrinsics, &thirdIntrinsicsNonRect, &thirdIntrinsicsRec, rotation, translation);
 
-    uint16_t *depthData = (uint16_t *)buffer->data;
 
     float zImage[3];
     zImage[0] = x;
     zImage[1] = y;
-    float *res = (float*) env->GetDirectBufferAddress(dest);
-    if (zImage[0] >= buffer->width || zImage[1] >= buffer->height)
-        jniThrowRuntimeException(env, "Array indexes out of bound!");
 
-    zImage[2] = depthData[(int) (zImage[1] * buffer->width + zImage[0])];
+    if (zImage[0] >= width || zImage[1] >= height)
+        jniThrowExceptionFmt(env, "java/lang/RuntimeException",
+                                 " Array indexes out of bound  %d, %d buffer size %dx%d! ", zImage[0], zImage[1], width , height);
+
+    float *res = (float*) env->GetDirectBufferAddress(dest);
+    zImage[2] = depth;
     if (zImage[2] != 0)
     {
         if (rectified)
@@ -982,6 +988,10 @@ static void Image_getUVMapPerPoint(JNIEnv* env, jobject thiz, jdoubleArray jrota
             DSTransformFromZImageToNonRectThirdImage(zIntrinsics, rotation, translation,
                     thirdIntrinsicsNonRect, zImage, res);
         }
+    }
+    else
+    {
+        res[0] = res[1] = 0;
     }
 }
 
@@ -1004,7 +1014,7 @@ static JNINativeMethod gImageMethods[] = {
     {   "nativeCreatePlane",      "(II)Lcom/intel/camera2/extensions/depthcamera/DepthCameraImageReader$SurfaceImage$SurfacePlane;",
         (void*)Image_createSurfacePlane
     },
-    {"nativeCalcUVMapVal", "([D[FFFFFFFFF[DIIZIILjava/nio/ByteBuffer;)V", (void*) Image_getUVMapPerPoint },
+    {"nativeCalcUVMapVal", "([D[FFFFFFFFF[DIIZIILjava/nio/ByteBuffer;III)V", (void*) Image_getUVMapPerPoint },
     {"nativeCalcUVMapValForRegion", "([D[FFFFFFFFF[DIIZIIIILjava/nio/ByteBuffer;)V", (void*) Image_getUVMapPerRegion },
 };
 
