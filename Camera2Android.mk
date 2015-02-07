@@ -32,8 +32,8 @@ LOCAL_C_INCLUDES += \
     frameworks/base/include/ \
     libnativehelper/include/ \
     libnativehelper/include/nativehelper/  \
-    vendor/intel/hardware/PRIVATE/libds4/v4l_camera/ \
-    vendor/intel/hardware/PRIVATE/libds4/v4l_camera/service \
+    vendor/intel/hardware/PRIVATE/libds4 \
+    vendor/intel/hardware/PRIVATE/libds4/service \
     $(LOCAL_PATH)/libdepthimageutils/Include/DSAPI/ \
     $(LOCAL_PATH)/libdepthimageutils/Devel/Source/DSAPI/Implementations/ \
     $(PV_INCLUDES) \
