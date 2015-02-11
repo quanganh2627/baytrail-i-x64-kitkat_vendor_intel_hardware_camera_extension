@@ -205,6 +205,26 @@ public class DepthCameraImageReader implements AutoCloseable {
             return new DepthImageImpl(si);
         return new  UVMAPImageImpl(si);
     }
+
+    private Image acquireNextImageNoConvert() {
+        SurfaceImage si = new SurfaceImage();
+        int status = acquireNextSurfaceImage(si);
+
+        switch (status) {
+            case ACQUIRE_SUCCESS:
+                return si;
+            case ACQUIRE_NO_BUFS:
+                return null;
+            case ACQUIRE_MAX_IMAGES:
+                throw new IllegalStateException(
+                        String.format(
+                                "maxImages (%d) has already been acquired, " +
+                                        "call #close before acquiring more.", mMaxImages));
+            default:
+                throw new AssertionError("Unknown nativeImageSetup return code " + status);
+        }
+    }
+
     /**
      * <p>
      * Acquire the latest {@link Image} from the ImageReader's queue, dropping older
@@ -237,8 +257,9 @@ public class DepthCameraImageReader implements AutoCloseable {
      * @return latest frame of image data, or {@code null} if no image data is available.
      * @throws IllegalStateException if too many images are currently acquired
      */
+
     public Image acquireLatestImage() {
-        Image image = acquireNextImage();
+        Image image = acquireNextImageNoConvert();
         if (image == null) {
             return null;
         }
