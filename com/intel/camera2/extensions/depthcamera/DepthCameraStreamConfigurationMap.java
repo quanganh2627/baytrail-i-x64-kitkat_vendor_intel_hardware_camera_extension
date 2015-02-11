@@ -279,6 +279,7 @@ public class DepthCameraStreamConfigurationMap
         if (data == null)
         {
             Log.w(TAG, "metadata has no data for key DEPTHCOMMON_AVAILABLE_STREAM_CONFIGURATIONS ");
+            return;
         }
         int elementSize = getElementSize();
         int arraySize = data.length/elementSize;
