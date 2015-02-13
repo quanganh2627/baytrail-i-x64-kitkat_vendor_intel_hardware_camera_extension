@@ -36,8 +36,8 @@ typedef enum intel_camera_metadata_section {
     COM_INTEL_STATISTICS,
     COM_INTEL_CV,
     COM_INTEL_CV_INFO,
-    COM_INTEL_DUAL,
-    COM_INTEL_DUAL_INFO,
+    COM_INTEL_DEVICE,
+    COM_INTEL_DEVICE_INFO,
     INTEL_CAMERA_SECTION_COUNT,
 } intel_camera_metadata_section_t;
 
@@ -49,8 +49,8 @@ typedef enum intel_camera_metadata_section_start {
     COM_INTEL_STATISTICS_START     = (COM_INTEL_STATISTICS     << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_CV_START             = (COM_INTEL_CV             << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_CV_INFO_START        = (COM_INTEL_CV_INFO        << 16 ) | VENDOR_SECTION_START,
-    COM_INTEL_DUAL_START           = (COM_INTEL_DUAL           << 16 ) | VENDOR_SECTION_START,
-    COM_INTEL_DUAL_INFO_START      = (COM_INTEL_DUAL_INFO      << 16 ) | VENDOR_SECTION_START,
+    COM_INTEL_DEVICE_START         = (COM_INTEL_DEVICE         << 16 ) | VENDOR_SECTION_START,
+    COM_INTEL_DEVICE_INFO_START    = (COM_INTEL_DEVICE_INFO    << 16 ) | VENDOR_SECTION_START,
 } intel_camera_metadata_section_start_t;
 
 /**
@@ -89,13 +89,14 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_CV_INFO_AVAILABLE_PANORAMA,             // byte[]       | public
     COM_INTEL_CV_INFO_END,
 
-    COM_INTEL_DUAL_DUAL_CAMERA_MODE =                 // enum         | public
-            COM_INTEL_DUAL_START,
-    COM_INTEL_DUAL_END,
+    COM_INTEL_DEVICE_DUAL_CAMERA_MODE =               // enum         | public
+            COM_INTEL_DEVICE_START,
+    COM_INTEL_DEVICE_END,
 
-    COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE =  // enum         | public
-            COM_INTEL_DUAL_INFO_START,
-    COM_INTEL_DUAL_INFO_END,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE = 
+                                                      // enum         | public
+            COM_INTEL_DEVICE_INFO_START,
+    COM_INTEL_DEVICE_INFO_END,
 
 } intel_camera_metadata_tag_t;
 
@@ -164,18 +165,18 @@ typedef enum intel_camera_metadata_enum_com_intel_cv_face_recognize_mode {
 
 
 
-// COM_INTEL_DUAL_DUAL_CAMERA_MODE
-typedef enum intel_camera_metadata_enum_com_intel_dual_dual_camera_mode {
-    COM_INTEL_DUAL_DUAL_CAMERA_MODE_OFF,
-    COM_INTEL_DUAL_DUAL_CAMERA_MODE_ON,
-} intel_camera_metadata_enum_com_intel_dual_dual_camera_mode_t;
+// COM_INTEL_DEVICE_DUAL_CAMERA_MODE
+typedef enum intel_camera_metadata_enum_com_intel_device_dual_camera_mode {
+    COM_INTEL_DEVICE_DUAL_CAMERA_MODE_OFF,
+    COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON,
+} intel_camera_metadata_enum_com_intel_device_dual_camera_mode_t;
 
 
-// COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
-typedef enum intel_camera_metadata_enum_com_intel_dual_info_available_dual_camera_mode {
-    COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF,
-    COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON,
-} intel_camera_metadata_enum_com_intel_dual_info_available_dual_camera_mode_t;
+// COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
+typedef enum intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode {
+    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON,
+} intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode_t;
 
 
 #endif

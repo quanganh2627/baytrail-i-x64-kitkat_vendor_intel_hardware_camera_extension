@@ -34,8 +34,8 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
     [COM_INTEL_STATISTICS]         = "com.intel.statistics",
     [COM_INTEL_CV]                 = "com.intel.cv",
     [COM_INTEL_CV_INFO]            = "com.intel.cv.info",
-    [COM_INTEL_DUAL]               = "com.intel.dual",
-    [COM_INTEL_DUAL_INFO]          = "com.intel.dual.info",
+    [COM_INTEL_DEVICE]             = "com.intel.device",
+    [COM_INTEL_DEVICE_INFO]        = "com.intel.device.info",
 };
 
 static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
@@ -91,15 +91,15 @@ static tag_info_t com_intel_cv_info_tags[COM_INTEL_CV_INFO_END -
     { "availablePanorama",             TYPE_BYTE   },
 };
 
-static tag_info_t com_intel_dual_tags[COM_INTEL_DUAL_END -
-        COM_INTEL_DUAL_START] = {
-    [ COM_INTEL_DUAL_DUAL_CAMERA_MODE - COM_INTEL_DUAL_START ] =
+static tag_info_t com_intel_device_tags[COM_INTEL_DEVICE_END -
+        COM_INTEL_DEVICE_START] = {
+    [ COM_INTEL_DEVICE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_START ] =
     { "dualCameraMode",                TYPE_BYTE   },
 };
 
-static tag_info_t com_intel_dual_info_tags[COM_INTEL_DUAL_INFO_END -
-        COM_INTEL_DUAL_INFO_START] = {
-    [ COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DUAL_INFO_START ] =
+static tag_info_t com_intel_device_info_tags[COM_INTEL_DEVICE_INFO_END -
+        COM_INTEL_DEVICE_INFO_START] = {
+    [ COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_INFO_START ] =
     { "availableDualCameraMode",       TYPE_BYTE   },
 };
 
@@ -126,18 +126,18 @@ static tag_section_t section_com_intel_cv_info = {
     com_intel_cv_info_tags
 };
 
-static tag_section_t section_com_intel_dual = {
-    "com.intel.dual",
-    (uint32_t) COM_INTEL_DUAL_START,
-    (uint32_t) COM_INTEL_DUAL_END,
-    com_intel_dual_tags
+static tag_section_t section_com_intel_device = {
+    "com.intel.device",
+    (uint32_t) COM_INTEL_DEVICE_START,
+    (uint32_t) COM_INTEL_DEVICE_END,
+    com_intel_device_tags
 };
 
-static tag_section_t section_com_intel_dual_info = {
-    "com.intel.dual.info",
-    (uint32_t) COM_INTEL_DUAL_INFO_START,
-    (uint32_t) COM_INTEL_DUAL_INFO_END,
-    com_intel_dual_info_tags
+static tag_section_t section_com_intel_device_info = {
+    "com.intel.device.info",
+    (uint32_t) COM_INTEL_DEVICE_INFO_START,
+    (uint32_t) COM_INTEL_DEVICE_INFO_END,
+    com_intel_device_info_tags
 };
 
 
@@ -145,8 +145,8 @@ tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_statistics,
     section_com_intel_cv,
     section_com_intel_cv_info,
-    section_com_intel_dual,
-    section_com_intel_dual_info,
+    section_com_intel_device,
+    section_com_intel_device_info,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -368,13 +368,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
 
-        case COM_INTEL_DUAL_DUAL_CAMERA_MODE: {
+        case COM_INTEL_DEVICE_DUAL_CAMERA_MODE: {
             switch (value) {
-                case COM_INTEL_DUAL_DUAL_CAMERA_MODE_OFF:
+                case COM_INTEL_DEVICE_DUAL_CAMERA_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_DUAL_DUAL_CAMERA_MODE_ON:
+                case COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;
@@ -384,13 +384,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
 
-        case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
+        case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
             switch (value) {
-                case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF:
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF:
                     msg = "OFF";
                     ret = 0;
                     break;
-                case COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON:
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON:
                     msg = "ON";
                     ret = 0;
                     break;

@@ -176,11 +176,11 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
      * <p>Control of Dual camera.</p>
      * <p>When ON, the camera HAL can support dual camera mode.<br />
      * </p>
-     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_OFF
-     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_ON
+     * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_OFF
+     * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_ON
      */
-    public static final Key<Integer> INTEL_DUAL_DUAL_CAMERA_MODE =
-            new Key<Integer>("com.intel.dual.dualCameraMode", int.class);
+    public static final Key<Integer> INTEL_DEVICE_DUAL_CAMERA_MODE =
+            new Key<Integer>("com.intel.device.dualCameraMode", int.class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

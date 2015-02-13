@@ -1,4 +1,4 @@
-<section name="dual">
+<section name="device">
   <controls>
       <entry name="dualCameraMode" type="byte" visibility="public" enum="true" >
         <enum>
@@ -13,7 +13,7 @@
   </controls>
 
   <dynamic>
-      <clone entry="com.intel.dual.dualCameraMode" kind="controls"></clone>
+      <clone entry="com.intel.device.dualCameraMode" kind="controls"></clone>
   </dynamic>
 
   <static>
@@ -25,7 +25,7 @@
           <value>ON
           <notes>Dual camera mode is on</notes></value>
         </enum>
-        <description>List of enums from com.intel.faceEngine.dualCameraMode</description>
+        <description>List of enums from com.intel.device.dualCameraMode</description>
         <details>OFF is always supported.
         </details>
       </entry>

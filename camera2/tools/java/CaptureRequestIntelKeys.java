@@ -74,7 +74,7 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.statistics.analysisMode", int.class);
 
     /**
-     * <p>This reports the recommended color effects the user should select for optimal quality.</p>
+     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
      * <p>To be added...</p>
      * @see #INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE
      * @see #INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN
@@ -117,11 +117,11 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
      * <p>Control of Dual camera.</p>
      * <p>When ON, the camera HAL can support dual camera mode.<br />
      * </p>
-     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_OFF
-     * @see #INTEL_DUAL_DUAL_CAMERA_MODE_ON
+     * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_OFF
+     * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_ON
      */
-    public static final Key<Integer> INTEL_DUAL_DUAL_CAMERA_MODE =
-            new Key<Integer>("com.intel.dual.dualCameraMode", int.class);
+    public static final Key<Integer> INTEL_DEVICE_DUAL_CAMERA_MODE =
+            new Key<Integer>("com.intel.device.dualCameraMode", int.class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

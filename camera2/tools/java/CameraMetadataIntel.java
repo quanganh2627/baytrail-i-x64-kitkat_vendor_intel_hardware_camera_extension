@@ -45,20 +45,20 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
     //
 
     /**
      * <p>Dual camera mode is off.</p>
-     * @see IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
      */
-    public static final int INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF = 0;
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF = 0;
 
     /**
      * <p>Dual camera mode is on</p>
-     * @see IntelCameraCharacteristics#INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
      */
-    public static final int INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON = 1;
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON = 1;
 
     //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
@@ -165,20 +165,20 @@ public class CameraMetadataIntel {
     public static final int INTEL_CV_FACE_RECOGNIZE_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+    // Enumeration values for IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
     //
 
     /**
      * <p>(default) Dual camera mode is off.</p>
-     * @see IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+     * @see IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
      */
-    public static final int INTEL_DUAL_DUAL_CAMERA_MODE_OFF = 0;
+    public static final int INTEL_DEVICE_DUAL_CAMERA_MODE_OFF = 0;
 
     /**
      * <p>Dual camera mode is on</p>
-     * @see IntelCaptureRequest#INTEL_DUAL_DUAL_CAMERA_MODE
+     * @see IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
      */
-    public static final int INTEL_DUAL_DUAL_CAMERA_MODE_ON = 1;
+    public static final int INTEL_DEVICE_DUAL_CAMERA_MODE_ON = 1;
 
     //
     // Enumeration values for IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
