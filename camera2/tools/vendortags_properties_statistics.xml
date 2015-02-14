@@ -38,6 +38,7 @@
   </controls>
 
   <dynamic>
+      <clone entry="com.intel.statistics.analysisMode" kind="controls"></clone>
       <entry name="multiFrameHint" type="byte" visibility="public" enum="true" >
         <enum>
           <value>NONE

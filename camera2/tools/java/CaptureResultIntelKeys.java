@@ -50,6 +50,20 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
 
 
     /**
+     * <p>Whether the extended AIQ analysis results are provided for each capture request.</p>
+     * <p>This is the list of extra tags that will be present in the result:</p>
+     * <ul>
+     * <li>multiframeHint</li>
+     * <li>sceneDected</li>
+     * <li>hdr.preferedExposures</li>
+     * </ul>
+     * @see #INTEL_STATISTICS_ANALYSIS_MODE_OFF
+     * @see #INTEL_STATISTICS_ANALYSIS_MODE_ON
+     */
+    public static final Key<Integer> INTEL_STATISTICS_ANALYSIS_MODE =
+            new Key<Integer>("com.intel.statistics.analysisMode", int.class);
+
+    /**
      * <p>This reports the recommendation from the Intel 3A to use one of the multi-frame postprocessing algotithms.</p>
      * <p>To be added...</p>
      * @see #INTEL_STATISTICS_MULTI_FRAME_HINT_NONE

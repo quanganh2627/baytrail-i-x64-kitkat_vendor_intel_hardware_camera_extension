@@ -124,6 +124,8 @@
           <span class="toc_kind_header">dynamic</span>
           <ul class="toc_section">
             <li
+            ><a href="#dynamic_com.intel.statistics.analysisMode">com.intel.statistics.analysisMode</a></li>
+            <li
             ><a href="#dynamic_com.intel.statistics.multiFrameHint">com.intel.statistics.multiFrameHint</a></li>
             <li
             ><a href="#dynamic_com.intel.statistics.sceneDetected">com.intel.statistics.sceneDetected</a></li>
@@ -421,6 +423,66 @@
 
         
 
+                
+          <tr class="entry" id="dynamic_com.intel.statistics.analysisMode">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>statistics.<wbr/>analysis<wbr/>Mode
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>(default) Do not include AIQ extended results in capture result metadata</p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ON</span>
+                    <span class="entry_type_enum_notes"><p>Include AIQ extended result in capture result metadata</p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>Whether the extended AIQ analysis results are provided for each capture request.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>This is the list of extra tags that will be present in the result:</p>
+<ul>
+<li>multiframeHint</li>
+<li>sceneDected</li>
+<li>hdr.<wbr/>preferedExposures</li>
+</ul>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
                 
           <tr class="entry" id="dynamic_com.intel.statistics.multiFrameHint">
             <td class="entry_name
