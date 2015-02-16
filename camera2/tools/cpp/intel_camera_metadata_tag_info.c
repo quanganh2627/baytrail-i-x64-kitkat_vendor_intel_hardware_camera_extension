@@ -106,6 +106,14 @@ static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
         COM_INTEL_IMAGE_ENHANCE_START] = {
     [ COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT - COM_INTEL_IMAGE_ENHANCE_START ] =
     { "colorEffect",                   TYPE_BYTE   },
+    [ COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "brightness",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_CONTRAST - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "contrast",                      TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_SATURATION - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "saturation",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_SHARPNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "sharpness",                     TYPE_INT32  },
 };
 
 
@@ -399,6 +407,18 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
                 default:
                     msg = "error: enum value out of range";
             }
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_CONTRAST: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_SATURATION: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_SHARPNESS: {
             break;
         }
 

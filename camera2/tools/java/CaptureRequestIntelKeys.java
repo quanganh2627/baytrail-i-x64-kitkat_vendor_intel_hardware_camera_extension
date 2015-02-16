@@ -123,6 +123,30 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_COLOR_EFFECT =
             new Key<Integer>("com.intel.imageEnhance.colorEffect", int.class);
 
+    /**
+     * <p>value of brightness </p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_BRIGHTNESS =
+            new Key<Integer>("com.intel.imageEnhance.brightness", int.class);
+
+    /**
+     * <p>value of contrast</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_CONTRAST =
+            new Key<Integer>("com.intel.imageEnhance.contrast", int.class);
+
+    /**
+     * <p>value of saturation</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_SATURATION =
+            new Key<Integer>("com.intel.imageEnhance.saturation", int.class);
+
+    /**
+     * <p>value of sharpness</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_SHARPNESS =
+            new Key<Integer>("com.intel.imageEnhance.sharpness", int.class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

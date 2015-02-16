@@ -99,6 +99,10 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.cv.faceDetectRopAngles", COM_INTEL_CV_FACE_DETECT_ROP_ANGLES},
         {"com.intel.device.dualCameraMode", COM_INTEL_DEVICE_DUAL_CAMERA_MODE},
         {"com.intel.imageEnhance.colorEffect", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT},
+        {"com.intel.imageEnhance.brightness", COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS},
+        {"com.intel.imageEnhance.contrast", COM_INTEL_IMAGE_ENHANCE_CONTRAST},
+        {"com.intel.imageEnhance.saturation", COM_INTEL_IMAGE_ENHANCE_SATURATION},
+        {"com.intel.imageEnhance.sharpness", COM_INTEL_IMAGE_ENHANCE_SHARPNESS},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {

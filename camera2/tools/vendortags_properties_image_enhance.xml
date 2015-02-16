@@ -19,9 +19,33 @@
         <details>To be added...
         </details>
       </entry>
+
+      <entry name="brightness" type="int32" visibility="public" >
+        <range>[1,10]</range>
+        <details> value of brightness </details>
+      </entry>
+
+      <entry name="contrast" type="int32" visibility="public" >
+        <range>[1,10]</range>
+        <details> value of contrast</details>
+      </entry>
+
+      <entry name="saturation" type="int32" visibility="public" >
+        <range>[1,10]</range>
+        <details> value of saturation</details>
+      </entry>
+
+      <entry name="sharpness" type="int32" visibility="public" >
+        <range>[1,10]</range>
+        <details> value of sharpness</details>
+      </entry>
   </controls>
 
   <dynamic>
       <clone entry="com.intel.imageEnhance.colorEffect" kind="controls"></clone>
+      <clone entry="com.intel.imageEnhance.brightness" kind="controls"></clone>
+      <clone entry="com.intel.imageEnhance.contrast" kind="controls"></clone>
+      <clone entry="com.intel.imageEnhance.saturation" kind="controls"></clone>
+      <clone entry="com.intel.imageEnhance.sharpness" kind="controls"></clone>
   </dynamic>
 </section>

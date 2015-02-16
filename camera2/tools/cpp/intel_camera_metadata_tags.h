@@ -101,6 +101,10 @@ typedef enum intel_camera_metadata_tag {
 
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT =            // enum         | public
             COM_INTEL_IMAGE_ENHANCE_START,
+    COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS,               // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_CONTRAST,                 // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_SATURATION,               // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_SHARPNESS,                // int32        | public
     COM_INTEL_IMAGE_ENHANCE_END,
 
 } intel_camera_metadata_tag_t;
