@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 
+import java.lang.Integer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -327,14 +328,27 @@ public class DepthCameraStreamConfigurationMap
     {
         if (mDepthStreamConfigurations.containsKey(sourceId))
         {
+
             ArrayList<DepthStreamConfiguration> configList = mDepthStreamConfigurations.get(sourceId);
-            HashSet<Integer> resSet  = new HashSet<Integer>();
-            for (DepthStreamConfiguration s : configList)
-                resSet.add(s.getFormat());
-            int[] res = new int[resSet.size()];
+
+            //hide IMPLEMENTATION_DEFINED from user
+            HashSet<Integer> formats = new HashSet<Integer>();
+            for (DepthStreamConfiguration item: configList)
+            {
+                if (item.getFormat() != HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED)
+                {
+                    formats.add(item.getFormat());
+                }
+            }
+
+            int[] res = new int[formats.size()];
             int i=0;
-            for (Integer format: resSet)
+            for (Integer format : formats)
+            {
                 res[i++] = format;
+            }
+
+
             return res;
         }
         throw new IllegalArgumentException(String.format(
