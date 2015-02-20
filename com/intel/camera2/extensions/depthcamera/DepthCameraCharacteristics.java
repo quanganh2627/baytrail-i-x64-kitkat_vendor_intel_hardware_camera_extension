@@ -57,8 +57,8 @@ public final class DepthCameraCharacteristics extends CameraMetadata<CameraChara
     /**
      * <p>BUGBUG:describe!</p>
      * <p>BUGBUG: Note</p>
-     * @see #DEPTHCOMMON_MODULE_ID_DS
-     * @see #DEPTHCOMMON_MODULE_ID_IVCAM
+     * @see #DEPTHCOMMON_MODULE_ID_R200
+     * @see #DEPTHCOMMON_MODULE_ID_F200
      */
     @PublicKey
     public static final Key<Integer> DEPTHCOMMON_MODULE_ID =

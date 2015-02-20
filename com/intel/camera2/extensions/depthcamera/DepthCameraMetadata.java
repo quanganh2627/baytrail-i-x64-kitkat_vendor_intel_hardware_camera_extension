@@ -17,7 +17,7 @@
 package com.intel.camera2.extensions.depthcamera;
 
 /**
- Enumeration values for Depth camera settings
+    Enumeration values for Depth camera settings
  **/
 
 public class DepthCameraMetadata {
@@ -33,16 +33,16 @@ public class DepthCameraMetadata {
     //
 
     /**
-     * <p>Deap Sea Camera</p>
+     * <p>Rear facing 3d Camera</p>
      * @see DepthCameraCharacteristics#DEPTHCOMMON_MODULE_ID
      */
-    public static final int DEPTHCOMMON_MODULE_ID_DS = 0;
+    public static final int DEPTHCOMMON_MODULE_ID_R200 = 0;
 
     /**
-     * <p>InVision Camera</p>
+     * <p>Front facing 3d Camera</p>
      * @see DepthCameraCharacteristics#DEPTHCOMMON_MODULE_ID
      */
-    public static final int DEPTHCOMMON_MODULE_ID_IVCAM = 1;
+    public static final int DEPTHCOMMON_MODULE_ID_F200 = 1;
 
     //
     // Enumeration values for DepthCameraCharacteristics#DEPTHCOMMON_AVAILABLE_NODES
