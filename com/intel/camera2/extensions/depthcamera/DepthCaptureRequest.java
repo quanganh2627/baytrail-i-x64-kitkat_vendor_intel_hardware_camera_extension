@@ -20,6 +20,8 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureRequest.Key;
 import android.hardware.camera2.impl.PublicKey;
+import android.hardware.camera2.impl.SyntheticKey;
+import java.util.Objects;
 import android.util.Rational;
 
 /**
@@ -208,8 +210,8 @@ public final class DepthCaptureRequest extends CameraMetadata<CaptureRequest.Key
      * @see #DEPTHCOMMON_AE_MODE_ON
      */
     @PublicKey
-    public static final Key<Long> DEPTHCOMMON_AE_MODE =
-            new Key<Long>("intel.depthcommon.aeMode", long.class);
+    public static final Key<Integer> DEPTHCOMMON_AE_MODE =
+            new Key<Integer>("intel.depthcommon.aeMode", int.class);
 
     /**
      * <p>BUGBUG:describe!</p>
