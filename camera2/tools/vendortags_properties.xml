@@ -72,7 +72,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
       * definitions vendortags_properties_*.xml. Do not modify by
       * hand or modify the comment blocks at the start or end.
       *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@-->
-        <section name="aiq">
+        <section name="statistics">
           <controls>
               <entry name="analysisMode" type="byte" visibility="public" enum="true" >
                 <enum>
@@ -105,13 +105,14 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <value>VIVID
                   <notes>ia_aiq_color_effect_vivid</notes></value>
                 </enum>
-                <description>This reports the recommended color effects the user should select for optimal quality.</description>
+                <description>This contains the color effect modes from Intel 3A that can be applied to images.</description>
                 <details>To be added...
                 </details>
               </entry>
           </controls>
 
           <dynamic>
+              <clone entry="com.intel.statistics.analysisMode" kind="controls"></clone>
               <entry name="multiFrameHint" type="byte" visibility="public" enum="true" >
                 <enum>
                   <value>NONE
@@ -161,7 +162,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
               </entry>
           </dynamic>
         </section>
-        <section name="faceEngine">
+        <section name="cv">
           <controls>
 
               <entry name="smileDetectMode" type="byte" visibility="public" enum="true" type_notes="Smile detection mode">
@@ -172,7 +173,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <notes>Return smile status and score values</notes></value>
                 </enum>
                 <description>Control of Smile detection.</description>
-                <details>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.
+                <details>When ON, com.intel.cv.smileDetectStatus (dynamic) and com.intel.cv.smileDetectScores (dynamic) outputs are valid.
                 </details>
               </entry>
 
@@ -184,7 +185,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <notes>Return blink status and score values</notes></value>
                 </enum>
                 <description>Control of Blink detection.</description>
-                <details>When ON, com.intel.faceEngine.blinkDetectStatus (dynamic) and com.intel.faceEngine.blinkDetectScores (dynamic) outputs are valid.
+                <details>When ON, com.intel.cv.blinkDetectStatus (dynamic) and com.intel.cv.blinkDetectScores (dynamic) outputs are valid.
                 </details>
               </entry>
 
@@ -196,13 +197,13 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <notes>Return person id and person similarity </notes></value>
                 </enum>
                 <description>Control of Face recognition.</description>
-                <details>When ON, com.intel.faceEngine.faceRecognizePersonIds (dynamic) and com.intel.faceEngine.faceRecognizePersonSimilarities (dynamic) outputs are valid.
+                <details>When ON, com.intel.cv.faceRecognizePersonIds (dynamic) and com.intel.cv.faceRecognizePersonSimilarities (dynamic) outputs are valid.
                 </details>
               </entry>
           </controls>
 
           <dynamic>
-              <clone entry="com.intel.faceEngine.smileDetectMode" kind="controls"></clone>
+              <clone entry="com.intel.cv.smileDetectMode" kind="controls"></clone>
               <entry name="smileDetectStatus" type="byte" visibility="public" type_notes="Smile detection status" container="array">
                 <array>
                   <size>n</size>
@@ -225,7 +226,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </details>
               </entry>
 
-              <clone entry="com.intel.faceEngine.blinkDetectMode" kind="controls"></clone>
+              <clone entry="com.intel.cv.blinkDetectMode" kind="controls"></clone>
               <entry name="blinkDetectStatus" type="byte" visibility="public" type_notes="Blink detection status" container="array">
                 <array>
                   <size>2 x n</size>
@@ -250,7 +251,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </details>
               </entry>
 
-              <clone entry="com.intel.faceEngine.faceRecognizeMode" kind="controls"></clone>
+              <clone entry="com.intel.cv.faceRecognizeMode" kind="controls"></clone>
               <entry name="faceRecognizePersonIds" type="int32" visibility="public" type_notes="Face Recognizer Person Ids" container="array">
                 <array>
                   <size>n</size>
@@ -302,10 +303,10 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <array>
                   <size>n</size>
                 </array>
-                <description>List of enums from com.intel.faceEngine.smileDetectMode</description>
+                <description>List of enums from com.intel.cv.smileDetectMode</description>
                 <details>NO is always supported.
 
-                         YES means the device supports com.intel.faceEngine.smileDetectStatus and com.intel.faceEngine.smileDetectScores outputs.
+                         YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.
                 </details>
               </entry>
 
@@ -313,10 +314,10 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <array>
                   <size>n</size>
                 </array>
-                <description>List of enums from com.intel.faceEngine.blinkDetectMode</description>
+                <description>List of enums from com.intel.cv.blinkDetectMode</description>
                 <details>NO is always supported.
 
-                         YES means the device supports com.intel.faceEngine.blinkDetectStatus and com.intel.faceEngine.blinkDetectScores outputs.
+                         YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.
                 </details>
               </entry>
 
@@ -324,10 +325,10 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <array>
                   <size>n</size>
                 </array>
-                <description>List of enums from com.intel.faceEngine.faceRecognizeMode</description>
+                <description>List of enums from com.intel.cv.faceRecognizeMode</description>
                 <details>NO is always supported.
 
-                         Yes means the device supports com.intel.faceEngine.faceRecognizePersonIds and com.intel.faceEngine.faceRecognizePersonSimilarities outputs.
+                         Yes means the device supports com.intel.cv.faceRecognizePersonIds and com.intel.cv.faceRecognizePersonSimilarities outputs.
                 </details>
               </entry>
 
@@ -338,7 +339,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <description>List of enums from com.intel.faceEngineObjectTracking.mode</description>
                 <details>NO is always supported.
 
-                         Yes means the device supports com.intel.faceEngine.objectTrackingBoundingRectangles, com.intel.faceEngine.objectTrackingTrackingIds and com.intel.faceEngine.objectTrackingScores outputs.
+                         Yes means the device supports com.intel.cv.objectTrackingBoundingRectangles, com.intel.cv.objectTrackingTrackingIds and com.intel.cv.objectTrackingScores outputs.
                 </details>
               </entry>
 
@@ -346,7 +347,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <array>
                   <size>n</size>
                 </array>
-                <description>List of enums from com.intel.faceEngine.panoramaMode</description>
+                <description>List of enums from com.intel.cv.panoramaMode</description>
                 <details>NO is always supported.
 
                          Yes means the device supports (TO BE DEFINED)
@@ -355,7 +356,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
             </namespace>
           </static>
         </section>
-        <section name="dual">
+        <section name="device">
           <controls>
               <entry name="dualCameraMode" type="byte" visibility="public" enum="true" >
                 <enum>
@@ -370,7 +371,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
           </controls>
 
           <dynamic>
-              <clone entry="com.intel.dual.dualCameraMode" kind="controls"></clone>
+              <clone entry="com.intel.device.dualCameraMode" kind="controls"></clone>
           </dynamic>
 
           <static>
@@ -382,7 +383,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <value>ON
                   <notes>Dual camera mode is on</notes></value>
                 </enum>
-                <description>List of enums from com.intel.faceEngine.dualCameraMode</description>
+                <description>List of enums from com.intel.device.dualCameraMode</description>
                 <details>OFF is always supported.
                 </details>
               </entry>

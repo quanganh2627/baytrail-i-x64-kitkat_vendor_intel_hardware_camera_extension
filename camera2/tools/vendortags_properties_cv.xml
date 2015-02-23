@@ -1,4 +1,4 @@
-<section name="faceEngine">
+<section name="cv">
   <controls>
 
       <entry name="smileDetectMode" type="byte" visibility="public" enum="true" type_notes="Smile detection mode">
@@ -9,7 +9,7 @@
           <notes>Return smile status and score values</notes></value>
         </enum>
         <description>Control of Smile detection.</description>
-        <details>When ON, com.intel.faceEngine.smileDetectStatus (dynamic) and com.intel.faceEngine.smileDetectScores (dynamic) outputs are valid.
+        <details>When ON, com.intel.cv.smileDetectStatus (dynamic) and com.intel.cv.smileDetectScores (dynamic) outputs are valid.
         </details>
       </entry>
 
@@ -21,7 +21,7 @@
           <notes>Return blink status and score values</notes></value>
         </enum>
         <description>Control of Blink detection.</description>
-        <details>When ON, com.intel.faceEngine.blinkDetectStatus (dynamic) and com.intel.faceEngine.blinkDetectScores (dynamic) outputs are valid.
+        <details>When ON, com.intel.cv.blinkDetectStatus (dynamic) and com.intel.cv.blinkDetectScores (dynamic) outputs are valid.
         </details>
       </entry>
 
@@ -33,13 +33,13 @@
           <notes>Return person id and person similarity </notes></value>
         </enum>
         <description>Control of Face recognition.</description>
-        <details>When ON, com.intel.faceEngine.faceRecognizePersonIds (dynamic) and com.intel.faceEngine.faceRecognizePersonSimilarities (dynamic) outputs are valid.
+        <details>When ON, com.intel.cv.faceRecognizePersonIds (dynamic) and com.intel.cv.faceRecognizePersonSimilarities (dynamic) outputs are valid.
         </details>
       </entry>
   </controls>
 
   <dynamic>
-      <clone entry="com.intel.faceEngine.smileDetectMode" kind="controls"></clone>
+      <clone entry="com.intel.cv.smileDetectMode" kind="controls"></clone>
       <entry name="smileDetectStatus" type="byte" visibility="public" type_notes="Smile detection status" container="array">
         <array>
           <size>n</size>
@@ -62,7 +62,7 @@
         </details>
       </entry>
 
-      <clone entry="com.intel.faceEngine.blinkDetectMode" kind="controls"></clone>
+      <clone entry="com.intel.cv.blinkDetectMode" kind="controls"></clone>
       <entry name="blinkDetectStatus" type="byte" visibility="public" type_notes="Blink detection status" container="array">
         <array>
           <size>2 x n</size>
@@ -87,7 +87,7 @@ android.statistics.faceIds.</description>
         </details>
       </entry>
 
-      <clone entry="com.intel.faceEngine.faceRecognizeMode" kind="controls"></clone>
+      <clone entry="com.intel.cv.faceRecognizeMode" kind="controls"></clone>
       <entry name="faceRecognizePersonIds" type="int32" visibility="public" type_notes="Face Recognizer Person Ids" container="array">
         <array>
           <size>n</size>
@@ -139,10 +139,10 @@ android.statistics.faceIds.</description>
         <array>
           <size>n</size>
         </array>
-        <description>List of enums from com.intel.faceEngine.smileDetectMode</description>
+        <description>List of enums from com.intel.cv.smileDetectMode</description>
         <details>NO is always supported.
 
-                 YES means the device supports com.intel.faceEngine.smileDetectStatus and com.intel.faceEngine.smileDetectScores outputs.
+                 YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.
         </details>
       </entry>
 
@@ -150,10 +150,10 @@ android.statistics.faceIds.</description>
         <array>
           <size>n</size>
         </array>
-        <description>List of enums from com.intel.faceEngine.blinkDetectMode</description>
+        <description>List of enums from com.intel.cv.blinkDetectMode</description>
         <details>NO is always supported.
 
-                 YES means the device supports com.intel.faceEngine.blinkDetectStatus and com.intel.faceEngine.blinkDetectScores outputs.
+                 YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.
         </details>
       </entry>
 
@@ -161,10 +161,10 @@ android.statistics.faceIds.</description>
         <array>
           <size>n</size>
         </array>
-        <description>List of enums from com.intel.faceEngine.faceRecognizeMode</description>
+        <description>List of enums from com.intel.cv.faceRecognizeMode</description>
         <details>NO is always supported.
 
-                 Yes means the device supports com.intel.faceEngine.faceRecognizePersonIds and com.intel.faceEngine.faceRecognizePersonSimilarities outputs.
+                 Yes means the device supports com.intel.cv.faceRecognizePersonIds and com.intel.cv.faceRecognizePersonSimilarities outputs.
         </details>
       </entry>
 
@@ -175,7 +175,7 @@ android.statistics.faceIds.</description>
         <description>List of enums from com.intel.faceEngineObjectTracking.mode</description>
         <details>NO is always supported.
 
-                 Yes means the device supports com.intel.faceEngine.objectTrackingBoundingRectangles, com.intel.faceEngine.objectTrackingTrackingIds and com.intel.faceEngine.objectTrackingScores outputs.
+                 Yes means the device supports com.intel.cv.objectTrackingBoundingRectangles, com.intel.cv.objectTrackingTrackingIds and com.intel.cv.objectTrackingScores outputs.
         </details>
       </entry>
 
@@ -183,7 +183,7 @@ android.statistics.faceIds.</description>
         <array>
           <size>n</size>
         </array>
-        <description>List of enums from com.intel.faceEngine.panoramaMode</description>
+        <description>List of enums from com.intel.cv.panoramaMode</description>
         <details>NO is always supported.
 
                  Yes means the device supports (TO BE DEFINED)

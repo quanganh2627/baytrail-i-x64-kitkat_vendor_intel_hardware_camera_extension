@@ -14,4 +14,4 @@
 ## See the License for the specific language governing permissions and
 ## limitations under the License.
 ##
-<%include file="IntelCameraMetadataKeys.mako" args="java_class='IntelCaptureRequest', xml_kind='controls'" />
+<%include file="IntelCameraMetadataKeys.mako" args="java_class='CaptureRequestIntelKeys', xml_kind='controls'" />

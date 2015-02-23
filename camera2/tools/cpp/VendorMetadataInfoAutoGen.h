@@ -25,97 +25,97 @@
  */
 
 
-const metadata_value_t com_intel_aiq_analysisMode_values[] = {
-                 {"OFF", COM_INTEL_AIQ_ANALYSIS_MODE_OFF },
-                 {"ON", COM_INTEL_AIQ_ANALYSIS_MODE_ON },
+const metadata_value_t com_intel_cv_blinkDetectMode_values[] = {
+                 {"OFF", COM_INTEL_CV_BLINK_DETECT_MODE_OFF },
+                 {"ON", COM_INTEL_CV_BLINK_DETECT_MODE_ON },
          };
 
-const metadata_value_t com_intel_aiq_colorEffect_values[] = {
-                 {"SKY_BLUE", COM_INTEL_AIQ_COLOR_EFFECT_SKY_BLUE },
-                 {"GRASS_GREEN", COM_INTEL_AIQ_COLOR_EFFECT_GRASS_GREEN },
-                 {"SKIN_WHITEN", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN },
-                 {"SKIN_WHITEN_LOW", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_LOW },
-                 {"SKIN_WHITEN_HIGH", COM_INTEL_AIQ_COLOR_EFFECT_SKIN_WHITEN_HIGH },
-                 {"VIVID", COM_INTEL_AIQ_COLOR_EFFECT_VIVID },
+const metadata_value_t com_intel_cv_faceRecognizeMode_values[] = {
+                 {"OFF", COM_INTEL_CV_FACE_RECOGNIZE_MODE_OFF },
+                 {"ON", COM_INTEL_CV_FACE_RECOGNIZE_MODE_ON },
          };
 
-const metadata_value_t com_intel_aiq_multiFrameHint_values[] = {
-                 {"NONE", COM_INTEL_AIQ_MULTI_FRAME_HINT_NONE },
-                 {"ULL", COM_INTEL_AIQ_MULTI_FRAME_HINT_ULL },
-                 {"HDR", COM_INTEL_AIQ_MULTI_FRAME_HINT_HDR },
+const metadata_value_t com_intel_cv_smileDetectMode_values[] = {
+                 {"OFF", COM_INTEL_CV_SMILE_DETECT_MODE_OFF },
+                 {"ON", COM_INTEL_CV_SMILE_DETECT_MODE_ON },
          };
 
-const metadata_value_t com_intel_aiq_sceneDetected_values[] = {
-                 {"NONE", COM_INTEL_AIQ_SCENE_DETECTED_NONE },
-                 {"CLOSE_UP_PORTRAIT", COM_INTEL_AIQ_SCENE_DETECTED_CLOSE_UP_PORTRAIT },
-                 {"PORTRAIT", COM_INTEL_AIQ_SCENE_DETECTED_PORTRAIT },
-                 {"LOWLIGHT_PORTRAIT", COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT_PORTRAIT },
-                 {"LOWLIGHT", COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT },
-                 {"ACTION", COM_INTEL_AIQ_SCENE_DETECTED_ACTION },
-                 {"BACKLIGHT", COM_INTEL_AIQ_SCENE_DETECTED_BACKLIGHT },
-                 {"LANDSCAPE", COM_INTEL_AIQ_SCENE_DETECTED_LANDSCAPE },
-                 {"DOCUMENT", COM_INTEL_AIQ_SCENE_DETECTED_DOCUMENT },
-                 {"FIREWORK", COM_INTEL_AIQ_SCENE_DETECTED_FIREWORK },
-                 {"LOWLIGHT_ACTION", COM_INTEL_AIQ_SCENE_DETECTED_LOWLIGHT_ACTION },
-                 {"BABY", COM_INTEL_AIQ_SCENE_DETECTED_BABY },
-                 {"BARCODE", COM_INTEL_AIQ_SCENE_DETECTED_BARCODE },
+const metadata_value_t com_intel_device_dualCameraMode_values[] = {
+                 {"OFF", COM_INTEL_DEVICE_DUAL_CAMERA_MODE_OFF },
+                 {"ON", COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON },
          };
 
-const metadata_value_t com_intel_dual_dualCameraMode_values[] = {
-                 {"OFF", COM_INTEL_DUAL_DUAL_CAMERA_MODE_OFF },
-                 {"ON", COM_INTEL_DUAL_DUAL_CAMERA_MODE_ON },
+const metadata_value_t com_intel_device_info_availableDualCameraMode_values[] = {
+                 {"OFF", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF },
+                 {"ON", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON },
          };
 
-const metadata_value_t com_intel_dual_info_availableDualCameraMode_values[] = {
-                 {"OFF", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF },
-                 {"ON", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON },
+const metadata_value_t com_intel_statistics_analysisMode_values[] = {
+                 {"OFF", COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF },
+                 {"ON", COM_INTEL_STATISTICS_ANALYSIS_MODE_ON },
          };
 
-const metadata_value_t com_intel_faceEngine_blinkDetectMode_values[] = {
-                 {"OFF", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_OFF },
-                 {"ON", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE_ON },
+const metadata_value_t com_intel_statistics_colorEffect_values[] = {
+                 {"SKY_BLUE", COM_INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE },
+                 {"GRASS_GREEN", COM_INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN },
+                 {"SKIN_WHITEN", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN },
+                 {"SKIN_WHITEN_LOW", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW },
+                 {"SKIN_WHITEN_HIGH", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH },
+                 {"VIVID", COM_INTEL_STATISTICS_COLOR_EFFECT_VIVID },
          };
 
-const metadata_value_t com_intel_faceEngine_faceRecognizeMode_values[] = {
-                 {"OFF", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_OFF },
-                 {"ON", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE_ON },
+const metadata_value_t com_intel_statistics_multiFrameHint_values[] = {
+                 {"NONE", COM_INTEL_STATISTICS_MULTI_FRAME_HINT_NONE },
+                 {"ULL", COM_INTEL_STATISTICS_MULTI_FRAME_HINT_ULL },
+                 {"HDR", COM_INTEL_STATISTICS_MULTI_FRAME_HINT_HDR },
          };
 
-const metadata_value_t com_intel_faceEngine_smileDetectMode_values[] = {
-                 {"OFF", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_OFF },
-                 {"ON", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE_ON },
+const metadata_value_t com_intel_statistics_sceneDetected_values[] = {
+                 {"NONE", COM_INTEL_STATISTICS_SCENE_DETECTED_NONE },
+                 {"CLOSE_UP_PORTRAIT", COM_INTEL_STATISTICS_SCENE_DETECTED_CLOSE_UP_PORTRAIT },
+                 {"PORTRAIT", COM_INTEL_STATISTICS_SCENE_DETECTED_PORTRAIT },
+                 {"LOWLIGHT_PORTRAIT", COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_PORTRAIT },
+                 {"LOWLIGHT", COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT },
+                 {"ACTION", COM_INTEL_STATISTICS_SCENE_DETECTED_ACTION },
+                 {"BACKLIGHT", COM_INTEL_STATISTICS_SCENE_DETECTED_BACKLIGHT },
+                 {"LANDSCAPE", COM_INTEL_STATISTICS_SCENE_DETECTED_LANDSCAPE },
+                 {"DOCUMENT", COM_INTEL_STATISTICS_SCENE_DETECTED_DOCUMENT },
+                 {"FIREWORK", COM_INTEL_STATISTICS_SCENE_DETECTED_FIREWORK },
+                 {"LOWLIGHT_ACTION", COM_INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_ACTION },
+                 {"BABY", COM_INTEL_STATISTICS_SCENE_DETECTED_BABY },
+                 {"BARCODE", COM_INTEL_STATISTICS_SCENE_DETECTED_BARCODE },
          };
 
 
 const metadata_value_t vendorMetadataNames[] = {
-        {"com.intel.aiq.analysisMode", COM_INTEL_AIQ_ANALYSIS_MODE},
-        {"com.intel.aiq.colorEffect", COM_INTEL_AIQ_COLOR_EFFECT},
-        {"com.intel.aiq.multiFrameHint", COM_INTEL_AIQ_MULTI_FRAME_HINT},
-        {"com.intel.aiq.sceneDetected", COM_INTEL_AIQ_SCENE_DETECTED},
-        {"com.intel.faceEngine.smileDetectMode", COM_INTEL_FACE_ENGINE_SMILE_DETECT_MODE},
-        {"com.intel.faceEngine.blinkDetectMode", COM_INTEL_FACE_ENGINE_BLINK_DETECT_MODE},
-        {"com.intel.faceEngine.faceRecognizeMode", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_MODE},
-        {"com.intel.faceEngine.smileDetectStatus", COM_INTEL_FACE_ENGINE_SMILE_DETECT_STATUS},
-        {"com.intel.faceEngine.smileDetectScores", COM_INTEL_FACE_ENGINE_SMILE_DETECT_SCORES},
-        {"com.intel.faceEngine.blinkDetectStatus", COM_INTEL_FACE_ENGINE_BLINK_DETECT_STATUS},
-        {"com.intel.faceEngine.blinkDetectScores", COM_INTEL_FACE_ENGINE_BLINK_DETECT_SCORES},
-        {"com.intel.faceEngine.faceRecognizePersonIds", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_IDS},
-        {"com.intel.faceEngine.faceRecognizePersonSimilarities", COM_INTEL_FACE_ENGINE_FACE_RECOGNIZE_PERSON_SIMILARITIES},
-        {"com.intel.faceEngine.faceDetectRipAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_RIP_ANGLES},
-        {"com.intel.faceEngine.faceDetectRopAngles", COM_INTEL_FACE_ENGINE_FACE_DETECT_ROP_ANGLES},
-        {"com.intel.dual.dualCameraMode", COM_INTEL_DUAL_DUAL_CAMERA_MODE},
+        {"com.intel.statistics.analysisMode", COM_INTEL_STATISTICS_ANALYSIS_MODE},
+        {"com.intel.statistics.colorEffect", COM_INTEL_STATISTICS_COLOR_EFFECT},
+        {"com.intel.statistics.multiFrameHint", COM_INTEL_STATISTICS_MULTI_FRAME_HINT},
+        {"com.intel.statistics.sceneDetected", COM_INTEL_STATISTICS_SCENE_DETECTED},
+        {"com.intel.cv.smileDetectMode", COM_INTEL_CV_SMILE_DETECT_MODE},
+        {"com.intel.cv.blinkDetectMode", COM_INTEL_CV_BLINK_DETECT_MODE},
+        {"com.intel.cv.faceRecognizeMode", COM_INTEL_CV_FACE_RECOGNIZE_MODE},
+        {"com.intel.cv.smileDetectStatus", COM_INTEL_CV_SMILE_DETECT_STATUS},
+        {"com.intel.cv.smileDetectScores", COM_INTEL_CV_SMILE_DETECT_SCORES},
+        {"com.intel.cv.blinkDetectStatus", COM_INTEL_CV_BLINK_DETECT_STATUS},
+        {"com.intel.cv.blinkDetectScores", COM_INTEL_CV_BLINK_DETECT_SCORES},
+        {"com.intel.cv.faceRecognizePersonIds", COM_INTEL_CV_FACE_RECOGNIZE_PERSON_IDS},
+        {"com.intel.cv.faceRecognizePersonSimilarities", COM_INTEL_CV_FACE_RECOGNIZE_PERSON_SIMILARITIES},
+        {"com.intel.cv.faceDetectRipAngles", COM_INTEL_CV_FACE_DETECT_RIP_ANGLES},
+        {"com.intel.cv.faceDetectRopAngles", COM_INTEL_CV_FACE_DETECT_ROP_ANGLES},
+        {"com.intel.device.dualCameraMode", COM_INTEL_DEVICE_DUAL_CAMERA_MODE},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
-    // AIQ
-    // FACE_ENGINE
-    {"faceEngine.info.availableSmileDetect", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_SMILE_DETECT, TYPE_BYTE, com_intel_faceEngine_smileDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availableBlinkDetect", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, com_intel_faceEngine_blinkDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availableFaceRecognize", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_faceEngine_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availableObjectTrack", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
-    {"faceEngine.info.availablePanorama", COM_INTEL_FACE_ENGINE_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
-    // DUAL
-    {"dual.info.availableDualCameraMode", COM_INTEL_DUAL_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_dual_info_availableDualCameraMode_values, 2, false, {0,0,0}, 0 },
+    // STATISTICS
+    // CV
+    {"cv.info.availableSmileDetect", COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT, TYPE_BYTE, com_intel_cv_smileDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
+    {"cv.info.availableBlinkDetect", COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, com_intel_cv_blinkDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
+    {"cv.info.availableFaceRecognize", COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_cv_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
+    {"cv.info.availableObjectTrack", COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
+    {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
+    // DEVICE
+    {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_info_availableDualCameraMode_values, 2, false, {0,0,0}, 0 },
 };
 
 #define STATIC_VENDOR_TAGS_TABLE_SIZE 6

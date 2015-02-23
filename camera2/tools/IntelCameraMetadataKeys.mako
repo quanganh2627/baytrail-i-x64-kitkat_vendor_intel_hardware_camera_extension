@@ -75,9 +75,10 @@ ${concatenated_info | javadoc(metadata)}\
   % if entry.deprecated:
     @Deprecated
   % endif
-  % if entry.applied_visibility == 'public':
-    @PublicKey
-  % endif
+##  No need for PublicKey annotation
+##  % if entry.applied_visibility == 'public':
+##    @PublicKey
+##  % endif
   % if entry.synthetic:
     @SyntheticKey
   % endif
