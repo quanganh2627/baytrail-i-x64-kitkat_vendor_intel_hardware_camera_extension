@@ -78,7 +78,7 @@ public class DepthCameraStreamConfigurationMap
 
         public String toString()
         {
-            return "Format: " + Integer.toHexString(mFormat) + " Size: " + mWidth + "x" + mHeight + " input: " + mInput + " usage: " + mUsageVal;
+            return "Format: " + Integer.toHexString(mFormat) + " Size: " + mWidth + "x" + mHeight + " input: " + mInput + " usage: " + mUsageVal + " min duration: " + mMinDuration;
         }
 
         private int checkUsage(int usage)
@@ -110,8 +110,7 @@ public class DepthCameraStreamConfigurationMap
 
         }
         private int checkArgumentFormat(int format) {
-            if (!ImageFormat.isPublicFormat(format) && !PixelFormat.isPublicFormat(format) && !DepthImageFormat.isPublicFormat(format) &&
-                    format != 0x20203859 /*Y8*/ && format != 0x20363159 /*Y16*/) { //TODO resolve this issue
+            if (!ImageFormat.isPublicFormat(format) && !PixelFormat.isPublicFormat(format) && !DepthImageFormat.isPublicFormat(format)) {
                 throw new IllegalArgumentException(String.format(
                         "format 0x%x was not defined in either ImageFormat or PixelFormat or DepthImageFormat", format));
             }
@@ -266,7 +265,7 @@ public class DepthCameraStreamConfigurationMap
         if (item.getFormat() == DepthImageFormat.Z16 || item.getFormat() == DepthImageFormat.UVMAP
                 || item.getUsageVal() == DEPTH_PREVIEW_USAGE_BIT_VAL)
             sourceId = DEPTH_STREAM_SOURCE_ID;
-        else if (item.getFormat() == ImageFormat.Y8 || item.getFormat() == ImageFormat.Y16 || item.getFormat() == ImageFormat.YV12)
+        else if (item.getFormat() == ImageFormat.YV12)
         {
             if (item.getUsageVal() == LEFT_USAGE_BIT_VAL)
                 sourceId = LEFT_STREAM_SOURCE_ID;
