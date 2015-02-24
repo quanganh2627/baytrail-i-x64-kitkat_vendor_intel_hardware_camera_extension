@@ -140,8 +140,15 @@ public final class DepthCameraCharacteristics extends CameraMetadata<CameraChara
 
     public static boolean isDepthCamera(CameraCharacteristics c)
     {
-        if (c.get(DepthCameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES) != null)
-            return true;
+        try
+        {
+            if (c.get(DepthCameraCharacteristics.DEPTHCOMMON_AVAILABLE_NODES) != null)
+                return true;
+        }
+        catch (java.lang.IllegalArgumentException e)
+        {
+            return false;
+        }
         return false;
     }
 
