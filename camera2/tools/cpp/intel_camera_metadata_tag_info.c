@@ -100,6 +100,8 @@ static tag_info_t com_intel_device_info_tags[COM_INTEL_DEVICE_INFO_END -
         COM_INTEL_DEVICE_INFO_START] = {
     [ COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_INFO_START ] =
     { "availableDualCameraMode",       TYPE_BYTE   },
+    [ COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS - COM_INTEL_DEVICE_INFO_START ] =
+    { "availableExtensions",           TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
@@ -375,6 +377,29 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         }
 
         case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
+            break;
+        }
+        case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS: {
+            switch (value) {
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS:
+                    msg = "STATISTICS";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV:
+                    msg = "CV";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT:
+                    msg = "ENHANCEMENT";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE:
+                    msg = "DEVICE";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
             break;
         }
 

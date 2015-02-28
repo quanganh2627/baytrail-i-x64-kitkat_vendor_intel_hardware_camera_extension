@@ -26,6 +26,25 @@
         <details>OFF Dual camera mode is off. ON Dual camera mode is on.
         </details>
       </entry>
+
+      <entry name="availableExtensions" type="byte" visibility="public" enum="true" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <enum>
+          <value>STATISTICS
+          <notes>camera extension supports statistics analisys </notes></value>
+          <value>CV
+          <notes>camera extension supports computer vision </notes></value>
+          <value>ENHANCEMENT
+          <notes>camera extension supports image enhancement, eg saturation </notes></value>
+          <value>DEVICE
+          <notes>camera extension supports special features in device,eg dual video </notes></value>
+        </enum>
+        <description>List of enums from com.intel.device.info.availableExtensions</description>
+        <details>The empty list means no camera extension support
+        </details>
+      </entry>
     </namespace>
   </static>
 

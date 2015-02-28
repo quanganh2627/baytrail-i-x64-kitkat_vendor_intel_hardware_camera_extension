@@ -45,6 +45,34 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
+    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+    //
+
+    /**
+     * <p>camera extension supports statistics analisys </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS = 0;
+
+    /**
+     * <p>camera extension supports computer vision </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV = 1;
+
+    /**
+     * <p>camera extension supports image enhancement, eg saturation </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT = 2;
+
+    /**
+     * <p>camera extension supports special features in device,eg dual video </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE = 3;
+
+    //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
     //
 
