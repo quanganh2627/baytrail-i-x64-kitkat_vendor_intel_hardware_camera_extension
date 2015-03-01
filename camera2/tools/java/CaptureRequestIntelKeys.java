@@ -74,19 +74,6 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.statistics.analysisMode", int.class);
 
     /**
-     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
-     * <p>To be added...</p>
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH
-     * @see #INTEL_STATISTICS_COLOR_EFFECT_VIVID
-     */
-    public static final Key<Integer> INTEL_STATISTICS_COLOR_EFFECT =
-            new Key<Integer>("com.intel.statistics.colorEffect", int.class);
-
-    /**
      * <p>Control of Smile detection.</p>
      * <p>When ON, com.intel.cv.smileDetectStatus (dynamic) and com.intel.cv.smileDetectScores (dynamic) outputs are valid.</p>
      * @see #INTEL_CV_SMILE_DETECT_MODE_OFF
@@ -122,6 +109,19 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
      */
     public static final Key<Integer> INTEL_DEVICE_DUAL_CAMERA_MODE =
             new Key<Integer>("com.intel.device.dualCameraMode", int.class);
+
+    /**
+     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
+     * <p>To be added...</p>
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_COLOR_EFFECT =
+            new Key<Integer>("com.intel.imageEnhance.colorEffect", int.class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

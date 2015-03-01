@@ -50,18 +50,18 @@ const metadata_value_t com_intel_device_info_availableDualCameraMode_values[] = 
                  {"ON", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON },
          };
 
+const metadata_value_t com_intel_imageEnhance_colorEffect_values[] = {
+                 {"SKY_BLUE", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE },
+                 {"GRASS_GREEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN },
+                 {"SKIN_WHITEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN },
+                 {"SKIN_WHITEN_LOW", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW },
+                 {"SKIN_WHITEN_HIGH", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH },
+                 {"VIVID", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID },
+         };
+
 const metadata_value_t com_intel_statistics_analysisMode_values[] = {
                  {"OFF", COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF },
                  {"ON", COM_INTEL_STATISTICS_ANALYSIS_MODE_ON },
-         };
-
-const metadata_value_t com_intel_statistics_colorEffect_values[] = {
-                 {"SKY_BLUE", COM_INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE },
-                 {"GRASS_GREEN", COM_INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN },
-                 {"SKIN_WHITEN", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN },
-                 {"SKIN_WHITEN_LOW", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW },
-                 {"SKIN_WHITEN_HIGH", COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH },
-                 {"VIVID", COM_INTEL_STATISTICS_COLOR_EFFECT_VIVID },
          };
 
 const metadata_value_t com_intel_statistics_multiFrameHint_values[] = {
@@ -89,7 +89,6 @@ const metadata_value_t com_intel_statistics_sceneDetected_values[] = {
 
 const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.statistics.analysisMode", COM_INTEL_STATISTICS_ANALYSIS_MODE},
-        {"com.intel.statistics.colorEffect", COM_INTEL_STATISTICS_COLOR_EFFECT},
         {"com.intel.statistics.multiFrameHint", COM_INTEL_STATISTICS_MULTI_FRAME_HINT},
         {"com.intel.statistics.sceneDetected", COM_INTEL_STATISTICS_SCENE_DETECTED},
         {"com.intel.cv.smileDetectMode", COM_INTEL_CV_SMILE_DETECT_MODE},
@@ -104,6 +103,7 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.cv.faceDetectRipAngles", COM_INTEL_CV_FACE_DETECT_RIP_ANGLES},
         {"com.intel.cv.faceDetectRopAngles", COM_INTEL_CV_FACE_DETECT_ROP_ANGLES},
         {"com.intel.device.dualCameraMode", COM_INTEL_DEVICE_DUAL_CAMERA_MODE},
+        {"com.intel.imageEnhance.colorEffect", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
@@ -116,6 +116,7 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     // DEVICE
     {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_info_availableDualCameraMode_values, 2, false, {0,0,0}, 0 },
+    // IMAGE_ENHANCE
 };
 
 #define STATIC_VENDOR_TAGS_TABLE_SIZE 6
