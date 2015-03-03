@@ -33,38 +33,46 @@
 #include <inttypes.h>
 
 #include "ufo/graphics.h"
+#include "ICameraHAL.h"
 
 // ----------------------------------------------------------------------------
 
 using namespace android;
-static void DepthSurfaceConfiguration_configureSurfaceUsageBits(JNIEnv* env, jobject thiz, jobject jsurface, jint usageBits)
+//TODO native init, and save binder isntance
+static void DepthSurfaceConfiguration_configureNextSurfacesType(JNIEnv* env, jobject thiz, jint type)
 {
-    int res;
-    int32_t currUsageBits;
+    sp<IServiceManager> sm = defaultServiceManager();
 
-    ALOGV("%s: ", __FUNCTION__);
-    ALOGV("%s: usagebits 0x%x ", __FUNCTION__, usageBits);
-
-    sp<IGraphicBufferProducer> gbp;
-    sp<Surface> surface;
-    if (jsurface) {
-        surface = android_view_Surface_getSurface(env, jsurface);
-        if (surface != NULL) {
-            gbp = surface->getIGraphicBufferProducer();
-        }
-    }
-    if ((res = gbp->query(NATIVE_WINDOW_CONSUMER_USAGE_BITS, &currUsageBits)) != OK)
+    sp<IBinder> binder = sm->getService(String16(CAMERA_HAL_SERVICE_NAME));
+    if(binder == 0)
     {
-        ALOGE("%s Failed to query consumer usage bis", __FUNCTION__);
+        jniThrowRuntimeException(env, "COuldn't find Camera HAL service binder");
         return;
     }
+    const sp<ICameraHAL>& bts = interface_cast<ICameraHAL>(binder);
 
-    int32_t newConsumerBits = currUsageBits | usageBits;
-    gbp->setConsumerUsageBits(newConsumerBits);
+    bts->setStreamType(type); // Set flags=1 for stream id 0
+}
+static void DepthSurfaceConfiguration_sendExtendedConfigurationCommand(JNIEnv* env, jobject thiz, jboolean isStart)
+{
+     sp<IServiceManager> sm = defaultServiceManager();
+
+    sp<IBinder> binder = sm->getService(String16(CAMERA_HAL_SERVICE_NAME));
+    if(binder == 0)
+    {
+       jniThrowRuntimeException(env, "COuldn't find Camera HAL service binder");
+       return;
+    }
+    const sp<ICameraHAL>& bts = interface_cast<ICameraHAL>(binder);
+    if ( isStart)
+        bts->startStreamConfig();
+    else
+        bts->endStreamConfig();
 }
 
 static JNINativeMethod gDepthSurfaceConfiguration[] = {
-    {"nativeConfigureSurface", "(Landroid/view/Surface;I)V", (void*)DepthSurfaceConfiguration_configureSurfaceUsageBits },
+    {"nativeConfigureSurfacesType", "(I)V", (void*)DepthSurfaceConfiguration_configureNextSurfacesType },
+    {"nativeSendExtendedConfigurationCommand", "(Z)V", (void*) DepthSurfaceConfiguration_sendExtendedConfigurationCommand},
 };
 
 int register_intel_camera2_extensions_depthcamera_DepthSurfaceConfiguration(JNIEnv *env)

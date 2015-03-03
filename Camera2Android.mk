@@ -19,7 +19,8 @@ LOCAL_SHARED_LIBRARIES := \
     liblog \
     libcutils \
     libgui \
-    libcamera_client
+    libcamera_client \
+    libcamerahal_client \
 
 LOCAL_C_INCLUDES += \
     system/core/include/ \
@@ -57,8 +58,8 @@ LOCAL_MODULE:= com.intel.camera2.extensions.depthcamera
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := \
-            $(call all-subdir-java-files) 
-            
+            $(call all-subdir-java-files)
+
 include $(BUILD_JAVA_LIBRARY)
 
 
