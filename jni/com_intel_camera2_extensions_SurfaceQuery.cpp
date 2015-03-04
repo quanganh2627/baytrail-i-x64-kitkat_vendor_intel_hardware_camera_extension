@@ -74,7 +74,7 @@ static jint SurfaceQuery_getSurfaceHeight(JNIEnv* env, jobject thiz, jobject sur
     sp<ANativeWindow> anw = android_view_Surface_getNativeWindow(env, surface);
     int height;
 
-    if ((anw->query(anw.get(), NATIVE_WINDOW_WIDTH, &height)) != OK) {
+    if ((anw->query(anw.get(), NATIVE_WINDOW_HEIGHT, &height)) != OK) {
         ALOGE("%s: Failed to query Surface height", __FUNCTION__);
         return 0;
     }

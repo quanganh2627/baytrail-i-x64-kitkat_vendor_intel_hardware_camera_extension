@@ -425,7 +425,7 @@ static jobject DepthCameraCalibrationDataMap_getCalibrationData(JNIEnv* env, job
 
     if (zEntry == -1)
     {
-        ALOGE("%s non valid depth width %d", __FUNCTION__, depthWidth);
+        ALOGE("%s non valid depth width %d height %d", __FUNCTION__, depthWidth, depthHeight);
         return NULL;
     }
 
