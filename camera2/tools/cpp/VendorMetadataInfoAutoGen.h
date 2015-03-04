@@ -45,11 +45,6 @@ const metadata_value_t com_intel_device_dualCameraMode_values[] = {
                  {"ON", COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON },
          };
 
-const metadata_value_t com_intel_device_info_availableDualCameraMode_values[] = {
-                 {"OFF", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF },
-                 {"ON", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON },
-         };
-
 const metadata_value_t com_intel_imageEnhance_colorEffect_values[] = {
                  {"SKY_BLUE", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE },
                  {"GRASS_GREEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN },
@@ -115,7 +110,7 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"cv.info.availableObjectTrack", COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     // DEVICE
-    {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_info_availableDualCameraMode_values, 2, false, {0,0,0}, 0 },
+    {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_dualCameraMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     // IMAGE_ENHANCE
 };
 

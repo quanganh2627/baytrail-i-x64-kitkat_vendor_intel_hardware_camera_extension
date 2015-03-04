@@ -45,22 +45,6 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
-    //
-
-    /**
-     * <p>Dual camera mode is off.</p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
-     */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF = 0;
-
-    /**
-     * <p>Dual camera mode is on</p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
-     */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON = 1;
-
-    //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
     //
 

@@ -367,18 +367,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         }
 
         case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
-            switch (value) {
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF:
-                    msg = "OFF";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON:
-                    msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
             break;
         }
 

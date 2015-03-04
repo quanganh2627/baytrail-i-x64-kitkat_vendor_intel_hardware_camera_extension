@@ -95,7 +95,7 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_DEVICE_END,
 
     COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE = 
-                                                      // enum         | public
+                                                      // byte[]       | public
             COM_INTEL_DEVICE_INFO_START,
     COM_INTEL_DEVICE_INFO_END,
 
@@ -166,12 +166,6 @@ typedef enum intel_camera_metadata_enum_com_intel_device_dual_camera_mode {
     COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON,
 } intel_camera_metadata_enum_com_intel_device_dual_camera_mode_t;
 
-
-// COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
-typedef enum intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode {
-    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON,
-} intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode_t;
 
 
 // COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT

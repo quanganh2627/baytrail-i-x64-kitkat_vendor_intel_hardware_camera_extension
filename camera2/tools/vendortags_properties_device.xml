@@ -18,15 +18,12 @@
 
   <static>
     <namespace name="info">
-      <entry name="availableDualCameraMode" type="byte" visibility="public" type_notes="List of enums" enum="true">
-        <enum>
-          <value>OFF
-          <notes>Dual camera mode is off.</notes></value>
-          <value>ON
-          <notes>Dual camera mode is on</notes></value>
-        </enum>
+      <entry name="availableDualCameraMode" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
         <description>List of enums from com.intel.device.dualCameraMode</description>
-        <details>OFF is always supported.
+        <details>OFF Dual camera mode is off. ON Dual camera mode is on.
         </details>
       </entry>
     </namespace>
