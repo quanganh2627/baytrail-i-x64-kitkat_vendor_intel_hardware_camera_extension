@@ -1,5 +1,6 @@
 #include "PvlUtil.h"
 #include "pvl_panorama.h"
+#include "Panorama.h"
 
 struct PanoramaEngine {
     pvl_panorama *panorama;
@@ -8,6 +9,7 @@ struct PanoramaEngine {
 
 static jobject createJConfig(JNIEnv *env, pvl_panorama *panorama);
 static jobject createJParam(JNIEnv *env, pvl_panorama_parameters *param);
+static jobject createJPanoramaVersion(JNIEnv* env, const pvl_version* version);
 static void getParam(JNIEnv *env, pvl_panorama_parameters *param, jobject jParam);
 
 static pvl_panorama* getPanorama(jlong instance)
@@ -169,10 +171,10 @@ jobject Panorama_getConfig(JNIEnv* env, jobject thiz, jlong instance)
 
 jobject createJConfig(JNIEnv *env, pvl_panorama *panorama)
 {
-    jclass cls = env->FindClass(CLASS_PANORAMA_CONFIG);
-    jmethodID constructor = env->GetMethodID(cls, "<init>", "(" SIG_PVL_VERSION "IIII)V");
+    jclass cls = envFindClass(env, CLASS_PANORAMA_CONFIG);
+    jmethodID constructor = envGetMethodID(env, cls, "<init>", "(" SIG_PANORAMA_VERSION "IIII)V");
     return env->NewObject(cls, constructor,
-                            createJVersion(env, &panorama->version),
+                            createJPanoramaVersion(env, &panorama->version),
                             panorama->max_supported_num_images,
                             panorama->min_overlapping_ratio,
                             panorama->max_overlapping_ratio,
@@ -181,11 +183,23 @@ jobject createJConfig(JNIEnv *env, pvl_panorama *panorama)
 
 jobject createJParam(JNIEnv *env, pvl_panorama_parameters *param)
 {
-    jclass cls = env->FindClass(CLASS_PANORAMA_PARAM);
-    jmethodID constructor = env->GetMethodID(cls, "<init>", "(II)V");
+    jclass cls = envFindClass(env, CLASS_PANORAMA_PARAM);
+    jmethodID constructor = envGetMethodID(env, cls, "<init>", "(II)V");
     return env->NewObject(cls, constructor,
                             param->overlapping_ratio,
                             (int)param->direction);
+}
+
+jobject createJPanoramaVersion(JNIEnv* env, const pvl_version* version)
+{
+    jclass cls = envFindClass(env, CLASS_PANORAMA_VERSION);
+    jmethodID constructor = envGetMethodID(env, cls, "<init>", "(III" SIG_STRING ")V");
+
+    return env->NewObject(cls, constructor,
+                          version->major,
+                          version->minor,
+                          version->patch,
+                          env->NewStringUTF(version->description));
 }
 
 void getParam(JNIEnv *env, pvl_panorama_parameters *param, jobject jParam)
@@ -220,5 +234,32 @@ int register_jni_Panorama(JNIEnv *env)
 {
     return jniRegisterNativeMethods(env, CLASS_PANORAMA, gMethods,
         sizeof(gMethods)/sizeof(JNINativeMethod));
+}
+
+#define REG_METHOD(_method_)    extern int _method_(JNIEnv *env);\
+                                _method_(env);
+
+jint JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    JNIEnv *env = NULL;
+    int ret;
+    int register_count = 0;
+
+    if(vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
+        LOGE("JNI GetEnv Error");
+        return JNI_ERR;
+    }
+
+    LOGD("start load...");
+
+    REG_METHOD(register_jni_Panorama);
+
+    return JNI_VERSION_1_6;
+}
+
+
+void JNI_OnUnload(JavaVM *vm, void *reserved)
+{
+    LOGD("Labrary Unloaded...");
 }
 

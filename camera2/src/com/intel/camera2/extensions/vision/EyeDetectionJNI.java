@@ -4,7 +4,7 @@ import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.EyeInfo;
 import com.intel.camera2.extensions.vision.FaceData.FaceInfo;
 
-public class EyeDetectionJNI extends PVLibraryLoader {
+final class EyeDetectionJNI extends PVLibraryLoader {
     public native static long create();
     public native static void destroy(long instance);
     public native static EyeInfo[] runInImage(long instance, IaFrame frame, FaceInfo[] fdInfo);

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.FaceInfo;
 
-public class FaceDetectionJNI extends PVLibraryLoader {
+final class FaceDetectionJNI extends PVLibraryLoader {
     public native static long create();  // If config value is null, it will initialize with default config.
     public native static void destroy(long instance);
     public native static FaceInfo[] runInImage(long instance, IaFrame frame);
@@ -13,8 +13,6 @@ public class FaceDetectionJNI extends PVLibraryLoader {
     public native static void setParam(long instance, Param param);
     public native static Param getParam(long instance);
     public native static Config getConfig(long instance);
-
-    public native static byte[] convertToGray(Bitmap bitmap);
 
     public static class Param {
         /** The maximum number of detectable faces in one frame.

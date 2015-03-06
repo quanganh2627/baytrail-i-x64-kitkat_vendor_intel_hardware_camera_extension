@@ -6,6 +6,8 @@ import android.graphics.ImageFormat;
 import android.hardware.camera2.CaptureResult;
 import android.media.Image;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.util.LongSparseArray;
@@ -52,6 +54,12 @@ public class MultiFrameBlender {
     private int mState = STATUS_INVALID;
 
     /**
+     */
+    public static boolean isSupported() {
+        return CPJNI.isSupported();
+    }
+
+    /**
      * create new {@link MultiFrameBlender blender} instance with given {@link MultiFrameBlendCallback callback} instance.
      * 
      * @param callback the callback interface to get the process result of {@link MultiFrameBlender blender}
@@ -75,7 +83,10 @@ public class MultiFrameBlender {
 
         mCallback = callback;
         mFrameCount = frameCount;
-        mHandler = new CallbackHandler();
+
+        HandlerThread ht = new HandlerThread("MultiFrameBlenderThread");
+        ht.start();
+        mHandler = new CallbackHandler(ht.getLooper());
     };
 
     public int getType() {
@@ -350,6 +361,9 @@ public class MultiFrameBlender {
     private static final int MSG_BLEND_FAIL = 2;
 
     private class CallbackHandler extends Handler {
+        public CallbackHandler(Looper looper) {
+            super(looper);
+        }
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -397,7 +411,7 @@ public class MultiFrameBlender {
         @Override
         public void run() {
             long key = image.getTimestamp();
-            IaFrame frame = new IaFrame(IaFrame.FRAME_FORMAT_NV12, image);
+            IaFrame frame = new IaFrame(image, IaFrame.IaFormat.NV12, 0);
             mFrames.put(key, frame);
             Message msg = Message.obtain();
             msg.what = MSG_ADDED_FRAME;

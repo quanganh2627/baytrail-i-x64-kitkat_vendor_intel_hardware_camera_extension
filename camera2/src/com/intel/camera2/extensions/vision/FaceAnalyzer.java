@@ -1,11 +1,6 @@
 package com.intel.camera2.extensions.vision;
 
-import java.nio.ByteBuffer;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Bitmap.Config;
 import android.media.Image;
 import android.util.Log;
 
@@ -24,6 +19,8 @@ public class FaceAnalyzer {
     private static final String TAG = "FaceAnalyzer";
     private static FaceAnalyzer mFaceAnalyzer;
 
+    private String mDbPath;
+
     private long mFaceDetectionInstance;
     private long mEyeDetectionInstance;
     private long mFaceRecognitionInstance;
@@ -36,6 +33,12 @@ public class FaceAnalyzer {
     private RecognitionInfo[] mRecognitionInfo;
     private SmileInfo[] mSmileInfo;
     private BlinkInfo[] mBlinkInfo;
+
+    private boolean mTryToGetFaceInfo;
+    private boolean mTryToGetEyeInfo;
+    private boolean mTryToGetRecognitionInfo;
+    private boolean mTryToGetSmileInfo;
+    private boolean mTryToGetBlinkInfo;
 
     /**
      * Get FaceAnalyzer instance.
@@ -62,6 +65,10 @@ public class FaceAnalyzer {
     private FaceAnalyzer() {
     }
 
+    public void loadFaceRecognitionDatabase(String dbPath) {
+        getFaceRecognitionInstance(dbPath);
+    }
+
     /**
      * Set the image that is analyzed.
      * It is released the previous image and the results.
@@ -73,24 +80,10 @@ public class FaceAnalyzer {
     public void setImage(Image image, int degree) {
         releaseValues();
 
-        if (image.getFormat() == ImageFormat.YUV_420_888) {
-            byte[] imageData = IaFrame.getGrayImageData(image);
-            if (imageData != null) {
-                int stride = image.getPlanes()[0].getRowStride();
-                int width = image.getWidth();
-                int height = image.getHeight();
-                int format = 2;
-                mImage = new IaFrame(imageData, stride, width, height, format, degree);
-            }
-        } else if (image.getFormat() == ImageFormat.JPEG) {
-            ByteBuffer jpegBuffer = image.getPlanes()[0].getBuffer();
-            byte[] jpegData = new byte[jpegBuffer.capacity()];
-            jpegBuffer.get(jpegData);
-
-            Bitmap bitmap = BitmapFactory.decodeByteArray(jpegData, 0, jpegData.length);
-            if (bitmap != null) {
-                setImage(bitmap, degree);
-            }
+        try {
+            mImage = new IaFrame(image, IaFrame.PvlFormat.GRAY, degree);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -105,22 +98,10 @@ public class FaceAnalyzer {
     public void setImage(Bitmap bitmap, int degree) {
         releaseValues();
 
-        if (bitmap == null || bitmap.getConfig() != Config.ARGB_8888) {
-            String reason1 = "bitmap("+bitmap+")";
-            String reason2 = (bitmap == null)?"":bitmap.getConfig().toString();
-            Log.e(TAG, reason1 + reason2);
-            return;
-        }
-
-        byte[] imageData = convertToGray(bitmap);
-        if (imageData != null) {
-            int stride = bitmap.getRowBytes() / 4;
-            int width = bitmap.getWidth();
-            int height = bitmap.getHeight();
-            int format = 2;
-            mImage = new IaFrame(imageData, stride, width, height, format, degree);
-        } else {
-            Log.e(TAG, "imageData == null");
+        try {
+            mImage = new IaFrame(bitmap, IaFrame.PvlFormat.GRAY, degree);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -136,10 +117,6 @@ public class FaceAnalyzer {
         mImage = frame;
     }
 
-    private boolean checkImage() {
-        return (mImage != null);
-    }
-
     /**
      * It returns the FaceInfo array.
      * If there are no the FaceInfo, it analyzes the image.
@@ -147,13 +124,16 @@ public class FaceAnalyzer {
      * @return FaceInfo[]
      */
     public FaceInfo[] getFaceInfo() {
-        if (!checkImage()) return null;
+        if (mTryToGetFaceInfo || mImage == null) {
+            Log.v(TAG, "mFaceInfo("+mFaceInfo+") mTryToGetFaceInfo("+mTryToGetFaceInfo+") mImage("+mImage+")");
+            return mFaceInfo;
+        }
 
-        if (mFaceInfo == null) {
-            long instance = getFaceDetectionInstance();
-            if (instance != 0) {
-                mFaceInfo = FaceDetectionJNI.runInImage(instance, mImage);
-            }
+        long instance = getFaceDetectionInstance();
+        if (instance != 0) {
+            mFaceInfo = FaceDetectionJNI.runInImage(instance, mImage);
+            mTryToGetFaceInfo = true;
+            printInfo("FD", mFaceInfo);
         }
 
         return mFaceInfo;
@@ -166,18 +146,33 @@ public class FaceAnalyzer {
      * @return EyeInfo[]
      */
     public EyeInfo[] getEyeInfo() {
-        if (!checkImage()) return null;
+        if (mTryToGetEyeInfo || mImage == null) {
+            Log.v(TAG, "mEyeInfo("+mEyeInfo+") mTryToGetEyeInfo("+mTryToGetEyeInfo+") mImage("+mImage+")");
+            return mEyeInfo;
+        }
 
-        getFaceInfo();
-
-        if (mEyeInfo == null) {
+        FaceInfo[] faceInfo = getFaceInfo();
+        if (faceInfo != null) {
             long instance = getEyeDetectionInstance();
             if (instance != 0) {
-                mEyeInfo = EyeDetectionJNI.runInImage(instance, mImage, mFaceInfo);
+                mEyeInfo = EyeDetectionJNI.runInImage(instance, mImage, faceInfo);
+                mTryToGetEyeInfo = true;
+                printInfo("ED", mEyeInfo);
             }
         }
 
         return mEyeInfo;
+    }
+
+    public static void printInfo(String infoTitle, Object[] info) {
+        if (info != null && info.length > 0) {
+            Log.i(TAG, infoTitle + " result count: " + info.length);
+            for (int i = 0; i < info.length; i++) {
+                Log.i(TAG, "\t\t["+i+"]" + info[i].toString());
+            }
+        } else {
+            Log.i(TAG, infoTitle + " result: null");
+        }
     }
 
     /**
@@ -187,14 +182,18 @@ public class FaceAnalyzer {
      * @return RecognitionInfo[]
      */
     public RecognitionInfo[] getRecognitionInfo() {
-        if (!checkImage()) return null;
+        if (mTryToGetRecognitionInfo || mImage == null) {
+            Log.v(TAG, "mRecognitionInfo("+mRecognitionInfo+") mTryToGetRecognitionInfo("+mTryToGetRecognitionInfo+") mImage("+mImage+")");
+            return mRecognitionInfo;
+        }
 
-        getEyeInfo();
-
-        if (mRecognitionInfo == null) {
-            long instance = getFaceRecognitionInstance();
+        EyeInfo[] eyeInfo = getEyeInfo();
+        if (eyeInfo != null) {
+            long instance = getFaceRecognitionInstance(mDbPath);
             if (instance != 0) {
-                mRecognitionInfo = FaceRecognitionJNI.runInImage(instance, mImage, mEyeInfo);
+                mRecognitionInfo = FaceRecognitionWithDbJNI.runInImage(instance, mImage, eyeInfo);
+                mTryToGetRecognitionInfo = true;
+                printInfo("FR", mRecognitionInfo);
             }
         }
 
@@ -208,14 +207,18 @@ public class FaceAnalyzer {
      * @return SmileInfo[]
      */
     public SmileInfo[] getSmileInfo() {
-        if (!checkImage()) return null;
+        if (mTryToGetSmileInfo || mImage == null) {
+            Log.v(TAG, "mSmileInfo("+mSmileInfo+") mTryToGetSmileInfo("+mTryToGetSmileInfo+") mImage("+mImage+")");
+            return mSmileInfo;
+        }
 
-        getEyeInfo();
-
-        if (mSmileInfo == null) {
+        EyeInfo[] eyeInfo = getEyeInfo();
+        if (eyeInfo != null) {
             long instance = getSmileDetectionInstance();
             if (instance != 0) {
-                mSmileInfo = SmileDetectionJNI.runInImage(instance, mImage, mEyeInfo);
+                mSmileInfo = SmileDetectionJNI.runInImage(instance, mImage, eyeInfo);
+                mTryToGetSmileInfo = true;
+                printInfo("SD", mSmileInfo);
             }
         }
 
@@ -229,18 +232,59 @@ public class FaceAnalyzer {
      * @return BlinkInfo[]
      */
     public BlinkInfo[] getBlinkInfo() {
-        if (!checkImage()) return null;
+        if (mTryToGetBlinkInfo || mImage == null) {
+            Log.v(TAG, "mBlinkInfo("+mBlinkInfo+") mTryToGetBlinkInfo("+mTryToGetBlinkInfo+") mImage("+mImage+")");
+            return mBlinkInfo;
+        }
 
-        getEyeInfo();
-
-        if (mBlinkInfo == null) {
+        EyeInfo[] eyeInfo = getEyeInfo();
+        if (eyeInfo != null) {
             long instance = getBlinkDetectionInstance();
             if (instance != 0) {
-                mBlinkInfo = BlinkDetectionJNI.runInImage(instance, mImage, mEyeInfo);
+                mBlinkInfo = BlinkDetectionJNI.runInImage(instance, mImage, eyeInfo);
+                mTryToGetBlinkInfo = true;
+                printInfo("BD", mBlinkInfo);
             }
         }
 
         return mBlinkInfo;
+    }
+
+    public int getNewPersonId() {
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            return FaceRecognitionWithDbJNI.getNewPersonId(instance);
+        } else {
+            return RecognitionInfo.UNKOWN_PERSON_ID;
+        }
+    }
+
+    public void registerFace(RecognitionInfo info) {
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            FaceRecognitionWithDbJNI.registerFace(instance, info);
+        }
+    }
+
+    public void registerPerson(long faceId, int personId) {
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            FaceRecognitionWithDbJNI.updatePerson(instance, faceId, personId);
+        }
+    }
+
+    public void unregisterFace(long faceId) {
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            FaceRecognitionWithDbJNI.unregisterFace(instance, faceId);
+        }
+    }
+
+    public void unregisterPerson(int personId) {
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            FaceRecognitionWithDbJNI.unregisterPerson(instance, personId);
+        }
     }
 
     private long getFaceDetectionInstance() {
@@ -275,10 +319,18 @@ public class FaceAnalyzer {
         }
     }
 
-    private long getFaceRecognitionInstance() {
-        if (FaceRecognitionJNI.isSupported()) {
-            if (mFaceRecognitionInstance == 0) {
-                mFaceRecognitionInstance = FaceRecognitionJNI.create();
+    private long getFaceRecognitionInstance(String dbPath) {
+        if (FaceRecognitionWithDbJNI.isSupported()) {
+            if (mDbPath != null && mDbPath.compareToIgnoreCase(dbPath) != 0) {
+                if (mFaceRecognitionInstance != 0) {
+                    FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
+                    mFaceRecognitionInstance = 0;
+                }
+            }
+
+            if (mFaceRecognitionInstance == 0 && dbPath != null && !dbPath.isEmpty()) {
+                mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
+                mDbPath = dbPath;
             }
         }
         return mFaceRecognitionInstance;
@@ -286,8 +338,9 @@ public class FaceAnalyzer {
 
     private void destroyFaceRecognitionInstance() {
         if (mFaceRecognitionInstance != 0) {
-            FaceRecognitionJNI.destroy(mFaceRecognitionInstance);
+            FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
             mFaceRecognitionInstance = 0;
+            mDbPath = null;
         }
     }
 
@@ -340,13 +393,10 @@ public class FaceAnalyzer {
         mRecognitionInfo = null;
         mSmileInfo = null;
         mBlinkInfo = null;
-    }
-
-    private static byte[] convertToGray(Bitmap bitmap) {
-        if (FaceDetectionJNI.isSupported()) {
-            return FaceDetectionJNI.convertToGray(bitmap);
-        } else {
-            return null;
-        }
+        mTryToGetFaceInfo = false;
+        mTryToGetEyeInfo = false;
+        mTryToGetRecognitionInfo = false;
+        mTryToGetSmileInfo = false;
+        mTryToGetBlinkInfo = false;
     }
 }

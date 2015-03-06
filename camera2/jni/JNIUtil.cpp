@@ -1,6 +1,21 @@
 #include "JNIUtil.h"
 #include <stdio.h>
 #include <android/bitmap.h>
+#include <stdarg.h>
+
+#define LOG_BUF_SIZE 256
+
+void traceLog(int prio, const char* tag, const char* function, int line, const char* format, ...)
+{
+    va_list ap;
+    char buf[LOG_BUF_SIZE];
+
+    va_start(ap, format);
+    vsprintf(buf, format, ap);
+    va_end(ap);
+
+    __android_log_print(prio, tag, "[%s:%d] %s", function, line, buf);
+}
 
 unsigned char* getValueByteArray(JNIEnv* env, jobject obj, const char* field_name) {
     jclass cls;
@@ -53,6 +68,27 @@ int getValueInt(JNIEnv* env, jobject obj, const char* field_name) {
     }
 
     return env->GetIntField(obj, fid);
+}
+
+long getValueLong(JNIEnv* env, jobject obj, const char* field_name) {
+    jclass cls;
+    jfieldID fid;
+
+    cls = env->GetObjectClass(obj);
+    if (cls == NULL) {
+        LOGE("Failed at 'GetObjectClass' ");
+        env->ExceptionClear();
+        return -1;
+    }
+
+    fid = env->GetFieldID(cls, field_name, "I");
+    if (fid == NULL) {
+        LOGE("Failed in 'GetFieldID' %s", field_name);
+        env->ExceptionClear();
+        return -1;
+    }
+
+    return env->GetLongField(obj, fid);
 }
 
 float getValueFloat(JNIEnv* env, jobject obj, const char* field_name) {
@@ -258,10 +294,10 @@ jbyteArray convertToGray(JNIEnv* env, jobject jBitmap)
   *@return    Ola_Return value in "OlaTypes.h"
   */
 /* Not Using */
-//const char* jstringToChar(JNIEnv* env, jstring str)
-//{
-//    return env->GetStringUTFChars(str, 0);
-//}
+const char* jstringToChar(JNIEnv* env, jstring str)
+{
+    return env->GetStringUTFChars(str, 0);
+}
 //
 //jstring charToJstring(JNIEnv* env, const char* str)
 //{
@@ -307,5 +343,25 @@ int jniRegisterNativeMethods
         return 0;
     else
         return JNI_ERR;
+}
+
+jclass envFindClass(JNIEnv *env, const char* class_name)
+{
+    jclass cls = env->FindClass(class_name);
+    if (cls == NULL) {
+        LOGE("[%s] was not found.", class_name);
+        env->ExceptionClear();
+    }
+    return cls;
+}
+
+jmethodID envGetMethodID(JNIEnv *env, jclass cls, const char* method_name, const char* sig_name)
+{
+    jmethodID methodID = env->GetMethodID(cls, method_name, sig_name);
+    if (methodID == NULL) {
+        LOGE("class[0x%08x] method[%s] sig[%s]", (uint32_t)cls, method_name, sig_name);
+        env->ExceptionClear();
+    }
+    return methodID;
 }
 

@@ -75,7 +75,39 @@ LOCAL_SRC_FILES := \
     EyeDetection.cpp \
     SmileDetection.cpp \
     BlinkDetection.cpp \
-    FaceRecognition.cpp \
+    FaceRecognition.cpp
+#FRDummy.cpp \
+    FaceRecognitionWithDb.cpp
+
+endif
+
+include $(BUILD_SHARED_LIBRARY)
+
+
+
+################# MAKE_JNI_LIBRARY (libpvl_panorama_jni) ############################
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := libpvl_panorama_jni
+
+ifeq ($(MY_BUILD_FLAG),true)
+LOCAL_MODULE_TAGS := optional
+LOCAL_MULTILIB := 32
+#LOCAL_PRELINK_MODULE := false   # Prevent from prelink error
+LOCAL_CFLAGS := -funsigned-char -Wno-unused-parameter -DPACKAGE="\"com/intel/camera2/extensions\"" -DTAG="\"PVL_PANORAMA_JNI\""
+
+LOCAL_SHARED_LIBRARIES := \
+    liblog \
+    libjnigraphics \
+    libpvl_panorama
+
+LOCAL_C_INCLUDES := \
+    $(TARGET_OUT_HEADERS)/libmfldadvci \
+    $(TARGET_OUT_HEADERS)/libtbd
+
+LOCAL_SRC_FILES := \
+    JNIUtil.cpp \
+    PvlUtil.cpp \
     Panorama.cpp
 
 endif

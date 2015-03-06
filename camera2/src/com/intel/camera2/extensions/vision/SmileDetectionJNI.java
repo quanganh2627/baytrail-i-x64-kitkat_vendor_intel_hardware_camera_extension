@@ -4,7 +4,7 @@ import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.EyeInfo;
 import com.intel.camera2.extensions.vision.FaceData.SmileInfo;
 
-public class SmileDetectionJNI extends PVLibraryLoader {
+final class SmileDetectionJNI extends PVLibraryLoader {
     public native static long create();
     public native static void destroy(long instance);
     public native static SmileInfo[] runInImage(long instance, IaFrame frame, EyeInfo[] eyeInfo);

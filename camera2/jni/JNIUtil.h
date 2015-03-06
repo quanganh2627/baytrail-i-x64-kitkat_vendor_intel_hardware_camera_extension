@@ -29,10 +29,12 @@
 #include <jni.h>
 #include <android/log.h>
 
-#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
-#define LOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,TAG,__VA_ARGS__)
-#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
+void traceLog(int prio, const char* tag, const char* function, int line, const char* format, ...);
+
+#define LOGE(format, ...)  traceLog(ANDROID_LOG_ERROR,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
+#define LOGV(format, ...)  traceLog(ANDROID_LOG_VERBOSE,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
+#define LOGI(format, ...)  traceLog(ANDROID_LOG_INFO,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
+#define LOGD(format, ...)  traceLog(ANDROID_LOG_DEBUG,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
 
 /*
  * PACKAGE was defined in Android.mk
@@ -53,6 +55,7 @@
 
 unsigned char* getValueByteArray(JNIEnv* env, jobject obj, const char* field_name);
 int getValueInt(JNIEnv* env, jobject obj, const char* field_name);
+long getValueLong(JNIEnv* env, jobject obj, const char* field_name);
 float getValueFloat(JNIEnv* env, jobject obj, const char* field_name);
 bool getValueBoolean(JNIEnv* env, jobject obj, const char* field_name);
 jobject getValueObject(JNIEnv* env, jobject obj, const char* field_name, const char* field_type);
@@ -60,9 +63,12 @@ void copyValueByteArray(JNIEnv* env, unsigned char* dst_buf, jobject src_obj, co
 void copyValueCharArray(JNIEnv* env, jobject obj, const char* field_name, unsigned short* buf);
 jbyteArray convertToGray(JNIEnv* env, jobject jBitmap);
 
-//const char* jstringToChar(JNIEnv* env, jstring str);
+const char* jstringToChar(JNIEnv* env, jstring str);
 //jstring charToJstring(JNIEnv* env, const char* str);
 int jniRegisterNativeMethods(JNIEnv* env, const char* className, const JNINativeMethod* gMethods, int numMethods);
+
+jclass envFindClass(JNIEnv *env, const char* class_name);
+jmethodID envGetMethodID(JNIEnv *env, jclass cls, const char* method_name, const char* sig_name);
 
 static void vdebug(const char *fmt, va_list ap)
 {

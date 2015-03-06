@@ -4,7 +4,7 @@ import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.BlinkInfo;
 import com.intel.camera2.extensions.vision.FaceData.EyeInfo;
 
-public class BlinkDetectionJNI extends PVLibraryLoader {
+final class BlinkDetectionJNI extends PVLibraryLoader {
     public native static long create();
     public native static void destroy(long instance);
     public native static BlinkInfo[] runInImage(long instance, IaFrame frame, EyeInfo[] eyeInfo);

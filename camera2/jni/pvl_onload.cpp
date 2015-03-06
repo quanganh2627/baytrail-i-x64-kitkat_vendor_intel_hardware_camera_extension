@@ -23,7 +23,7 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
     REG_METHOD(register_jni_SmileDetection);
     REG_METHOD(register_jni_BlinkDetection);
     REG_METHOD(register_jni_FaceRecognition);
-    REG_METHOD(register_jni_Panorama);
+    //REG_METHOD(register_jni_FaceRecognitionWithDb);
 
     return JNI_VERSION_1_6;
 }

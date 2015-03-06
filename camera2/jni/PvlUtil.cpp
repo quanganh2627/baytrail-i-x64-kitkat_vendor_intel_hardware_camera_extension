@@ -9,7 +9,7 @@ void mapImage(JNIEnv* env, pvl_image* dst, jobject src)
 	dst->height = getValueInt(env, src, "height");
 	dst->stride = getValueInt(env, src, "stride");
 	dst->size = getValueInt(env, src, "size");
-	dst->rotation = getValueInt(env, src, "rotation");
+	dst->rotation = getValueInt(env, src, "degree");
 }
 
 jobject createIaFrame(JNIEnv* env, pvl_image* src) {

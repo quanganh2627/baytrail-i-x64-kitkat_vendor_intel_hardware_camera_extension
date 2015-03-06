@@ -1,6 +1,6 @@
 package com.intel.camera2.extensions.photography;
 
-public class CPLibraryLoader {
+class CPLibraryLoader {
 
     private static boolean isSupported;
 

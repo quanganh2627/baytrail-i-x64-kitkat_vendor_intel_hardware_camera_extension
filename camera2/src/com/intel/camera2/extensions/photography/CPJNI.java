@@ -3,7 +3,7 @@ package com.intel.camera2.extensions.photography;
 import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.photography.CPLibraryLoader;
 
-public class CPJNI extends CPLibraryLoader {
+final class CPJNI extends CPLibraryLoader {
     // CP blending process target.
     // Those definitions should be synced up with enum 'ia_cp_target' in 'ia_cp_types.h'
     public static final int TARGET_CPU = 0; //Intel Architecture (IA) host

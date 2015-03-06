@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void convert(JNIEnv* env, ia_frame* dst, jobject jIaFrameSrc) {
-	create_ia_frame(dst, ia_frame_format_nv12, getValueInt(env, jIaFrameSrc, "stride"), getValueInt(env, jIaFrameSrc, "width"), getValueInt(env, jIaFrameSrc, "height"), getValueInt(env, jIaFrameSrc, "rotation"));
+	create_ia_frame(dst, ia_frame_format_nv12, getValueInt(env, jIaFrameSrc, "stride"), getValueInt(env, jIaFrameSrc, "width"), getValueInt(env, jIaFrameSrc, "height"), getValueInt(env, jIaFrameSrc, "degree"));
 	copyValueByteArray(env, (unsigned char*)dst->data, jIaFrameSrc, "imageData");
 	LOGD("converted frame :");
 	printFrameInfo(dst);

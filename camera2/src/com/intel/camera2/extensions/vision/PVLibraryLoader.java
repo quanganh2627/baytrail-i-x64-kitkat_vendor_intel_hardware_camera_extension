@@ -1,6 +1,6 @@
 package com.intel.camera2.extensions.vision;
 
-public class PVLibraryLoader {
+class PVLibraryLoader {
 
     private static boolean isSupported;
 
