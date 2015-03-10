@@ -2,9 +2,22 @@ LOCAL_PATH:= $(call my-dir)
 ################# COPY_HEADERS #######################
 include $(CLEAR_VARS)
 LOCAL_COPY_HEADERS_TO := cameralibs
-LOCAL_COPY_HEADERS := \
-	include/intel_camera_extensions.h \
-	include/android_hardware_Camera.h \
+ifeq ($(findstring 5.0, $(PLATFORM_VERSION)),5.0)
+LOCAL_COPY_HEADERS += \
+	include/L_mr0/intel_camera_extensions.h \
+	include/L_mr0/android_hardware_Camera.h
+else
+ifeq ($(findstring 5.1, $(PLATFORM_VERSION)),5.1)
+LOCAL_COPY_HEADERS += \
+	include/L_mr1/intel_camera_extensions.h \
+	include/L_mr1/android_hardware_Camera.h
+else
+LOCAL_COPY_HEADERS += \
+	include/latest/intel_camera_extensions.h \
+	include/latest/android_hardware_Camera.h
+endif
+endif
+LOCAL_COPY_HEADERS += \
 	libacc/Ilibacc.h
 LOCAL_MULTILIB := 32
 include $(BUILD_COPY_HEADERS)
@@ -24,9 +37,20 @@ LOCAL_SHARED_LIBRARIES := \
 	libcamera_client
 LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDES) \
-	$(LOCAL_PATH)/include \
 	$(LOCAL_PATH)/libacc \
 	$(call include-path-for, frameworks-base-core)
+ifeq ($(findstring 5.0, $(PLATFORM_VERSION)),5.0)
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/include/L_mr0
+else
+ifeq ($(findstring 5.1, $(PLATFORM_VERSION)),5.1)
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/include/L_mr1
+else
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/include/latest
+endif
+endif
 LOCAL_MULTILIB := 32
 include $(BUILD_SHARED_LIBRARY)
 
