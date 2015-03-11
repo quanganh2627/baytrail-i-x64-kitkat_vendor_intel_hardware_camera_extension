@@ -95,24 +95,6 @@ public final class DepthCameraCharacteristics extends CameraMetadata<CameraChara
             new Key<int[]>("intel.depthcommon.availableNodes", int[].class);
 
     /**
-     * <p>entry i is a bitmap that relates to entry i in availableProcessedSizes,
-     * bit j in the bitmap relates to the nodeId in entry availableNodes[j].
-     * If bit i is ON then the size is available for the relevant nodeId</p>
-     */
-    @PublicKey
-    public static final Key<byte[]> DEPTHCOMMON_SIZE_NODES_MAPPING =
-            new Key<byte[]>("intel.depthcommon.sizeNodesMapping", byte[].class);
-
-    /**
-     * <p>entry i is a bitmap that relates to entry i in availableFormats,
-     * bit j in the bitmap relates to the nodeId in entry availableNodes[j]
-     * If bit i is ON then the format is available for the relevant nodeId</p>
-     */
-    @PublicKey
-    public static final Key<byte[]> DEPTHCOMMON_FORMAT_NODES_MAPPING =
-            new Key<byte[]>("intel.depthcommon.formatNodesMapping", byte[].class);
-
-    /**
      * <p>Vallid depth (image) exposure time ranges </p>
      */
     @PublicKey
