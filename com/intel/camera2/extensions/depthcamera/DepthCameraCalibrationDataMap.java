@@ -394,7 +394,7 @@ public class DepthCameraCalibrationDataMap
         try {
             // Check if we already have this set
 
-            isRectified = (request.get(DepthCaptureRequest.R200_COLOR_RECTIFICATION_MODE) == DepthCameraMetadata.R200_COLOR_RECTIFICATION_MODE_ON);
+            isRectified = (request.get(DepthCaptureRequest.R200_COLOR_RECTIFICATION_MODE) == true);
         }
         catch(Exception e)
         {

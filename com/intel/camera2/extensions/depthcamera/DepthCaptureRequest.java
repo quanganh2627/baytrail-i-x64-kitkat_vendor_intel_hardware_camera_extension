@@ -126,12 +126,10 @@ public final class DepthCaptureRequest extends CameraMetadata<CaptureRequest.Key
 
     /**
      * <p>Enable or disable Color rectification</p>
-     * @see #R200_COLOR_RECTIFICATION_MODE_OFF
-     * @see #R200_COLOR_RECTIFICATION_MODE_ON
      */
     @PublicKey
-    public static final Key<Integer> R200_COLOR_RECTIFICATION_MODE =
-            new Key<Integer>("intel.r200.colorRectificationMode", int.class);
+    public static final Key<Boolean> R200_COLOR_RECTIFICATION_MODE =
+            new Key<Boolean>("intel.r200.colorRectificationMode", boolean.class);
 
     /**
      * <p>Resolution of color stream to perform uvmap for.</p>
@@ -206,12 +204,10 @@ public final class DepthCaptureRequest extends CameraMetadata<CaptureRequest.Key
     /**
      * <p>Depth aeMode - Whether AE is currently updating the sensor
      * exposure and sensitivity fields</p>
-     * @see #DEPTHCOMMON_AE_MODE_OFF
-     * @see #DEPTHCOMMON_AE_MODE_ON
      */
     @PublicKey
-    public static final Key<Integer> DEPTHCOMMON_AE_MODE =
-            new Key<Integer>("intel.depthcommon.aeMode", int.class);
+    public static final Key<Boolean> DEPTHCOMMON_AE_MODE =
+            new Key<Boolean>("intel.depthcommon.aeMode", boolean.class);
 
     /**
      * <p>BUGBUG:describe!</p>

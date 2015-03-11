@@ -80,22 +80,6 @@ public class DepthCameraMetadata {
     public static final int DEPTHCOMMON_AVAILABLE_NODES_CENTER = 4;
 
     //
-    // Enumeration values for DepthCaptureRequest#R200_COLOR_RECTIFICATION_MODE
-    //
-
-    /**
-     * <p>Color rectification disabled</p>
-     * @see DepthCaptureRequest#R200_COLOR_RECTIFICATION_MODE
-     */
-    public static final int R200_COLOR_RECTIFICATION_MODE_OFF = 0;
-
-    /**
-     * <p>Color rectification enabled</p>
-     * @see DepthCaptureRequest#R200_COLOR_RECTIFICATION_MODE
-     */
-    public static final int R200_COLOR_RECTIFICATION_MODE_ON = 1;
-
-    //
     // Enumeration values for DepthCaptureRequest#DEPTHCOMMON_DEPTH_UNITS
     //
 
@@ -110,23 +94,6 @@ public class DepthCameraMetadata {
      * @see DepthCaptureRequest#DEPTHCOMMON_DEPTH_UNITS
      */
     public static final int DEPTHCOMMON_DEPTH_UNITS_MM = 1;
-
-    //
-    // Enumeration values for DepthCaptureRequest#DEPTHCOMMON_AE_MODE
-    //
-
-    /**
-     * <p>Autoexposure is disabled;
-     * sensor.sensitivity and sensor.frameDuration are used</p>
-     * @see DepthCaptureRequest#DEPTHCOMMON_AE_MODE
-     */
-    public static final int DEPTHCOMMON_AE_MODE_OFF = 0;
-
-    /**
-     * <p>Autoexposure is active</p>
-     * @see DepthCaptureRequest#DEPTHCOMMON_AE_MODE
-     */
-    public static final int DEPTHCOMMON_AE_MODE_ON = 1;
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
