@@ -135,6 +135,15 @@ public class DepthCaptureResult extends CameraMetadata<CaptureResult.Key<?>> {
             new Key<Double>("intel.depthcommon.disparityMultiplier", double.class);
 
     /**
+     * <p>BUGBUG: Note</p>
+     * @see #DEPTHCOMMON_DEPTH_UNITS_MICRON
+     * @see #DEPTHCOMMON_DEPTH_UNITS_MM
+     */
+    @PublicKey
+    public static final Key<Integer> DEPTHCOMMON_DEPTH_UNITS =
+            new Key<Integer>("intel.depthcommon.depthUnits", int.class);
+
+    /**
      * <p>BUGBUG:describe!</p>
      * <p>BUGBUG: Note</p>
      */
