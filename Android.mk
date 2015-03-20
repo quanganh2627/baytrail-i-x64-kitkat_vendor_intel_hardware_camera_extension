@@ -7,3 +7,5 @@ include $(CAMERA_EXT_PATH)/camera1/Android.mk
 # Build camera2 extensions
 include $(CAMERA_EXT_PATH)/camera2/Android.mk
 
+# Build acc
+include $(CAMERA_EXT_PATH)/acc/Android.mk
