@@ -18,8 +18,8 @@
 
 #
 # Generate all files we have templates for:
-#   ./cpp/intel_metadata_tag_info.c
-#   ./cpp/intel_metadata_tags.h
+#   ./native/intel_metadata_tag_info.c
+#   ./native/intel_metadata_tags.h
 #   ./java/IntelCameraCharacteristics.java
 #   ./java/IntelCaptureRequest.java
 #   ./java/IntelCaptureResult.java
@@ -258,9 +258,9 @@ $thisdir/metadata-validate $thisdir/vendortags_properties.xml || exit 1
 gen_file html.mako docs.html || exit 1
 
 # Generate C API headers and implementation
-gen_file intel_camera_metadata_tag_info.mako "cpp/intel_camera_metadata_tag_info.c" || exit 1
-gen_file intel_camera_metadata_tags.mako "cpp/intel_camera_metadata_tags.h" || exit 1
-gen_file vendor_metadata_info_autogen.mako "cpp/VendorMetadataInfoAutoGen.h" || exit 1
+gen_file intel_camera_metadata_tag_info.mako "native/intel_camera_metadata_tag_info.c" || exit 1
+gen_file intel_camera_metadata_tags.mako "native/intel_camera_metadata_tags.h" || exit 1
+gen_file vendor_metadata_info_autogen.mako "native/VendorMetadataInfoAutoGen.h" || exit 1
 
 # Generate Java API definitions
 mkdir -p "${outdir}"
