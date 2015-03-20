@@ -83,7 +83,7 @@ public:
 
     virtual ~JNIDepthCameraImageReaderContext();
 
-    virtual void onFrameAvailable();
+    virtual void onFrameAvailable(const BufferItem& item);
 
     CpuConsumer::LockedBuffer* getLockedBuffer();
 
@@ -190,7 +190,7 @@ JNIDepthCameraImageReaderContext::~JNIDepthCameraImageReaderContext() {
     mConsumer.clear();
 }
 
-void JNIDepthCameraImageReaderContext::onFrameAvailable()
+void JNIDepthCameraImageReaderContext::onFrameAvailable(const BufferItem& item)
 {
     ALOGV("%s: frame available", __FUNCTION__);
     bool needsDetach = false;
