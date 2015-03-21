@@ -1,0 +1,23 @@
+This is the test program which test IOCTL lib under ../../lib
+
+Usage:
+
+Prerequisite:
+
+"mm -B" under ../../lib, and push libacc.so to /system/lib/ on the device.
+
+Build and run ACC test:
+
+1. "mm -B" to make the test executable acc_test, and the FW binary add.bin is already under this directory.
+
+2. make sure /sdcard/isp/ and /data/local/tmp/ folders exist on phone
+
+3. adb push add.bin /sdcard/isp/add.bin
+
+4. adb push acc_test /data/local/tmp/
+
+5. adb shell
+
+6. /data/local/tmp/acc_test
+
+

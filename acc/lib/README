@@ -1,0 +1,3 @@
+This is the IOCTL lib which encapsulate all the IOCTL APIs used by ACC client and service.
+
+"mm -B" under this directory to make the lib.
