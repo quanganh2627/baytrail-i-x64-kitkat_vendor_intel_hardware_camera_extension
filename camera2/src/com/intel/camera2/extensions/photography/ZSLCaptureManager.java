@@ -1,13 +1,33 @@
+/*
+ * Copyright 2015, Intel Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intel.camera2.extensions.photography;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.graphics.ImageFormat;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -102,6 +122,52 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             super.handleMessage(msg);
         }
     }
+
+    /**
+     * helper method to get the available capture size list for using application ZSL feature
+     * 
+     * @param context the context of the application
+     * @param cameraId the id of camera want to use
+     * @param imageFormat the ImageForamt.
+     * 
+     * @return list of supported capture size for ZSL
+     */
+    public static ArrayList<Size> getSupportedSize(Context context, String cameraId, int imageFormat) {
+        CameraManager cameraMgr = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+        if (cameraMgr == null) {
+            Log.e(TAG, "unable to get the camera serviec!");
+            return null;
+        }
+        CameraCharacteristics characteristics;
+        try {
+            characteristics = cameraMgr.getCameraCharacteristics(cameraId);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+        Integer maxNbrOfOutputProc = characteristics.get(CameraCharacteristics.REQUEST_MAX_NUM_OUTPUT_PROC);
+        if (maxNbrOfOutputProc == null || maxNbrOfOutputProc < 2) {
+            Log.w(TAG, "device should support 2 or more number of non stalling outputs");
+            return null;
+        }
+        StreamConfigurationMap map = (StreamConfigurationMap) characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+        if (map != null && map.isOutputSupportedFor(imageFormat)) {
+            Size[] outputSizes = map.getOutputSizes(imageFormat);
+            if (outputSizes != null) {
+                ArrayList<Size> supportedSizes = new ArrayList<Size>();
+                for (Size size : outputSizes) {
+                    if (map.getOutputStallDuration(imageFormat, size) == 0) {
+                        supportedSizes.add(size);
+                    }
+                }
+                if (supportedSizes.size() > 0) {
+                    return supportedSizes;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Initialize ZSLCaptureManager.
      * It will determine internal queue size for keeping historical images according to the
@@ -668,7 +734,6 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             }
         }
 
-        long current = 0;
         final long refresh = 3000;
         private void enqueue(ImageEntry entry) {
             long current = entry.timestamp;
@@ -706,7 +771,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             long now = System.currentTimeMillis();
             if (now - current > refresh) {
                 Log.d(TAG, "queue status : lv1 = " + mLv1Queue.size() + " / lv2 = " + mLv2Queue.size());
-                current = now;
+//                current = now;
             }
         }
 

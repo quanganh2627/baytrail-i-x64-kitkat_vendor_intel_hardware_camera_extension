@@ -15,26 +15,6 @@
                    * hdr.preferedExposures
         </details>
       </entry>
-
-      <entry name="colorEffect" type="byte" visibility="public" enum="true" >
-        <enum>
-          <value>SKY_BLUE
-          <notes>ia_aiq_color_effect_sky_blue</notes></value>
-          <value>GRASS_GREEN
-          <notes>ia_aiq_color_effect_grass_green</notes></value>
-          <value>SKIN_WHITEN
-          <notes>ia_aiq_color_effect_skin_whiten</notes></value>
-          <value>SKIN_WHITEN_LOW
-          <notes>ia_aiq_color_effect_skin_whiten_low</notes></value>
-          <value>SKIN_WHITEN_HIGH
-          <notes>ia_aiq_color_effect_skin_whiten_high</notes></value>
-          <value>VIVID
-          <notes>ia_aiq_color_effect_vivid</notes></value>
-        </enum>
-        <description>This contains the color effect modes from Intel 3A that can be applied to images.</description>
-        <details>To be added...
-        </details>
-      </entry>
   </controls>
 
   <dynamic>
@@ -87,24 +67,5 @@
         </details>
       </entry>
 
-      <entry name="colorEffect" type="byte" visibility="public" enum="true" >
-        <enum>
-          <value>SKY_BLUE
-          <notes>ia_aiq_color_effect_sky_blue</notes></value>
-          <value>GRASS_GREEN
-          <notes>ia_aiq_color_effect_grass_green</notes></value>
-          <value>SKIN_WHITEN
-          <notes>ia_aiq_color_effect_skin_whiten</notes></value>
-          <value>SKIN_WHITEN_LOW
-          <notes>ia_aiq_color_effect_skin_whiten_low</notes></value>
-          <value>SKIN_WHITEN_HIGH
-          <notes>ia_aiq_color_effect_skin_whiten_high</notes></value>
-          <value>VIVID
-          <notes>ia_aiq_color_effect_vivid</notes></value>
-        </enum>
-        <description>This reports the color effect mode which has been applied for the image.</description>
-        <details>To be added...
-        </details>
-      </entry>
   </dynamic>
 </section>

@@ -45,20 +45,32 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
+    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
     //
 
     /**
-     * <p>Dual camera mode is off.</p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     * <p>camera extension supports statistics analisys </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF = 0;
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS = 0;
 
     /**
-     * <p>Dual camera mode is on</p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
+     * <p>camera extension supports computer vision </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON = 1;
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV = 1;
+
+    /**
+     * <p>camera extension supports image enhancement, eg saturation </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT = 2;
+
+    /**
+     * <p>camera extension supports special features in device,eg dual video </p>
+     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     */
+    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE = 3;
 
     //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
@@ -75,46 +87,6 @@ public class CameraMetadataIntel {
      * @see IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
      */
     public static final int INTEL_STATISTICS_ANALYSIS_MODE_ON = 1;
-
-    //
-    // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-    //
-
-    /**
-     * <p>ia_aiq_color_effect_sky_blue</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE = 0;
-
-    /**
-     * <p>ia_aiq_color_effect_grass_green</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN = 1;
-
-    /**
-     * <p>ia_aiq_color_effect_skin_whiten</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN = 2;
-
-    /**
-     * <p>ia_aiq_color_effect_skin_whiten_low</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW = 3;
-
-    /**
-     * <p>ia_aiq_color_effect_skin_whiten_high</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH = 4;
-
-    /**
-     * <p>ia_aiq_color_effect_vivid</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_COLOR_EFFECT
-     */
-    public static final int INTEL_STATISTICS_COLOR_EFFECT_VIVID = 5;
 
     //
     // Enumeration values for IntelCaptureRequest#INTEL_CV_SMILE_DETECT_MODE
@@ -179,6 +151,46 @@ public class CameraMetadataIntel {
      * @see IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
      */
     public static final int INTEL_DEVICE_DUAL_CAMERA_MODE_ON = 1;
+
+    //
+    // Enumeration values for IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+    //
+
+    /**
+     * <p>ia_aiq_color_effect_sky_blue</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE = 0;
+
+    /**
+     * <p>ia_aiq_color_effect_grass_green</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN = 1;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN = 2;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten_low</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW = 3;
+
+    /**
+     * <p>ia_aiq_color_effect_skin_whiten_high</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH = 4;
+
+    /**
+     * <p>ia_aiq_color_effect_vivid</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID = 5;
 
     //
     // Enumeration values for IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT

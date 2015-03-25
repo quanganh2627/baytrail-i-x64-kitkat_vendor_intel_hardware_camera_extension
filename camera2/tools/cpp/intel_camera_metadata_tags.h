@@ -38,6 +38,7 @@ typedef enum intel_camera_metadata_section {
     COM_INTEL_CV_INFO,
     COM_INTEL_DEVICE,
     COM_INTEL_DEVICE_INFO,
+    COM_INTEL_IMAGE_ENHANCE,
     INTEL_CAMERA_SECTION_COUNT,
 } intel_camera_metadata_section_t;
 
@@ -51,6 +52,7 @@ typedef enum intel_camera_metadata_section_start {
     COM_INTEL_CV_INFO_START        = (COM_INTEL_CV_INFO        << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_DEVICE_START         = (COM_INTEL_DEVICE         << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_DEVICE_INFO_START    = (COM_INTEL_DEVICE_INFO    << 16 ) | VENDOR_SECTION_START,
+    COM_INTEL_IMAGE_ENHANCE_START  = (COM_INTEL_IMAGE_ENHANCE  << 16 ) | VENDOR_SECTION_START,
 } intel_camera_metadata_section_start_t;
 
 /**
@@ -62,7 +64,6 @@ typedef enum intel_camera_metadata_section_start {
 typedef enum intel_camera_metadata_tag {
     COM_INTEL_STATISTICS_ANALYSIS_MODE =              // enum         | public
             COM_INTEL_STATISTICS_START,
-    COM_INTEL_STATISTICS_COLOR_EFFECT,                // enum         | public
     COM_INTEL_STATISTICS_MULTI_FRAME_HINT,            // enum         | public
     COM_INTEL_STATISTICS_SCENE_DETECTED,              // enum         | public
     COM_INTEL_STATISTICS_END,
@@ -94,9 +95,18 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_DEVICE_END,
 
     COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE = 
-                                                      // enum         | public
+                                                      // byte[]       | public
             COM_INTEL_DEVICE_INFO_START,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS,       // enum[]       | public
     COM_INTEL_DEVICE_INFO_END,
+
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT =            // enum         | public
+            COM_INTEL_IMAGE_ENHANCE_START,
+    COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS,               // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_CONTRAST,                 // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_SATURATION,               // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_SHARPNESS,                // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_END,
 
 } intel_camera_metadata_tag_t;
 
@@ -109,16 +119,6 @@ typedef enum intel_camera_metadata_enum_com_intel_statistics_analysis_mode {
     COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF,
     COM_INTEL_STATISTICS_ANALYSIS_MODE_ON,
 } intel_camera_metadata_enum_com_intel_statistics_analysis_mode_t;
-
-// COM_INTEL_STATISTICS_COLOR_EFFECT
-typedef enum intel_camera_metadata_enum_com_intel_statistics_color_effect {
-    COM_INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE,
-    COM_INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN,
-    COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN,
-    COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW,
-    COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH,
-    COM_INTEL_STATISTICS_COLOR_EFFECT_VIVID,
-} intel_camera_metadata_enum_com_intel_statistics_color_effect_t;
 
 // COM_INTEL_STATISTICS_MULTI_FRAME_HINT
 typedef enum intel_camera_metadata_enum_com_intel_statistics_multi_frame_hint {
@@ -172,11 +172,24 @@ typedef enum intel_camera_metadata_enum_com_intel_device_dual_camera_mode {
 } intel_camera_metadata_enum_com_intel_device_dual_camera_mode_t;
 
 
-// COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE
-typedef enum intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode {
-    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON,
-} intel_camera_metadata_enum_com_intel_device_info_available_dual_camera_mode_t;
+// COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+typedef enum intel_camera_metadata_enum_com_intel_device_info_available_extensions {
+    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT,
+    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE,
+} intel_camera_metadata_enum_com_intel_device_info_available_extensions_t;
+
+
+// COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE,
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN,
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN,
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW,
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH,
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID,
+} intel_camera_metadata_enum_com_intel_image_enhance_color_effect_t;
 
 
 #endif

@@ -188,13 +188,49 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>Control of Dual camera.</p>
-     * <p>When ON, the camera HAL can support dual camera mode.<br />
-     * </p>
+     * <p>When ON, the camera HAL can support dual camera mode.  </p>
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_OFF
      * @see #INTEL_DEVICE_DUAL_CAMERA_MODE_ON
      */
     public static final Key<Integer> INTEL_DEVICE_DUAL_CAMERA_MODE =
             new Key<Integer>("com.intel.device.dualCameraMode", int.class);
+
+    /**
+     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
+     * <p>To be added...</p>
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_COLOR_EFFECT =
+            new Key<Integer>("com.intel.imageEnhance.colorEffect", int.class);
+
+    /**
+     * <p>value of brightness </p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_BRIGHTNESS =
+            new Key<Integer>("com.intel.imageEnhance.brightness", int.class);
+
+    /**
+     * <p>value of contrast</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_CONTRAST =
+            new Key<Integer>("com.intel.imageEnhance.contrast", int.class);
+
+    /**
+     * <p>value of saturation</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_SATURATION =
+            new Key<Integer>("com.intel.imageEnhance.saturation", int.class);
+
+    /**
+     * <p>value of sharpness</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_SHARPNESS =
+            new Key<Integer>("com.intel.imageEnhance.sharpness", int.class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

@@ -1,9 +1,39 @@
+/*
+ * Copyright 2015, Intel Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.intel.camera2.extensions.photography;
 
 import com.intel.camera2.extensions.IaFrame;
-import com.intel.camera2.extensions.vision.PVLibraryLoader;
 
-public class PanoramaJNI extends PVLibraryLoader {
+final class PanoramaJNI {
+    private static boolean isSupported;
+
+    static {
+        try {
+            System.loadLibrary("pvl_panorama_jni");
+            isSupported = true;
+        } catch (UnsatisfiedLinkError e) {
+            isSupported = false;
+        }
+    }
+
+    public static boolean isSupported() {
+        return isSupported;
+    }
+
+    public static final int DIRECTION_STILL = 0;
     public static final int DIRECTION_RIGHT = 1;
     public static final int DIRECTION_LEFT = 2;
     public static final int DIRECTION_DOWN = 3;
@@ -15,6 +45,7 @@ public class PanoramaJNI extends PVLibraryLoader {
     public native static void reset(long instance);
     public native static void setParam(long instance, int direction);
     public native static void stitch(long instance, IaFrame image, int index);  // index (0 ~ ...). for debugging.
+//    public native static int compareWithStitched(long instance, IaFrame image, Param result);    // for preview.
     public native static IaFrame run(long instance);
     public native static void setDebug(long instance, int debug);  // debug == 1, dump image when panorama stitch & run.
 
@@ -43,6 +74,24 @@ public class PanoramaJNI extends PVLibraryLoader {
 
         public String toString() {
             return "overlapping_ratio("+overlapping_ratio+") direction("+direction+")";
+        }
+    }
+
+    public static class Version {
+        public int major;
+        public int minor;
+        public int patch;
+        public String description;
+
+        public Version(int major, int minor, int patch, String description) {
+            this.major = major;
+            this.minor = minor;
+            this.patch = patch;
+            this.description = description;
+        }
+
+        public String toString() {
+            return major + "/" + minor + "patch("+patch+") desc("+description+")";
         }
     }
 

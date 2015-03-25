@@ -36,14 +36,13 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
     [COM_INTEL_CV_INFO]            = "com.intel.cv.info",
     [COM_INTEL_DEVICE]             = "com.intel.device",
     [COM_INTEL_DEVICE_INFO]        = "com.intel.device.info",
+    [COM_INTEL_IMAGE_ENHANCE]      = "com.intel.imageEnhance",
 };
 
 static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
         COM_INTEL_STATISTICS_START] = {
     [ COM_INTEL_STATISTICS_ANALYSIS_MODE - COM_INTEL_STATISTICS_START ] =
     { "analysisMode",                  TYPE_BYTE   },
-    [ COM_INTEL_STATISTICS_COLOR_EFFECT - COM_INTEL_STATISTICS_START ] =
-    { "colorEffect",                   TYPE_BYTE   },
     [ COM_INTEL_STATISTICS_MULTI_FRAME_HINT - COM_INTEL_STATISTICS_START ] =
     { "multiFrameHint",                TYPE_BYTE   },
     [ COM_INTEL_STATISTICS_SCENE_DETECTED - COM_INTEL_STATISTICS_START ] =
@@ -101,6 +100,22 @@ static tag_info_t com_intel_device_info_tags[COM_INTEL_DEVICE_INFO_END -
         COM_INTEL_DEVICE_INFO_START] = {
     [ COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_INFO_START ] =
     { "availableDualCameraMode",       TYPE_BYTE   },
+    [ COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS - COM_INTEL_DEVICE_INFO_START ] =
+    { "availableExtensions",           TYPE_BYTE   },
+};
+
+static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
+        COM_INTEL_IMAGE_ENHANCE_START] = {
+    [ COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "colorEffect",                   TYPE_BYTE   },
+    [ COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "brightness",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_CONTRAST - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "contrast",                      TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_SATURATION - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "saturation",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_SHARPNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "sharpness",                     TYPE_INT32  },
 };
 
 
@@ -140,6 +155,13 @@ static tag_section_t section_com_intel_device_info = {
     com_intel_device_info_tags
 };
 
+static tag_section_t section_com_intel_image_enhance = {
+    "com.intel.imageEnhance",
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_START,
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_END,
+    com_intel_image_enhance_tags
+};
+
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_statistics,
@@ -147,6 +169,7 @@ tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_cv_info,
     section_com_intel_device,
     section_com_intel_device_info,
+    section_com_intel_image_enhance,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -165,37 +188,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
                     break;
                 case COM_INTEL_STATISTICS_ANALYSIS_MODE_ON:
                     msg = "ON";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
-        case COM_INTEL_STATISTICS_COLOR_EFFECT: {
-            switch (value) {
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKY_BLUE:
-                    msg = "SKY_BLUE";
-                    ret = 0;
-                    break;
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_GRASS_GREEN:
-                    msg = "GRASS_GREEN";
-                    ret = 0;
-                    break;
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN:
-                    msg = "SKIN_WHITEN";
-                    ret = 0;
-                    break;
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_LOW:
-                    msg = "SKIN_WHITEN_LOW";
-                    ret = 0;
-                    break;
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_SKIN_WHITEN_HIGH:
-                    msg = "SKIN_WHITEN_HIGH";
-                    ret = 0;
-                    break;
-                case COM_INTEL_STATISTICS_COLOR_EFFECT_VIVID:
-                    msg = "VIVID";
                     ret = 0;
                     break;
                 default:
@@ -385,18 +377,73 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         }
 
         case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
+            break;
+        }
+        case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS: {
             switch (value) {
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF:
-                    msg = "OFF";
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS:
+                    msg = "STATISTICS";
                     ret = 0;
                     break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON:
-                    msg = "ON";
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV:
+                    msg = "CV";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT:
+                    msg = "ENHANCEMENT";
+                    ret = 0;
+                    break;
+                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE:
+                    msg = "DEVICE";
                     ret = 0;
                     break;
                 default:
                     msg = "error: enum value out of range";
             }
+            break;
+        }
+
+        case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT: {
+            switch (value) {
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE:
+                    msg = "SKY_BLUE";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN:
+                    msg = "GRASS_GREEN";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN:
+                    msg = "SKIN_WHITEN";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW:
+                    msg = "SKIN_WHITEN_LOW";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH:
+                    msg = "SKIN_WHITEN_HIGH";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID:
+                    msg = "VIVID";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_CONTRAST: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_SATURATION: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_SHARPNESS: {
             break;
         }
 

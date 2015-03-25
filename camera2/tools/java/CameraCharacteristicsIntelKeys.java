@@ -73,12 +73,21 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>List of enums from com.intel.device.dualCameraMode</p>
-     * <p>OFF is always supported.</p>
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_OFF
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE_ON
+     * <p>OFF Dual camera mode is off. ON Dual camera mode is on.</p>
      */
-    public static final Key<Integer> INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE =
-            new Key<Integer>("com.intel.device.info.availableDualCameraMode", int.class);
+    public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE =
+            new Key<int[]>("com.intel.device.info.availableDualCameraMode", int[].class);
+
+    /**
+     * <p>List of enums from com.intel.device.info.availableExtensions</p>
+     * <p>The empty list means no camera extension support</p>
+     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS
+     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV
+     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT
+     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE
+     */
+    public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS =
+            new Key<int[]>("com.intel.device.info.availableExtensions", int[].class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

@@ -19,15 +19,16 @@ import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.EyeInfo;
 import com.intel.camera2.extensions.vision.FaceData.RecognitionInfo;
 
-final class FaceRecognitionJNI extends PVLibraryLoader {
-    public native static long create();
+final class FaceRecognitionWithDbJNI extends PVLibraryLoader {
+    public native static long create(String dbPath);
     public native static void destroy(long instance);
     public native static RecognitionInfo[] runInImage(long instance, IaFrame frame, EyeInfo[] edInfo);
     public native static void registerFace(long instance, RecognitionInfo result);
     public native static void unregisterFace(long instance, long faceId);
     public native static void updatePerson(long instance, long faceId, int personId);
-    public native static void deletePerson(long instance, int personId);
+    public native static void unregisterPerson(long instance, int personId);
     public native static int getNumFacesInDatabase(long instance);
+    public native static int getNewPersonId(long instance);
 
     public native static void setParam(long instance, Param param);
     public native static Param getParam(long instance);
