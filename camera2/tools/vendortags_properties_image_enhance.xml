@@ -55,4 +55,21 @@
       <clone entry="com.intel.imageEnhance.saturation" kind="controls"></clone>
       <clone entry="com.intel.imageEnhance.sharpness" kind="controls"></clone>
   </dynamic>
+
+  <static>
+    <namespace name="info">
+      <entry name="availablecolorEffects" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of color effect modes for com.intel.imageEnhance.colorEffect that can be applied to images.</description>
+        <range>Any value listed in com.intel.imageEnhance.colorEffect</range>
+        <details>
+          Android standard color effect modes and Intel color effect modes can't be applied at same time,
+          Android color effect should have higher priority
+        </details>
+      </entry>
+    </namespace>
+  </static>
+
 </section>

@@ -73,6 +73,14 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
     public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS =
             new Key<int[]>("com.intel.device.info.availableExtensions", int[].class);
 
+    /**
+     * <p>List of color effect modes for com.intel.imageEnhance.colorEffect that can be applied to images.</p>
+     * <p>Android standard color effect modes and Intel color effect modes can't be applied at same time,
+     * Android color effect should have higher priority</p>
+     */
+    public static final Key<int[]> INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS =
+            new Key<int[]>("com.intel.imageEnhance.info.availablecolorEffects", int[].class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

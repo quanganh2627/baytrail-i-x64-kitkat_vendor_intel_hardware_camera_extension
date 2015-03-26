@@ -37,6 +37,7 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
     [COM_INTEL_DEVICE]             = "com.intel.device",
     [COM_INTEL_DEVICE_INFO]        = "com.intel.device.info",
     [COM_INTEL_IMAGE_ENHANCE]      = "com.intel.imageEnhance",
+    [COM_INTEL_IMAGE_ENHANCE_INFO] = "com.intel.imageEnhance.info",
 };
 
 static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
@@ -114,6 +115,12 @@ static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
     { "sharpness",                     TYPE_INT32  },
 };
 
+static tag_info_t com_intel_image_enhance_info_tags[COM_INTEL_IMAGE_ENHANCE_INFO_END -
+        COM_INTEL_IMAGE_ENHANCE_INFO_START] = {
+    [ COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS - COM_INTEL_IMAGE_ENHANCE_INFO_START ] =
+    { "availablecolorEffects",         TYPE_BYTE   },
+};
+
 
 
 static tag_section_t section_com_intel_statistics = {
@@ -158,6 +165,13 @@ static tag_section_t section_com_intel_image_enhance = {
     com_intel_image_enhance_tags
 };
 
+static tag_section_t section_com_intel_image_enhance_info = {
+    "com.intel.imageEnhance.info",
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_INFO_START,
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_INFO_END,
+    com_intel_image_enhance_info_tags
+};
+
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_statistics,
@@ -166,6 +180,7 @@ tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
     section_com_intel_device,
     section_com_intel_device_info,
     section_com_intel_image_enhance,
+    section_com_intel_image_enhance_info,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -438,6 +453,10 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
         case COM_INTEL_IMAGE_ENHANCE_SHARPNESS: {
+            break;
+        }
+
+        case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS: {
             break;
         }
 

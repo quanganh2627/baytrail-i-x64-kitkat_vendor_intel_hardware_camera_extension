@@ -123,7 +123,8 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_dualCameraMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"device.info.availableExtensions", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS, TYPE_BYTE, com_intel_device_info_availableExtensions_values, 4, true, {-1,0,0}, 0 },
     // IMAGE_ENHANCE
+    {"imageEnhance.info.availablecolorEffects", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS, TYPE_BYTE, com_intel_imageEnhance_colorEffect_values, 7, true, {-1,0,0}, ENUM_LIST },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 6
 
