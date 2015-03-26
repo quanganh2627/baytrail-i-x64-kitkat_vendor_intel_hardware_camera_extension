@@ -280,28 +280,6 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
 
           <static>
             <namespace name="info">
-              <entry name="availableSmileDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.smileDetectMode</description>
-                <details>NO is always supported.
-
-                         YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.
-                </details>
-              </entry>
-
-              <entry name="availableBlinkDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.blinkDetectMode</description>
-                <details>NO is always supported.
-
-                         YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.
-                </details>
-              </entry>
-
               <entry name="availableFaceRecognize" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
                 <array>
                   <size>n</size>
