@@ -39,6 +39,7 @@ typedef enum intel_camera_metadata_section {
     COM_INTEL_DEVICE,
     COM_INTEL_DEVICE_INFO,
     COM_INTEL_IMAGE_ENHANCE,
+    COM_INTEL_IMAGE_ENHANCE_INFO,
     INTEL_CAMERA_SECTION_COUNT,
 } intel_camera_metadata_section_t;
 
@@ -53,6 +54,9 @@ typedef enum intel_camera_metadata_section_start {
     COM_INTEL_DEVICE_START         = (COM_INTEL_DEVICE         << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_DEVICE_INFO_START    = (COM_INTEL_DEVICE_INFO    << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_IMAGE_ENHANCE_START  = (COM_INTEL_IMAGE_ENHANCE  << 16 ) | VENDOR_SECTION_START,
+    COM_INTEL_IMAGE_ENHANCE_INFO_START
+                                   = (COM_INTEL_IMAGE_ENHANCE_INFO
+                                                                << 16 ) | VENDOR_SECTION_START,
 } intel_camera_metadata_section_start_t;
 
 /**
@@ -105,6 +109,11 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_IMAGE_ENHANCE_SATURATION,               // int32        | public
     COM_INTEL_IMAGE_ENHANCE_SHARPNESS,                // int32        | public
     COM_INTEL_IMAGE_ENHANCE_END,
+
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS = 
+                                                      // byte[]       | public
+            COM_INTEL_IMAGE_ENHANCE_INFO_START,
+    COM_INTEL_IMAGE_ENHANCE_INFO_END,
 
 } intel_camera_metadata_tag_t;
 
@@ -189,6 +198,7 @@ typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID,
 } intel_camera_metadata_enum_com_intel_image_enhance_color_effect_t;
+
 
 
 #endif
