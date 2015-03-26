@@ -110,8 +110,13 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.device.dualCameraMode", int.class);
 
     /**
-     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
-     * <p>To be added...</p>
+     * <p>This contains the color effect modes supported by Intel 3A that can be applied to images.</p>
+     * <p>Intel color effect can be used like as an extension to the standard control(android.control.effectMode).
+     * But due to range checks in android standard API, those keys can't be sent by android.control.effectMode,
+     * it's right way to send by separate control tag.
+     * If a request with both tags arrives at the HAL, the Android standard metadata should take precedence
+     * over the Intel's.</p>
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN

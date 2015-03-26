@@ -53,6 +53,7 @@ const metadata_value_t com_intel_device_info_availableExtensions_values[] = {
          };
 
 const metadata_value_t com_intel_imageEnhance_colorEffect_values[] = {
+                 {"OFF", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF },
                  {"SKY_BLUE", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE },
                  {"GRASS_GREEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN },
                  {"SKIN_WHITEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN },
