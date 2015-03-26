@@ -115,8 +115,6 @@ const metadata_value_t vendorMetadataNames[] = {
 const metadata_tag_t static_vendor_tags_table[] = {
     // STATISTICS
     // CV
-    {"cv.info.availableSmileDetect", COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT, TYPE_BYTE, com_intel_cv_smileDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"cv.info.availableBlinkDetect", COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, com_intel_cv_blinkDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availableFaceRecognize", COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_cv_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availableObjectTrack", COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
@@ -126,5 +124,5 @@ const metadata_tag_t static_vendor_tags_table[] = {
     // IMAGE_ENHANCE
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 7
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
 

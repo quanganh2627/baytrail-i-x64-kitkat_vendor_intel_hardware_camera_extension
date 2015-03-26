@@ -78,10 +78,6 @@ static tag_info_t com_intel_cv_tags[COM_INTEL_CV_END -
 
 static tag_info_t com_intel_cv_info_tags[COM_INTEL_CV_INFO_END -
         COM_INTEL_CV_INFO_START] = {
-    [ COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT - COM_INTEL_CV_INFO_START ] =
-    { "availableSmileDetect",          TYPE_BYTE   },
-    [ COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT - COM_INTEL_CV_INFO_START ] =
-    { "availableBlinkDetect",          TYPE_BYTE   },
     [ COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE - COM_INTEL_CV_INFO_START ] =
     { "availableFaceRecognize",        TYPE_BYTE   },
     [ COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_CV_INFO_START ] =
@@ -344,12 +340,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
 
-        case COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT: {
-            break;
-        }
-        case COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT: {
-            break;
-        }
         case COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE: {
             break;
         }

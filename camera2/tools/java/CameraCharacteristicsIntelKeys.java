@@ -32,22 +32,6 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
 
 
     /**
-     * <p>List of enums from com.intel.cv.smileDetectMode</p>
-     * <p>NO is always supported.</p>
-     * <p>YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.</p>
-     */
-    public static final Key<int[]> INTEL_CV_INFO_AVAILABLE_SMILE_DETECT =
-            new Key<int[]>("com.intel.cv.info.availableSmileDetect", int[].class);
-
-    /**
-     * <p>List of enums from com.intel.cv.blinkDetectMode</p>
-     * <p>NO is always supported.</p>
-     * <p>YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.</p>
-     */
-    public static final Key<int[]> INTEL_CV_INFO_AVAILABLE_BLINK_DETECT =
-            new Key<int[]>("com.intel.cv.info.availableBlinkDetect", int[].class);
-
-    /**
      * <p>List of enums from com.intel.cv.faceRecognizeMode</p>
      * <p>NO is always supported.</p>
      * <p>Yes means the device supports com.intel.cv.faceRecognizePersonIds and com.intel.cv.faceRecognizePersonSimilarities outputs.</p>
