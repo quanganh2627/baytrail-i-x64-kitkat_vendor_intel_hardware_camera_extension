@@ -181,6 +181,7 @@ typedef enum intel_camera_metadata_enum_com_intel_device_info_available_extensio
 
 // COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT
 typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN,

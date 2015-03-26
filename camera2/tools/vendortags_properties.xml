@@ -370,6 +370,8 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
           <controls>
               <entry name="colorEffect" type="byte" visibility="public" enum="true" >
                 <enum>
+                  <value>OFF
+                  <notes>disable Intel color effect</notes></value>
                   <value>SKY_BLUE
                   <notes>ia_aiq_color_effect_sky_blue</notes></value>
                   <value>GRASS_GREEN
@@ -383,28 +385,33 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <value>VIVID
                   <notes>ia_aiq_color_effect_vivid</notes></value>
                 </enum>
-                <description>This contains the color effect modes from Intel 3A that can be applied to images.</description>
-                <details>To be added...
+                <description>This contains the color effect modes supported by Intel 3A that can be applied to images.</description>
+                <details>
+                  Intel color effect can be used like as an extension to the standard control(android.control.effectMode).
+                  But due to range checks in android standard API, those keys can't be sent by android.control.effectMode,
+                  it's right way to send by separate control tag.
+                  If a request with both tags arrives at the HAL, the Android standard metadata should take precedence
+                  over the Intel's.
                 </details>
               </entry>
 
               <entry name="brightness" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10]; 10 is maximum brightening, 0 is neutral</range>
                 <details> value of brightness </details>
               </entry>
 
               <entry name="contrast" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10]; 10 is maximum contrast, 0 is neutral</range>
                 <details> value of contrast</details>
               </entry>
 
               <entry name="saturation" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10], 10 is maximum saturation, 0 is neutral</range>
                 <details> value of saturation</details>
               </entry>
 
               <entry name="sharpness" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10], 10 is maximum sharpening, 0 is neutral</range>
                 <details> value of sharpness</details>
               </entry>
           </controls>

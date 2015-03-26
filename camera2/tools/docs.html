@@ -1964,6 +1964,10 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
 
                 <ul class="entry_type_enum">
                   <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>disable Intel color effect</p></span>
+                  </li>
+                  <li>
                     <span class="entry_type_enum_name">SKY_BLUE</span>
                     <span class="entry_type_enum_notes"><p>ia_<wbr/>aiq_<wbr/>color_<wbr/>effect_<wbr/>sky_<wbr/>blue</p></span>
                   </li>
@@ -1992,7 +1996,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td> <!-- entry_type -->
 
             <td class="entry_description">
-              <p>This contains the color effect modes from Intel 3A that can be applied to images.<wbr/></p>
+              <p>This contains the color effect modes supported by Intel 3A that can be applied to images.<wbr/></p>
             </td>
 
             <td class="entry_units">
@@ -2010,7 +2014,11 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>To be added...<wbr/></p>
+              <p>Intel color effect can be used like as an extension to the standard control(android.<wbr/>control.<wbr/>effect<wbr/>Mode).<wbr/>
+But due to range checks in android standard API,<wbr/> those keys can't be sent by android.<wbr/>control.<wbr/>effect<wbr/>Mode,<wbr/>
+it's right way to send by separate control tag.<wbr/>
+If a request with both tags arrives at the HAL,<wbr/> the Android standard metadata should take precedence
+over the Intel's.<wbr/></p>
             </td>
           </tr>
 
@@ -2043,7 +2051,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum brightening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2088,7 +2096,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum contrast,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2133,7 +2141,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum saturation,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2178,7 +2186,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum sharpening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2242,6 +2250,10 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
 
                 <ul class="entry_type_enum">
                   <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>disable Intel color effect</p></span>
+                  </li>
+                  <li>
                     <span class="entry_type_enum_name">SKY_BLUE</span>
                     <span class="entry_type_enum_notes"><p>ia_<wbr/>aiq_<wbr/>color_<wbr/>effect_<wbr/>sky_<wbr/>blue</p></span>
                   </li>
@@ -2270,7 +2282,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td> <!-- entry_type -->
 
             <td class="entry_description">
-              <p>This contains the color effect modes from Intel 3A that can be applied to images.<wbr/></p>
+              <p>This contains the color effect modes supported by Intel 3A that can be applied to images.<wbr/></p>
             </td>
 
             <td class="entry_units">
@@ -2288,7 +2300,11 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>To be added...<wbr/></p>
+              <p>Intel color effect can be used like as an extension to the standard control(android.<wbr/>control.<wbr/>effect<wbr/>Mode).<wbr/>
+But due to range checks in android standard API,<wbr/> those keys can't be sent by android.<wbr/>control.<wbr/>effect<wbr/>Mode,<wbr/>
+it's right way to send by separate control tag.<wbr/>
+If a request with both tags arrives at the HAL,<wbr/> the Android standard metadata should take precedence
+over the Intel's.<wbr/></p>
             </td>
           </tr>
 
@@ -2321,7 +2337,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum brightening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2366,7 +2382,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum contrast,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2411,7 +2427,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum saturation,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2456,7 +2472,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum sharpening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">

@@ -395,6 +395,10 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
 
         case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT: {
             switch (value) {
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
                 case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE:
                     msg = "SKY_BLUE";
                     ret = 0;
