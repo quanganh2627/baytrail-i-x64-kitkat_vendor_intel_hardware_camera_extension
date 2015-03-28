@@ -146,6 +146,12 @@ public final class CaptureRequestIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.imageEnhance.saturation", int.class);
 
     /**
+     * <p>value of hue</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_HUE =
+            new Key<Integer>("com.intel.imageEnhance.hue", int.class);
+
+    /**
      * <p>value of sharpness</p>
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_SHARPNESS =
