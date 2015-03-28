@@ -111,6 +111,8 @@ static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
     { "contrast",                      TYPE_INT32  },
     [ COM_INTEL_IMAGE_ENHANCE_SATURATION - COM_INTEL_IMAGE_ENHANCE_START ] =
     { "saturation",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_HUE - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "hue",                           TYPE_INT32  },
     [ COM_INTEL_IMAGE_ENHANCE_SHARPNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
     { "sharpness",                     TYPE_INT32  },
 };
@@ -450,6 +452,9 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
         case COM_INTEL_IMAGE_ENHANCE_SATURATION: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_HUE: {
             break;
         }
         case COM_INTEL_IMAGE_ENHANCE_SHARPNESS: {

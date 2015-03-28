@@ -110,6 +110,7 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.imageEnhance.brightness", COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS},
         {"com.intel.imageEnhance.contrast", COM_INTEL_IMAGE_ENHANCE_CONTRAST},
         {"com.intel.imageEnhance.saturation", COM_INTEL_IMAGE_ENHANCE_SATURATION},
+        {"com.intel.imageEnhance.hue", COM_INTEL_IMAGE_ENHANCE_HUE},
         {"com.intel.imageEnhance.sharpness", COM_INTEL_IMAGE_ENHANCE_SHARPNESS},
 };
 

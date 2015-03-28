@@ -410,6 +410,11 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <details> value of saturation</details>
               </entry>
 
+              <entry name="hue" type="int32" visibility="public" >
+                <range>[-10,10], 10 is maximum hue, 0 is neutral</range>
+                <details> value of hue</details>
+              </entry>
+
               <entry name="sharpness" type="int32" visibility="public" >
                 <range>[-10,10], 10 is maximum sharpening, 0 is neutral</range>
                 <details> value of sharpness</details>
@@ -421,6 +426,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
               <clone entry="com.intel.imageEnhance.brightness" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.contrast" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.saturation" kind="controls"></clone>
+              <clone entry="com.intel.imageEnhance.hue" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.sharpness" kind="controls"></clone>
           </dynamic>
 
