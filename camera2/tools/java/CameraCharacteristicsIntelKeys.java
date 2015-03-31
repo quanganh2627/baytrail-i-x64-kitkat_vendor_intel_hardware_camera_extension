@@ -32,6 +32,17 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
 
 
     /**
+     * <p>List of enums from com.intel.device.info.availableExtensions</p>
+     * <p>The empty list means no camera extension support</p>
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE
+     */
+    public static final Key<int[]> INTEL_EXTENSIONS_AVAILABLE_GROUPS =
+            new Key<int[]>("com.intel.extensions.availableGroups", int[].class);
+
+    /**
      * <p>List of enums from com.intel.cv.faceRecognizeMode</p>
      * <p>NO is always supported.</p>
      * <p>Yes means the device supports com.intel.cv.faceRecognizePersonIds and com.intel.cv.faceRecognizePersonSimilarities outputs.</p>
@@ -61,17 +72,6 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
      */
     public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE =
             new Key<int[]>("com.intel.device.info.availableDualCameraMode", int[].class);
-
-    /**
-     * <p>List of enums from com.intel.device.info.availableExtensions</p>
-     * <p>The empty list means no camera extension support</p>
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE
-     */
-    public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS =
-            new Key<int[]>("com.intel.device.info.availableExtensions", int[].class);
 
     /**
      * <p>List of color effect modes for com.intel.imageEnhance.colorEffect that can be applied to images.</p>

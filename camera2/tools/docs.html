@@ -109,6 +109,18 @@
   <ul class="toc">
     <li><a href="#tag_index" class="toc_section_header">Tags</a></li>
     <li>
+      <span class="toc_section_header"><a href="#section_extensions">extensions</a></span>
+      <ul class="toc_section">
+        <li>
+          <span class="toc_kind_header">static</span>
+          <ul class="toc_section">
+            <li
+            ><a href="#static_com.intel.extensions.availableGroups">com.intel.extensions.availableGroups</a></li>
+          </ul>
+        </li>
+      </ul> <!-- toc_section -->
+    </li>
+    <li>
       <span class="toc_section_header"><a href="#section_statistics">statistics</a></span>
       <ul class="toc_section">
         <li>
@@ -210,8 +222,6 @@
 
             <li
             ><a href="#static_com.intel.device.info.availableDualCameraMode">com.intel.device.info.availableDualCameraMode</a></li>
-            <li
-            ><a href="#static_com.intel.device.info.availableExtensions">com.intel.device.info.availableExtensions</a></li>
 
           </ul>
         </li>
@@ -283,6 +293,105 @@
     </thead> <!-- so that the first occurrence of thead is not
                          above the first occurrence of tr -->
 <!-- <namespace name="intel"> -->
+  <tr><td colspan="6" id="section_extensions" class="section">extensions</td></tr>
+
+
+      <tr><td colspan="6" class="kind">static</td></tr>
+
+      <thead class="entries_header">
+        <tr>
+          <th class="th_name">Property Name</th>
+          <th class="th_type">Type</th>
+          <th class="th_description">Description</th>
+          <th class="th_units">Units</th>
+          <th class="th_range">Range</th>
+          <th class="th_tags">Tags</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        
+
+        
+
+        
+
+        
+
+                
+          <tr class="entry" id="static_com.intel.extensions.availableGroups">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>extensions.<wbr/>available<wbr/>Groups
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">STATISTICS</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports statistics analisys </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">CV</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports computer vision </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ENHANCEMENT</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports image enhancement,<wbr/> eg saturation </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">DEVICE</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports special features in device,<wbr/>eg dual video </p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>List of enums from com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions</p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>The empty list means no camera extension support</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+        
+
+      <!-- end of kind -->
+      </tbody>
+
+  <!-- end of section -->
   <tr><td colspan="6" id="section_statistics" class="section">statistics</td></tr>
 
 
@@ -1849,73 +1958,6 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
               <p>OFF Dual camera mode is off.<wbr/> ON Dual camera mode is on.<wbr/></p>
-            </td>
-          </tr>
-
-
-          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
-           <!-- end of entry -->
-        
-                
-          <tr class="entry" id="static_com.intel.device.info.availableExtensions">
-            <td class="entry_name
-             " rowspan="3">
-              com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions
-            </td>
-            <td class="entry_type">
-                <span class="entry_type_name entry_type_name_enum">byte</span>
-                <span class="entry_type_container">x</span>
-
-                <span class="entry_type_array">
-                  n
-                </span>
-              <span class="entry_type_visibility"> [public]</span>
-
-
-
-
-
-                <ul class="entry_type_enum">
-                  <li>
-                    <span class="entry_type_enum_name">STATISTICS</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports statistics analisys </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">CV</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports computer vision </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">ENHANCEMENT</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports image enhancement,<wbr/> eg saturation </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">DEVICE</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports special features in device,<wbr/>eg dual video </p></span>
-                  </li>
-                </ul>
-
-            </td> <!-- entry_type -->
-
-            <td class="entry_description">
-              <p>List of enums from com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions</p>
-            </td>
-
-            <td class="entry_units">
-            </td>
-
-            <td class="entry_range">
-            </td>
-
-            <td class="entry_tags">
-            </td>
-
-          </tr>
-          <tr class="entries_header">
-            <th class="th_details" colspan="5">Details</th>
-          </tr>
-          <tr class="entry_cont">
-            <td class="entry_details" colspan="5">
-              <p>The empty list means no camera extension support</p>
             </td>
           </tr>
 
