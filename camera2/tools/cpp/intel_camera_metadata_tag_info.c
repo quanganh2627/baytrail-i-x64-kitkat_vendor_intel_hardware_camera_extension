@@ -31,6 +31,7 @@
  */
 
 const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
+    [COM_INTEL_EXTENSIONS]         = "com.intel.extensions",
     [COM_INTEL_STATISTICS]         = "com.intel.statistics",
     [COM_INTEL_CV]                 = "com.intel.cv",
     [COM_INTEL_CV_INFO]            = "com.intel.cv.info",
@@ -38,6 +39,12 @@ const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
     [COM_INTEL_DEVICE_INFO]        = "com.intel.device.info",
     [COM_INTEL_IMAGE_ENHANCE]      = "com.intel.imageEnhance",
     [COM_INTEL_IMAGE_ENHANCE_INFO] = "com.intel.imageEnhance.info",
+};
+
+static tag_info_t com_intel_extensions_tags[COM_INTEL_EXTENSIONS_END -
+        COM_INTEL_EXTENSIONS_START] = {
+    [ COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS - COM_INTEL_EXTENSIONS_START ] =
+    { "availableGroups",               TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
@@ -97,8 +104,6 @@ static tag_info_t com_intel_device_info_tags[COM_INTEL_DEVICE_INFO_END -
         COM_INTEL_DEVICE_INFO_START] = {
     [ COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_INFO_START ] =
     { "availableDualCameraMode",       TYPE_BYTE   },
-    [ COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS - COM_INTEL_DEVICE_INFO_START ] =
-    { "availableExtensions",           TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
@@ -124,6 +129,13 @@ static tag_info_t com_intel_image_enhance_info_tags[COM_INTEL_IMAGE_ENHANCE_INFO
 };
 
 
+
+static tag_section_t section_com_intel_extensions = {
+    "com.intel.extensions",
+    (uint32_t) COM_INTEL_EXTENSIONS_START,
+    (uint32_t) COM_INTEL_EXTENSIONS_END,
+    com_intel_extensions_tags
+};
 
 static tag_section_t section_com_intel_statistics = {
     "com.intel.statistics",
@@ -176,6 +188,7 @@ static tag_section_t section_com_intel_image_enhance_info = {
 
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
+    section_com_intel_extensions,
     section_com_intel_statistics,
     section_com_intel_cv,
     section_com_intel_cv_info,
@@ -193,6 +206,30 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
     int ret = -1;
 
     switch(tag) {
+        case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS: {
+            switch (value) {
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS:
+                    msg = "STATISTICS";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV:
+                    msg = "CV";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT:
+                    msg = "ENHANCEMENT";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE:
+                    msg = "DEVICE";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+
         case COM_INTEL_STATISTICS_ANALYSIS_MODE: {
             switch (value) {
                 case COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF:
@@ -384,29 +421,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         }
 
         case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
-            break;
-        }
-        case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS: {
-            switch (value) {
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS:
-                    msg = "STATISTICS";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV:
-                    msg = "CV";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT:
-                    msg = "ENHANCEMENT";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE:
-                    msg = "DEVICE";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
             break;
         }
 

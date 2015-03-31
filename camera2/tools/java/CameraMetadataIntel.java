@@ -45,32 +45,32 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+    // Enumeration values for IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
     //
 
     /**
      * <p>camera extension supports statistics analisys </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS = 0;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS = 0;
 
     /**
      * <p>camera extension supports computer vision </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV = 1;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV = 1;
 
     /**
      * <p>camera extension supports image enhancement, eg saturation </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT = 2;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT = 2;
 
     /**
      * <p>camera extension supports special features in device,eg dual video </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE = 3;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE = 3;
 
     //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
