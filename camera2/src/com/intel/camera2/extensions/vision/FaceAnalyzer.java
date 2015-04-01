@@ -33,6 +33,7 @@ public class FaceAnalyzer {
 
     private static final String TAG = "FaceAnalyzer";
     private static FaceAnalyzer mFaceAnalyzer;
+    public static final int ERROR = -1;
 
     private String mDbPath;
 
@@ -51,7 +52,6 @@ public class FaceAnalyzer {
 
     private boolean mTryToGetFaceInfo;
     private boolean mTryToGetEyeInfo;
-    private boolean mTryToGetRecognitionInfo;
     private boolean mTryToGetSmileInfo;
     private boolean mTryToGetBlinkInfo;
 
@@ -197,8 +197,8 @@ public class FaceAnalyzer {
      * @return RecognitionInfo[]
      */
     public RecognitionInfo[] getRecognitionInfo() {
-        if (mTryToGetRecognitionInfo || mImage == null) {
-            Log.v(TAG, "mRecognitionInfo("+mRecognitionInfo+") mTryToGetRecognitionInfo("+mTryToGetRecognitionInfo+") mImage("+mImage+")");
+        if (mImage == null) {
+            Log.v(TAG, "mRecognitionInfo("+mRecognitionInfo+") mImage("+mImage+")");
             return mRecognitionInfo;
         }
 
@@ -207,7 +207,6 @@ public class FaceAnalyzer {
             long instance = getFaceRecognitionInstance(mDbPath);
             if (instance != 0) {
                 mRecognitionInfo = FaceRecognitionWithDbJNI.runInImage(instance, mImage, eyeInfo);
-                mTryToGetRecognitionInfo = true;
                 printInfo("FR", mRecognitionInfo);
             }
         }
@@ -274,11 +273,24 @@ public class FaceAnalyzer {
         }
     }
 
-    public void registerFace(RecognitionInfo info) {
+    public FaceData.RecognitionInfo[] getFaceDataInDatabase() {
+        FaceData.RecognitionInfo[] info = null;
         long instance = getFaceRecognitionInstance(mDbPath);
         if (instance != 0) {
-            FaceRecognitionWithDbJNI.registerFace(instance, info);
+            info = FaceRecognitionWithDbJNI.getFacedataInDatabase(instance);
         }
+
+        return info;
+    }
+
+    // deprecated: It should be removed.
+    public int registerFace(RecognitionInfo info) {
+        int ret = ERROR;
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            ret = FaceRecognitionWithDbJNI.registerFace(instance, info);
+        }
+        return ret;
     }
 
     public void registerPerson(long faceId, int personId) {
@@ -288,18 +300,31 @@ public class FaceAnalyzer {
         }
     }
 
-    public void unregisterFace(long faceId) {
+    public int updatePerson(long faceId, int personId) {
+        int ret = ERROR;
         long instance = getFaceRecognitionInstance(mDbPath);
         if (instance != 0) {
-            FaceRecognitionWithDbJNI.unregisterFace(instance, faceId);
+            ret = FaceRecognitionWithDbJNI.updatePerson(instance, faceId, personId);
         }
+        return ret;
     }
 
-    public void unregisterPerson(int personId) {
+    public int unregisterFace(long faceId) {
+        int ret = ERROR;
         long instance = getFaceRecognitionInstance(mDbPath);
         if (instance != 0) {
-            FaceRecognitionWithDbJNI.unregisterPerson(instance, personId);
+            ret = FaceRecognitionWithDbJNI.unregisterFace(instance, faceId);
         }
+        return ret;
+    }
+
+    public int unregisterPerson(int personId) {
+        int ret = ERROR;
+        long instance = getFaceRecognitionInstance(mDbPath);
+        if (instance != 0) {
+            ret = FaceRecognitionWithDbJNI.unregisterPerson(instance, personId);
+        }
+        return ret;
     }
 
     private long getFaceDetectionInstance() {
@@ -336,16 +361,23 @@ public class FaceAnalyzer {
 
     private long getFaceRecognitionInstance(String dbPath) {
         if (FaceRecognitionWithDbJNI.isSupported()) {
-            if (mDbPath != null && mDbPath.compareToIgnoreCase(dbPath) != 0) {
-                if (mFaceRecognitionInstance != 0) {
-                    FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
-                    mFaceRecognitionInstance = 0;
+            if (dbPath == null) {
+                if (mFaceRecognitionInstance == 0) {
+                    mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
+                    mDbPath = null;
                 }
-            }
+            } else {
+                if (mDbPath != null && mDbPath.compareToIgnoreCase(dbPath) != 0) {
+                    if (mFaceRecognitionInstance != 0) {
+                        FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
+                        mFaceRecognitionInstance = 0;
+                    }
+                }
 
-            if (mFaceRecognitionInstance == 0 && dbPath != null && !dbPath.isEmpty()) {
-                mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
-                mDbPath = dbPath;
+                if (mFaceRecognitionInstance == 0 && dbPath != null && !dbPath.isEmpty()) {
+                    mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
+                    mDbPath = dbPath;
+                }
             }
         }
         return mFaceRecognitionInstance;
@@ -410,7 +442,6 @@ public class FaceAnalyzer {
         mBlinkInfo = null;
         mTryToGetFaceInfo = false;
         mTryToGetEyeInfo = false;
-        mTryToGetRecognitionInfo = false;
         mTryToGetSmileInfo = false;
         mTryToGetBlinkInfo = false;
     }

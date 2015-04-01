@@ -23,11 +23,12 @@ final class FaceRecognitionWithDbJNI extends PVLibraryLoader {
     public native static long create(String dbPath);
     public native static void destroy(long instance);
     public native static RecognitionInfo[] runInImage(long instance, IaFrame frame, EyeInfo[] edInfo);
-    public native static void registerFace(long instance, RecognitionInfo result);
-    public native static void unregisterFace(long instance, long faceId);
-    public native static void updatePerson(long instance, long faceId, int personId);
-    public native static void unregisterPerson(long instance, int personId);
+    public native static int registerFace(long instance, RecognitionInfo result);
+    public native static int unregisterFace(long instance, long faceId);
+    public native static int updatePerson(long instance, long faceId, int personId);
+    public native static int unregisterPerson(long instance, int personId);
     public native static int getNumFacesInDatabase(long instance);
+    public native static RecognitionInfo[] getFacedataInDatabase(long instance);
     public native static int getNewPersonId(long instance);
 
     public native static void setParam(long instance, Param param);
