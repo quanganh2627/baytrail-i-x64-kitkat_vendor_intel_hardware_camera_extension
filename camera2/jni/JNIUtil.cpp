@@ -96,7 +96,7 @@ long getValueLong(JNIEnv* env, jobject obj, const char* field_name) {
         return -1;
     }
 
-    fid = env->GetFieldID(cls, field_name, "I");
+    fid = env->GetFieldID(cls, field_name, "J");
     if (fid == NULL) {
         LOGE("Failed in 'GetFieldID' %s", field_name);
         env->ExceptionClear();
@@ -311,7 +311,11 @@ jbyteArray convertToGray(JNIEnv* env, jobject jBitmap)
 /* Not Using */
 const char* jstringToChar(JNIEnv* env, jstring str)
 {
-    return env->GetStringUTFChars(str, 0);
+    if (str != NULL) {
+        return env->GetStringUTFChars(str, 0);
+    } else {
+        return NULL;
+    }
 }
 //
 //jstring charToJstring(JNIEnv* env, const char* str)

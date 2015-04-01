@@ -130,7 +130,7 @@ public class FaceData {
      *
      */
     public static class RecognitionInfo {
-        public static final int UNKOWN_PERSON_ID = -1;
+        public static final int UNKOWN_PERSON_ID = -10000;
 
         /** The estimated similarity between the input face and the faces in the database. The biggest value will be assigned. */
         public int similarity;
@@ -147,6 +147,17 @@ public class FaceData {
         /** The pointer to the actual face data. Face data is essentially a binary encoded representation of the face generated from the gray face image. */
         public byte[] feature;
 
+        public RecognitionInfo(byte[] feature, int similarity, long faceId, int personId, long timeStamp, int condition, int checksum) {
+            this.similarity = similarity;
+            this.faceId = faceId;
+            this.personId = personId;
+            this.timeStamp = timeStamp;
+            this.condition = condition;
+            this.checksum = checksum;
+            this.feature = feature;
+        }
+
+        // deprecated: 
         public RecognitionInfo(int similarity, long faceId, int personId, long timeStamp, int condition, int checksum, byte[] feature) {
             this.similarity = similarity;
             this.faceId = faceId;

@@ -20,6 +20,11 @@
 #include "pvl_eye_detection.h"
 #include "pvl_face_recognition_with_db.h"
 
+#define checkRet(ret) if (ret != pvl_success) { \
+                          LOGE("ret(%d)", ret); \
+                          return ret; \
+                      }
+
 struct FaceRecognitionWidthDbEngine {
     pvl_face_recognition_with_db *facerecognition_with_db;
     int debug;
@@ -28,6 +33,7 @@ struct FaceRecognitionWidthDbEngine {
 static void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDResults, int index);
 static void getFRDBResult(JNIEnv* env, pvl_face_recognition_with_db_result *out, jobject jFRDBResults);
 static jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_result* results, int num, int facedataSize);
+static jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_facedata* facedataList, int num, int facedataSize);
 static jobjectArray createJResult2(JNIEnv* env, pvl_face_detection_result* fdResults, pvl_eye_detection_result* edResults, pvl_face_recognition_with_db_result* frResults, int num, int facedataSize);
 static jobject createJConfig(JNIEnv *env, pvl_face_recognition_with_db *detection);
 static jobject createJParam(JNIEnv *env, pvl_face_recognition_with_db_parameters *param);
@@ -54,7 +60,7 @@ jlong FaceRecognitionWithDb_create(JNIEnv* env, jobject thiz, jstring dbPath)
     const char* db_path = jstringToChar(env, dbPath);
     pvl_face_recognition_with_db_get_default_config(&config);
     pvl_err ret = pvl_face_recognition_with_db_create(&config, db_path, &fr);
-    LOGV("pvl_face_recognition_with_db_create ret(%d)", ret);
+    LOGV("pvl_face_recognition_with_db_create ret(%d) fr_instance(%p)", ret, fr);
     if (ret == pvl_success) {
         fre = (FaceRecognitionWidthDbEngine*)calloc(1, sizeof(FaceRecognitionWidthDbEngine));
         fre->facerecognition_with_db = fr;
@@ -65,6 +71,7 @@ jlong FaceRecognitionWithDb_create(JNIEnv* env, jobject thiz, jstring dbPath)
 
 void FaceRecognitionWithDb_destroy(JNIEnv* env, jobject thiz, jlong instance) {
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
+    LOGV("pvl_face_recognition_with_db_destroy fr_instance(%p)", fr);
     if (fr != NULL) {
         pvl_face_recognition_with_db_destroy(fr);
         free((void*)instance);
@@ -96,7 +103,7 @@ jobjectArray FaceRecognitionWithDb_runInImage(JNIEnv* env, jobject thiz, jlong i
         }
 
         pvl_err ret = pvl_face_recognition_with_db_run_in_image(fr, &image, length, left_eyes, right_eyes, results);
-        LOGE("pvl_face_recognition_with_db_run_in_image ret(%d)", ret);
+        LOGV("pvl_face_recognition_with_db_run_in_image ret(%d)", ret);
         if (ret == pvl_success) {
             jResult = createJResult(env, results, length, fr->facedata_size);
         }
@@ -178,63 +185,105 @@ jobjectArray FaceRecognitionWithDb_runInImage2(JNIEnv* env, jobject thiz, jlong 
 }
 #endif
 
-void FaceRecognitionWithDb_registerFace(JNIEnv* env, jobject thiz, jlong instance, jobject jFRDBResult)
+jint FaceRecognitionWithDb_registerFace(JNIEnv* env, jobject thiz, jlong instance, jobject jFRDBResult)
 {
+    pvl_err ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
         pvl_face_recognition_with_db_result *result;
-        pvl_face_recognition_with_db_create_result_buffer(fr, 1, &result);
+        ret = pvl_face_recognition_with_db_create_result_buffer(fr, 1, &result);
+        checkRet(ret);
+
         getFRDBResult(env, result, jFRDBResult);
 
-        pvl_err ret = pvl_face_recognition_with_db_register_facedata(fr, &result->facedata);
-        LOGE("pvl_face_recognition_with_db_register_facedata ret: %d", (int)ret);
+        ret = pvl_face_recognition_with_db_register_facedata(fr, &result->facedata);
+        LOGV("pvl_face_recognition_with_db_register_facedata: faceId(%llu) personId(%d) ret(%d)", result->facedata.face_id, result->facedata.person_id, (int)ret);
+        checkRet(ret);
 
         pvl_face_recognition_with_db_destroy_result_buffer(result);
     }
+    return ret;
 }
 
-void FaceRecognitionWithDb_unregisterFace(JNIEnv* env, jobject thiz, jlong instance, jlong faceId)
+jint FaceRecognitionWithDb_unregisterFace(JNIEnv* env, jobject thiz, jlong instance, jlong faceId)
 {
+    pvl_err ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
-        pvl_face_recognition_with_db_unregister_facedata(fr, faceId);
+        ret = pvl_face_recognition_with_db_unregister_facedata(fr, faceId);
+        LOGV("pvl_face_recognition_with_db_unregister_facedata: faceId(%llu) ret(%d)", faceId, (int)ret);
+        checkRet(ret);
     }
+    return ret;
 }
 
-void FaceRecognitionWithDb_updatePerson(JNIEnv* env, jobject thiz, jlong instance, jlong faceId, jint personId)
+jint FaceRecognitionWithDb_updatePerson(JNIEnv* env, jobject thiz, jlong instance, jlong faceId, jint personId)
 {
+    pvl_err ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
-        pvl_face_recognition_with_db_update_person(fr, faceId, personId);
+        ret = pvl_face_recognition_with_db_update_person(fr, faceId, personId);
+        LOGV("pvl_face_recognition_with_db_update_person: faceId(%llu) personId(%d) ret(%d)", faceId, personId, (int)ret);
+        checkRet(ret);
     }
+    return ret;
 }
 
-void FaceRecognitionWithDb_unregisterPerson(JNIEnv* env, jobject thiz, jlong instance, jint personId)
+jint FaceRecognitionWithDb_unregisterPerson(JNIEnv* env, jobject thiz, jlong instance, jint personId)
 {
+    pvl_err ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
-        pvl_face_recognition_with_db_unregister_person(fr, personId);
+        ret = pvl_face_recognition_with_db_unregister_person(fr, personId);
+        LOGV("pvl_face_recognition_with_db_unregister_person: personId(%d) ret(%d)", personId, (int)ret);
+        checkRet(ret);
     }
+    return ret;
 }
 
 jint FaceRecognitionWithDb_getNumFacesInDatabase(JNIEnv* env, jobject thiz, jlong instance)
 {
+    int32_t ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
-        return pvl_face_recognition_with_db_get_num_faces_in_database(fr);
-    } else {
-        return 0;
+        ret = pvl_face_recognition_with_db_get_num_faces_in_database(fr);
+        checkRet(ret);
     }
+    return ret;
+}
+
+jobjectArray FaceRecognitionWithDb_getFacedataInDatabase(JNIEnv* env, jobject thiz, jlong instance)
+{
+    jobjectArray jResult = NULL;
+    pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
+    if (fr != NULL) {
+        int numFaces = pvl_face_recognition_with_db_get_num_faces_in_database(fr);
+        if (numFaces > 0) {
+            pvl_face_recognition_with_db_facedata *facedata = NULL;
+            pvl_face_recognition_with_db_create_facedata_buffer(fr, numFaces, &facedata);
+
+            int ret = pvl_face_recognition_with_db_get_registered_facedata(fr, facedata);
+            LOGV("pvl_face_recognition_with_db_get_registered_facedata: ret(%d)", ret);
+            if (ret > 0) {
+                jResult = createJResult(env, facedata, numFaces, fr->facedata_size);
+            }
+
+            pvl_face_recognition_with_db_destroy_facedata_buffer(facedata);
+        }
+    }
+
+    return jResult;
 }
 
 jint FaceRecognitionWithDb_getNewPersonId(JNIEnv* env, jobject thiz, jlong instance)
 {
+    int32_t ret = pvl_err_general;
     pvl_face_recognition_with_db* fr = getFaceRecognition(instance);
     if (fr != NULL) {
-        return pvl_face_recognition_with_db_get_new_person_id(fr);
-    } else {
-        return 0;
+        ret = pvl_face_recognition_with_db_get_new_person_id(fr);
+        LOGV("pvl_face_recognition_with_db_get_new_person_id: ret(%d)", ret);
     }
+    return ret;
 }
 
 void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDResults, int index) {
@@ -251,17 +300,20 @@ void getFRDBResult(JNIEnv* env, pvl_face_recognition_with_db_result *out, jobjec
     out->similarity = getValueInt(env, jFRDBResults, "similarity");
     facedata->face_id = getValueLong(env, jFRDBResults, "faceId");
     facedata->person_id = getValueInt(env, jFRDBResults, "personId");
-    facedata->time_stamp = getValueInt(env, jFRDBResults, "timeStamp");
+    facedata->time_stamp = getValueLong(env, jFRDBResults, "timeStamp");
     facedata->condition = getValueInt(env, jFRDBResults, "condition");
     facedata->checksum = getValueInt(env, jFRDBResults, "checksum");
+
+    LOGE("faceId(%llu) personId(%d) cond(%d) check(%d)",
+            facedata->face_id, facedata->person_id, facedata->condition, facedata->checksum);
 
     copyValueByteArray(env, facedata->data, jFRDBResults, "feature");
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_result* results, int num, int facedataSize) {
-    jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_WITH_DB);
+    jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_INFO);
+    jmethodID constructor = env->GetMethodID(cls, "<init>", "([BIJIJII)V");
     jobjectArray retArray = (jobjectArray)env->NewObjectArray(num, cls, NULL);
-    jmethodID constructor = env->GetMethodID(cls, "<init>", "(IJIJII[B)V");
 
     for (int i = 0; i < num; i++) {
         pvl_face_recognition_with_db_result* result = &results[i];
@@ -269,14 +321,42 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_result* res
         jbyteArray feature = env->NewByteArray(facedataSize);
         env->SetByteArrayRegion(feature, 0, facedataSize, (jbyte*)facedata->data);
 
+        LOGE("i[%d] : faceId(%llu) personId(%d)", i, facedata->face_id, facedata->person_id);
+
         jobject jResult = env->NewObject(cls, constructor,
-                results->similarity,
+                feature,
+                result->similarity,
                 facedata->face_id,
                 facedata->person_id,
                 facedata->time_stamp,
                 facedata->condition,
-                facedata->checksum,
-                feature);
+                facedata->checksum);
+        env->SetObjectArrayElement(retArray, i, jResult);
+    }
+
+    return retArray;
+}
+
+jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_facedata* facedataList, int num, int facedataSize) {
+    jclass cls = env->FindClass(CLASS_FACE_RECOGNITION_INFO);
+    jobjectArray retArray = (jobjectArray)env->NewObjectArray(num, cls, NULL);
+    jmethodID constructor = env->GetMethodID(cls, "<init>", "([BIJIJII)V");
+
+    LOGE("FaceData: ");
+    for (int i = 0; i < num; i++) {
+        pvl_face_recognition_facedata* facedata = &facedataList[i];
+        jbyteArray feature = env->NewByteArray(facedataSize);
+        env->SetByteArrayRegion(feature, 0, facedataSize, (jbyte*)facedata->data);
+
+        LOGE("i[%d] : faceId(%llu) personId(%d)", i, facedata->face_id, facedata->person_id);
+        jobject jResult = env->NewObject(cls, constructor,
+                feature,
+                0,
+                facedata->face_id,
+                facedata->person_id,
+                facedata->time_stamp,
+                facedata->condition,
+                facedata->checksum);
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
@@ -399,24 +479,28 @@ static JNINativeMethod gMethods[] = {
 #endif
 
     { "registerFace",
-      "(J"SIG_FACE_RECOGNITION_INFO")V",
+      "(J"SIG_FACE_RECOGNITION_INFO")I",
       (void*)FaceRecognitionWithDb_registerFace },
 
     { "unregisterFace",
-      "(JJ)V",
+      "(JJ)I",
       (void*)FaceRecognitionWithDb_unregisterFace },
 
     { "updatePerson",
-      "(JJI)V",
+      "(JJI)I",
       (void*)FaceRecognitionWithDb_updatePerson },
 
     { "unregisterPerson",
-      "(JI)V",
+      "(JI)I",
       (void*)FaceRecognitionWithDb_unregisterPerson },
 
     { "getNumFacesInDatabase",
       "(J)I",
       (void*)FaceRecognitionWithDb_getNumFacesInDatabase },
+
+    { "getFacedataInDatabase",
+      "(J)["SIG_FACE_RECOGNITION_INFO,
+      (void*)FaceRecognitionWithDb_getFacedataInDatabase },
 
     { "getNewPersonId",
       "(J)I",

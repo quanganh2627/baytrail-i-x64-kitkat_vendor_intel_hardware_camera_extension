@@ -46,10 +46,15 @@
 
 void traceLog(int prio, const char* tag, const char* function, int line, const char* format, ...);
 
-#define LOGE(format, ...)  traceLog(ANDROID_LOG_ERROR,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
-#define LOGV(format, ...)  traceLog(ANDROID_LOG_VERBOSE,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
-#define LOGI(format, ...)  traceLog(ANDROID_LOG_INFO,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
-#define LOGD(format, ...)  traceLog(ANDROID_LOG_DEBUG,TAG,__FUNCTION__,__LINE__,format, ##__VA_ARGS__)
+#define LOGE(...)  traceLog(ANDROID_LOG_ERROR,TAG,__FUNCTION__,__LINE__,__VA_ARGS__)
+#define LOGV(...)  traceLog(ANDROID_LOG_VERBOSE,TAG,__FUNCTION__,__LINE__,__VA_ARGS__)
+#define LOGI(...)  traceLog(ANDROID_LOG_INFO,TAG,__FUNCTION__,__LINE__,__VA_ARGS__)
+#define LOGD(...)  traceLog(ANDROID_LOG_DEBUG,TAG,__FUNCTION__,__LINE__,__VA_ARGS__)
+
+//#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
+//#define LOGV(...)  __android_log_print(ANDROID_LOG_VERBOSE,TAG,__VA_ARGS__)
+//#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
+//#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 
 /*
  * PACKAGE was defined in Android.mk
