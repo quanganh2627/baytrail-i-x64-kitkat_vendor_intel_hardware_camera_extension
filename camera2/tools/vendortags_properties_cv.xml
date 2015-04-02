@@ -57,8 +57,7 @@
         </array>
         <description>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</description>
         <range>[0,100]</range>
-        <details>0 means it’s no smile at all.
-                 100 means fully smiling face.
+        <details>A person's smile intensity is able to be detected. Along with detecting features of a face, the changes and movements of the face are also analyzed in order to index smile intensity.
         </details>
       </entry>
 
@@ -82,8 +81,7 @@ android.statistics.faceIds.</description>
         </array>
         <description>This metadata tag will provide an list of blink confidence scores. The scores are confidence level that the face is blinking.</description>
         <range>[0,100]</range>
-        <details>0 means closed eye.
-                 100 means wide-open eye.
+        <details>A person's blink intensity is able to be detected. Along with detecting features of eyes, the changes and movements of eyes are also analyzed in order to index blink intensity.
         </details>
       </entry>
 
