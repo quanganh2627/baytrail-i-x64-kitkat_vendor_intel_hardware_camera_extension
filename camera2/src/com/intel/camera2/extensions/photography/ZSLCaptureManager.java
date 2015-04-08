@@ -16,6 +16,7 @@
 package com.intel.camera2.extensions.photography;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.graphics.ImageFormat;
@@ -40,7 +41,7 @@ import android.util.LongSparseArray;
 import android.util.Size;
 import android.view.Surface;
 
-public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
+public class ZSLCaptureManager {
     private static final String TAG = ZSLCaptureManager.class.getSimpleName();
 
     private CameraCaptureSession.CaptureCallback mPreviewCallback;
@@ -54,7 +55,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
 
     private final int MAX_TEMP_QUEUE_SIZE = 2;
 
-    public static final int ERROR_NO_MATCHED_IMAGE = -1;
+    public static final int ERROR_NO_MATCHED_IMAGE = -1;    //
     public static final int ERROR_UNKNOWN = -2;
     public static final int ERROR_INTERNAL_STATE = -3;
     public static final int ERROR_INVALID_ARGUMENT = -4;
@@ -71,6 +72,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
 
     private static int sAcquiredcount = 0;
 
+    private long mDeviceLatency;
     // for performance trace
 //    private int mNumberOfJobs;
 //    private long mThreadTick;
@@ -104,7 +106,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                 }
                 case MSG_FOUND_MATCHED_ENTRY: {
                     changeStatus(STATUS_CAPTURING);
-                    ImageEntry entry = mHistoryQueue.getMatchedImage(mTimestampWaitingFor);
+                    ImageResult entry = mHistoryQueue.getMatchedImage(mTimestampWaitingFor);
                     if (mWaitingZSLCallback != null) {
                         if (entry != null) {
                             mWaitingZSLCallback.onZSLCaptured(entry.image, entry.metadata);
@@ -169,9 +171,9 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * Initialize ZSLCaptureManager.
-     * It will determine internal queue size for keeping historical images according to the
-     * input parameters.
+     * <p>Initialize ZSLCaptureManager.</p>
+     * <p>It will determine internal queue size for keeping historical images according to the
+     * input parameters.</p>
      *  
      * @param format the ImageForamt for ZSL capture. It only supports ImageForamt.YUV_420_888 now.
      * @param size the size of image for ZSL capture.
@@ -179,6 +181,10 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
      * @param maxDelayForZSL the delay microseconds to calculate ZSL queue size.
      * @param maxHistories the maximum history queue size
      * @param historyInterval the sampling interval microseconds to store historical images
+     * 
+     * @return <p>true if the output surface changed. if not, it will return false.</p>
+     * <p>if it return true, application should do reconfiguration of ZSL surface for the {@link CameraCaptureSession} and {@link CaptureRequest}
+     * using {@link #configureOutputSurface(List, boolean)} and {@link #configureOutputTarget(android.hardware.camera2.CaptureRequest.Builder, boolean)}.</p>
      */
     public synchronized boolean setup(int format, Size size, int refFps, long maxDelayForZSL, int maxHistories, long historyInterval) {
         if (format != ImageFormat.YUV_420_888) {
@@ -190,13 +196,17 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * set {@link CameraCaptureSession.CaptureCallback} instance of application.
-     * it should be set for passing CaptureResult of preview frames from ZSLCaptureManager to application.
+     * <p>set {@link CameraCaptureSession.CaptureCallback} instance of application.</p>
+     * <p>it should be set for passing CaptureResult of preview frames from ZSLCaptureManager to application.</p>
      * 
      * @param callback the CaptureCallback instance to get the callback in the application
      */
     public void setCaptureCallback(CameraCaptureSession.CaptureCallback callback) {
         mPreviewCallback = callback;
+    }
+
+    public CameraCaptureSession.CaptureCallback getCaptureCallback() {
+        return mMainCaptureCallback;
     }
 
     private int calculateImageObjectSize(int format, Size size) {
@@ -239,8 +249,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * Close all acquired Image object in the history queue and also close ImageReader object.
-     * Once this method called, user should call setup() again to configure.
+     * <p>Close all acquired Image object in the history queue and also close ImageReader object.
+     * Once this method called, user should call setup() again to configure.</p>
      */
     public void release() {
         Log.v(TAG,"");
@@ -257,8 +267,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * Suspend ZSL queue updating and arrived new Image object will be closed automatically.
-     * user should call this method prior to directly call getImage() API.
+     * <p>Suspend ZSL queue updating and arrived new Image object will be closed automatically.
+     * user should call this method prior to directly call getImage() API.</p>
      */
     public synchronized void suspend() {
         int status = getStatus();
@@ -274,7 +284,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     /**
      * initialize all internal buffers and acquired image object to the configured status.
      */
-    public synchronized void initialize() {
+    public synchronized void flush() {
         Log.d(TAG,"");
         int status = getStatus();
         if (status == STATUS_CAPTURING || status == STATUS_IDLE) {
@@ -293,7 +303,9 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             if (reader != null) {
                 try {
                     Image temp = reader.acquireNextImage();
-
+                    Long now = System.nanoTime();
+//                    Log.d(TAG, "timestamp = " + temp.getTimestamp() + ", now = " + now + " / nano delta for image= " + (now - temp.getTimestamp()));
+                    mDeviceLatency = now - temp.getTimestamp();
                     sAcquiredcount++;
                     long status = getStatus();
                     if (status == STATUS_IDLE) {
@@ -311,7 +323,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     };
 
     /**
-     * add or remove ZSL surface as the output target to the preview capture request builder
+     * <p>add or remove ZSL surface as the output target to the preview capture request builder</p>
      * 
      * @param builder the capture request builder for preview
      * @param attach if it is true, ZSL surface will be added in the capture request builder.
@@ -320,7 +332,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     public void configureOutputTarget(CaptureRequest.Builder builder, boolean attach) {
         int status = getStatus();
         if (status == STATUS_INVALID) {
-            throw new IllegalStateException("invalid status (" + status + "). ZSL should be configured by calling setup() API");
+            throw new IllegalStateException("invalid status (" + status + "). configure() should be called before using this API");
         }
         if (attach) {
             builder.addTarget(mImageReader.getSurface());
@@ -330,29 +342,29 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * get output surface of ZSL
+     * <p>add or remove output surface from/to list of surfaces to create {@link android.hardware.camera2.CameraCaptureSession Session}</p>
      * 
-     * @return the output surface
+     * @param surfaces the list of surfaces
+     * @param attach if it is true, ZSL surface will be added to the list. And if it is false, surface will be removed from the list.
      */
-    public Surface getZSLSurface() {
+    public void configureOutputSurface(List<Surface> surfaces, boolean attach) {
         int status = getStatus();
         if (status == STATUS_INVALID) {
-            throw new IllegalStateException("invalid status (" + status + "). ZSL should be configured by calling setup() API");
+            throw new IllegalStateException("invalid status (" + status + "). configure() should be called before using this API");
         }
-        if (mImageReader == null) {
-            Log.w(TAG, "ImageReader is null");
-            return null;
+        if (attach) {
+            surfaces.add(mImageReader.getSurface());
+        } else {
+            surfaces.remove(mImageReader.getSurface());
         }
-        Log.d(TAG, "getZSLSurface");
-        return mImageReader.getSurface();
     }
 
     /**
-     * Take a picture using ZSL feature. A image which has the nearest time stamp with the input shutter time
-     * will be delivered through callback interface.
-     * once all received Image process done, call initialize() API to start ZSL manager again.
+     * <p>Take a picture using ZSL feature. A image which has the nearest time stamp with the input shutter time
+     * will be delivered through callback interface. the returned {@link Image image} object should be released by calling
+     * {@link #processDone(long)} to release resource. Or call {@link #flush()} API to release all resources and restart ZSL manager.</p>
      * 
-     * @param shutterTime the milliseconds unit time stamp.
+     * @param shutterTime the nanoseconds unit time stamp.
      * @param callback the callback interface to receive captured image.
      */
     public synchronized int captureZSL(long shutterTime, ZSLCaptureCallback callback) {
@@ -370,7 +382,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             Log.d(TAG, "unable to capture now");
             return -2;
         }
-        ImageEntry entry = mHistoryQueue.getNearestImage(shutterTime);
+        ImageResult entry = mHistoryQueue.getNearestImage(shutterTime);
         if (entry != null && entry.image != null && entry.metadata != null) {
             callback.onZSLCaptured(entry.image, entry.metadata);
         } else {
@@ -382,9 +394,9 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * Take a picture using ZSL feature. A image which has same time stamp with the CaptureResult.SENSOR_TIMESTAMP
-     * of specific CaptureResult object will be delivered through callback interface.
-     * once all received Image process done, call initialize() API to start ZSL manager again.
+     * <p>Take a picture using ZSL feature. A image which has same time stamp with the CaptureResult.SENSOR_TIMESTAMP
+     * of specific CaptureResult object will be delivered through callback interface.</p>
+     * <p>once all received Image process done, call {@link #flush()} to start ZSL manager again.</p>
      * 
      * @param result the CaptureResult object which includes CaptureResult.SENSOR_TIMESTAMP.
      * @param callback the callback interface to receive captured image.
@@ -418,7 +430,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             mTimestampWaitingFor = timestamp;
         } else {
             changeStatus(STATUS_CAPTURING);
-            ImageEntry entry = mHistoryQueue.getMatchedImage(timestamp);
+            ImageResult entry = mHistoryQueue.getMatchedImage(timestamp);
             if (entry != null) {
                 if (entry.image != null && entry.metadata != null) {
                     callback.onZSLCaptured(entry.image, entry.metadata);
@@ -431,9 +443,9 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * Take a series of picture using Time-Nudge feature.
-     * this method will provide list of ImageEntry which includes Image object and CaptureResult pair through TimeNudgeCallback interface. 
-     * once all received Image process done, call initialize() API to start ZSL manager again.
+     * <p>Take a series of picture using Time-Nudge feature.</p>
+     * <p>this method will provide list of ImageEntry which includes Image object and CaptureResult pair through TimeNudgeCallback interface. 
+     * once all received Image process done, call initialize() API to start ZSL manager again.</p>
      * 
      * @param callback the callback interface to receive result of Time-Nudge capture.
      */
@@ -448,7 +460,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             Log.w(TAG, "History queue for Time-Nudge is null");
             return;
         }
-        ArrayList<ImageEntry> entries = mHistoryQueue.getTimeNudgeImages();
+        ArrayList<ImageResult> entries = mHistoryQueue.getTimeNudgeImages();
         if (entries.size() > 0) {
             callback.onTimeNudgeCaptured(entries);
         } else {
@@ -459,30 +471,12 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     /**
-     * get Image object directly which is in the internal ZSL buffers.
-     * normally, you can use captureZSL() API instead of this.
+     * <p>notify to ZSLCaptureManager about the ZSL captured Image related process is done
+     * in the application. ZSLCaptureManager will release corresponding resources once this was called.</p>
+     * <p>it must be called whether {@link Image#close()} method was called in the application.</p>
      * 
-     * @param timestamp the timestamp value to want to get
-     * @return the Image object which is captured at the time of given timestamp
-     */
-    public synchronized Image getImage(long timestamp) {
-        if (getStatus() != STATUS_CAPTURING) {
-            throw new IllegalStateException("invalid status("+getStatus()+") ZSL should be paused prior to use this API");
-        }
-        if (mHistoryQueue != null) {
-            ImageEntry entry = mHistoryQueue.getMatchedImage(timestamp);
-            if (entry != null) {
-                return entry.image;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * notify to ZSLCaptureManager about the ZSL captured Image related process is done
-     * in the application. ZSLCaptureManager will release corresponding Image resource once this was called.
-     * 
-     * @param key the timestamp value for Image object
+     * @param key the timestamp value for {@link Image image} object. 
+     * it could be get from the {@link Image image} object by calling {@link Image#getTimestamp()} API.
      */
     public synchronized void processDone(long key) {
         if (mHistoryQueue != null) {
@@ -545,11 +539,16 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
         Log.i(TAG, "capture done");
     }
 
-    public class ImageEntry {
+    /**
+     * data class to represent ZSL capture result. it consists with {@link Image image} object, 
+     * {@link CaptureResult result} object, and timestamp in nanoseconds unit which means the time when
+     * this instance created.
+     */
+    public class ImageResult {
         public final Image image;
         public final long timestamp;
         public final CaptureResult metadata;
-        public ImageEntry(long timestamp, Image image, CaptureResult metadata) {
+        public ImageResult(long timestamp, Image image, CaptureResult metadata) {
             this.image = image;
             this.timestamp = timestamp;
             this.metadata = metadata;
@@ -578,17 +577,17 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
         private LongSparseArray<Image> mTempImages;
         private LongSparseArray<CaptureResult> mTempMetadatas;
 
-        private LongSparseArray<ImageEntry> mLv1Queue;
+        private LongSparseArray<ImageResult> mLv1Queue;
         private int mLv1QueueSize;
         private long mLv1Interval;
         private long mLv1LastTime;
 
-        private LongSparseArray<ImageEntry> mLv2Queue;
+        private LongSparseArray<ImageResult> mLv2Queue;
         private int mLv2QueueSize;
         private long mLv2Interval;
         private long mLv2LastTime;
 
-        private LongSparseArray<ImageEntry> mInvokedImageQueue;
+        private LongSparseArray<ImageResult> mInvokedImageQueue;
         private int mInvokedQueueMaxSize;
 
         private ImageHistoryBuffer(int zslSize, long zslIntervalMs, int historySize, long historyIntervalMs) {
@@ -601,17 +600,17 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                 zslSize = 1;
             }
             mLv1QueueSize = zslSize;
-            mLv1Queue = new LongSparseArray<ImageEntry>();
+            mLv1Queue = new LongSparseArray<ImageResult>();
             mLv1Interval = zslIntervalMs;
             mLv1LastTime = 0;
             mLv2QueueSize = historySize;
-            mLv2Queue = new LongSparseArray<ImageEntry>();
+            mLv2Queue = new LongSparseArray<ImageResult>();
             mLv2Interval = historyIntervalMs;
             mLv2LastTime = 0;
             mTempImages = new LongSparseArray<Image>();
             mTempMetadatas = new LongSparseArray<CaptureResult>();
 
-            mInvokedImageQueue = new LongSparseArray<ImageEntry>();
+            mInvokedImageQueue = new LongSparseArray<ImageResult>();
             mInvokedQueueMaxSize = mLv1QueueSize - 1;
         }
 
@@ -625,7 +624,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
         private void releaseAllEntries() {
             Log.d(TAG, "");
             for (int i = 0 ; i < mLv1Queue.size() ; i++) {
-                ImageEntry entry = mLv1Queue.valueAt(i);
+                ImageResult entry = mLv1Queue.valueAt(i);
                 if (entry != null) {
                     entry.release();
                     sAcquiredcount--;
@@ -633,7 +632,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             }
             mLv1Queue.clear();
             for (int i = 0 ; i < mLv2Queue.size() ; i++) {
-                ImageEntry entry = mLv2Queue.valueAt(i);
+                ImageResult entry = mLv2Queue.valueAt(i);
                 if (entry != null) {
                     entry.release();
                     sAcquiredcount--;
@@ -648,7 +647,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             mTempImages.clear();
             mTempMetadatas.clear();
             for (int i = 0 ; i < mInvokedImageQueue.size() ; i++) {
-                ImageEntry entry = mInvokedImageQueue.valueAt(i);
+                ImageResult entry = mInvokedImageQueue.valueAt(i);
                 if (entry != null) {
                     entry.release();
                 }
@@ -656,8 +655,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             mInvokedImageQueue.clear();
         }
 
-        private ImageEntry enqueueLv1(ImageEntry entry) {
-            ImageEntry oldest = null;
+        private ImageResult enqueueLv1(ImageResult entry) {
+            ImageResult oldest = null;
             if (mLv1Queue.size() == (mLv1QueueSize - mInvokedImageQueue.size())) {
                 oldest = mLv1Queue.valueAt(0);
                 mLv1Queue.removeAt(0);
@@ -667,11 +666,11 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             return oldest;
         }
 
-        private ImageEntry enqueueLv2(ImageEntry entry) {
+        private ImageResult enqueueLv2(ImageResult entry) {
             if (mLv2QueueSize == 0) {
                 return entry;
             }
-            ImageEntry oldest = null;
+            ImageResult oldest = null;
             if (mLv2Queue.size() == mLv2QueueSize) {
                 oldest = mLv2Queue.valueAt(0);
                 mLv2Queue.removeAt(0);
@@ -691,8 +690,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
 //            Log.d(TAG, "receive metadata " + key);
             Image tempImage = mTempImages.get(key);
             if (tempImage != null) {
-                long now = System.currentTimeMillis();
-                ImageEntry entry = new ImageEntry(now, tempImage, metadata);
+                long now = System.nanoTime() / 1000 * 1000;
+                ImageResult entry = new ImageResult(now, tempImage, metadata);
                 enqueue(entry);
                 mTempImages.remove(key);
 //                if (mThreadTick != 0) {
@@ -713,8 +712,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
 //            Log.d(TAG, "receive image " + key);
             CaptureResult tempMetadata = mTempMetadatas.get(key);
             if (tempMetadata != null) {
-                long now = System.currentTimeMillis();
-                ImageEntry entry = new ImageEntry(now, newImage, tempMetadata);
+                long now = System.nanoTime() / 1000 * 1000;
+                ImageResult entry = new ImageResult(now, newImage, tempMetadata);
                 enqueue(entry);
                 mTempMetadatas.remove(key);
 //                if (mThreadTick != 0) {
@@ -734,19 +733,19 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             }
         }
 
-        final long refresh = 3000;
-        private void enqueue(ImageEntry entry) {
+//        final long refresh = 3000;
+        private void enqueue(ImageResult entry) {
             long current = entry.timestamp;
 //            Log.d(TAG, "enqueue(" + current + ")");
             if (current - mLv1LastTime > mLv1Interval) {
 //                Log.d(TAG, "enqueueLv1()");
-                ImageEntry oldestLv1Entry = enqueueLv1(entry);
+                ImageResult oldestLv1Entry = enqueueLv1(entry);
                 mLv1LastTime = current;
                 if (oldestLv1Entry != null) {
                     if (current - mLv2LastTime > mLv2Interval) {
                         mLv2LastTime = current;
 //                        Log.d(TAG, "enqueueLv2()");
-                        ImageEntry oldestLv2Entry = enqueueLv2(oldestLv1Entry);
+                        ImageResult oldestLv2Entry = enqueueLv2(oldestLv1Entry);
                         if (oldestLv2Entry != null) {
                             oldestLv2Entry.release();
                             sAcquiredcount--;
@@ -768,28 +767,30 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                 entry.release();
                 sAcquiredcount--;
             }
-            long now = System.currentTimeMillis();
-            if (now - current > refresh) {
-                Log.d(TAG, "queue status : lv1 = " + mLv1Queue.size() + " / lv2 = " + mLv2Queue.size());
-//                current = now;
-            }
+//            long now = System.currentTimeMillis();
+//            if (now - current > refresh) {
+//                Log.d(TAG, "queue status : lv1 = " + mLv1Queue.size() + " / lv2 = " + mLv2Queue.size());
+////                current = now;
+//            }
         }
 
-        private ImageEntry getNearestImage(long timeStamp) {
+        private ImageResult getNearestImage(long timeStamp) {
             Log.d(TAG, "time stamp = " + timeStamp);
             if (timeStamp == 0) {
-                return moveLastEntryToInvokedQueue();
+                return moveImageResultToInvokedQueue(1, -1);
             }
+            timeStamp -= mDeviceLatency;
+            Log.d(TAG,"adjusted timestamp = " + timeStamp);
             long minDiff = Long.MAX_VALUE;
             int minIndex = -1;
             long diff;
-            ImageEntry lastLv2Entry = null;
+            ImageResult lastLv2Entry = null;
             if (mLv2Queue.size() > 1) {
                 lastLv2Entry = mLv2Queue.valueAt(mLv2Queue.size() - 1);
             }
             if (lastLv2Entry != null && lastLv2Entry.timestamp >= timeStamp) {
                 for (int i = 0 ; i < mLv2Queue.size() ; i++) {
-                    ImageEntry entry = mLv2Queue.valueAt(i);
+                    ImageResult entry = mLv2Queue.valueAt(i);
                     if (entry != null) {
                         diff = timeStamp - entry.timestamp;
                         if (diff < minDiff) {
@@ -799,12 +800,11 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                     }
                 }
                 if (minIndex != -1) {
-                    ImageEntry entry = mLv2Queue.valueAt(minIndex);
-                    return entry;
+                    return moveImageResultToInvokedQueue(2, minIndex);
                 }
             } else {
                 for (int i = 0 ; i < mLv1Queue.size() ; i++) {
-                    ImageEntry entry = mLv1Queue.valueAt(i);
+                    ImageResult entry = mLv1Queue.valueAt(i);
                     if (entry != null) {
                         diff = timeStamp - entry.timestamp;
                         if (diff < minDiff) {
@@ -814,16 +814,16 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                     }
                 }
                 if (minIndex != -1) {
-                    return mLv1Queue.valueAt(minIndex);
+                    return moveImageResultToInvokedQueue(1, minIndex);
                 }
             }
             Log.e(TAG, "No image in the both queue!");
             return null;
         }
 
-        private ImageEntry getMatchedImage(long resultTimestamp) {
+        private ImageResult getMatchedImage(long resultTimestamp) {
             Log.d(TAG, "timestamp = " + resultTimestamp);
-            ImageEntry entry = mLv1Queue.get(resultTimestamp);
+            ImageResult entry = mLv1Queue.get(resultTimestamp);
             if (entry != null) {
                 return entry;
             }
@@ -835,8 +835,8 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             return null;
         }
 
-        private ArrayList<ImageEntry> getTimeNudgeImages() {
-            ArrayList<ImageEntry> entries = new ArrayList<ImageEntry>();
+        private ArrayList<ImageResult> getTimeNudgeImages() {
+            ArrayList<ImageResult> entries = new ArrayList<ImageResult>();
             if (mLv1Queue.size() > 0) {
                 entries.add(mLv1Queue.valueAt(mLv1Queue.size() - 1));
             }
@@ -855,7 +855,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
 //        }
 
         private void releaseProcessedEntry(long key) {
-            ImageEntry entry = mInvokedImageQueue.get(key);
+            ImageResult entry = mInvokedImageQueue.get(key);
             if (entry != null) {
                 entry.release();
                 mInvokedImageQueue.remove(key);
@@ -873,15 +873,26 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
             return (mInvokedImageQueue.size() >= mInvokedQueueMaxSize) ? false : true;
         }
 
-        private ImageEntry moveLastEntryToInvokedQueue() {
+        private ImageResult moveImageResultToInvokedQueue(int queueLvl, int index) {
             if (mLv1Queue.size() == 0) {
                 Log.w(TAG, "there is no image in the ZSL queue!!");
                 return null;
             }
-            ImageEntry lastEntry = mLv1Queue.valueAt(mLv1Queue.size() - 1);
-            mInvokedImageQueue.put(lastEntry.getSensorTimestamp(), lastEntry);
-            mLv1Queue.remove(lastEntry.getSensorTimestamp());
-            return lastEntry;
+            ImageResult imageResult;
+            if (index == -1) {
+                imageResult = mLv1Queue.valueAt(mLv1Queue.size() - 1);
+                mLv1Queue.remove(imageResult.getSensorTimestamp());
+            } else {
+                if (queueLvl == 1) {
+                    imageResult = mLv1Queue.valueAt(index);
+                    mLv1Queue.removeAt(index);
+                } else {
+                    imageResult = mLv2Queue.valueAt(index);
+                    mLv2Queue.removeAt(index);
+                }
+            }
+            mInvokedImageQueue.put(imageResult.getSensorTimestamp(), imageResult);
+            return imageResult;
         }
 
         private long getLastEntryTimestamp() {
@@ -889,7 +900,7 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
                 Log.w(TAG, "there is no image in the ZSL queue!!");
                 return 0;
             }
-            ImageEntry lastEntry = mLv1Queue.valueAt(mLv1Queue.size() - 1);
+            ImageResult lastEntry = mLv1Queue.valueAt(mLv1Queue.size() - 1);
             return lastEntry.getSensorTimestamp();
         }
     }
@@ -900,55 +911,61 @@ public class ZSLCaptureManager extends CameraCaptureSession.CaptureCallback {
     }
 
     public interface TimeNudgeCallback {
-        public void onTimeNudgeCaptured(ArrayList<ImageEntry> images);
+        public void onTimeNudgeCaptured(ArrayList<ImageResult> images);
         public void onTimeNudgeError(int error);
     }
 
-    @Override
-    public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureStarted(session, request, timestamp, frameNumber);
+    private CameraCaptureSession.CaptureCallback mMainCaptureCallback = new CameraCaptureSession.CaptureCallback() {
+        @Override
+        public void onCaptureStarted(CameraCaptureSession session, CaptureRequest request, long timestamp, long frameNumber) {
+            long now = System.nanoTime();
+//        Log.d(TAG, "nano timestamp = " + timestamp + " , now = " + now + " / delta = " + (now - timestamp));
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureStarted(session, request, timestamp, frameNumber);
+            }
         }
-    }
 
-    @Override
-    public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureProgressed(session, request, partialResult);
+        @Override
+        public void onCaptureProgressed(CameraCaptureSession session, CaptureRequest request, CaptureResult partialResult) {
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureProgressed(session, request, partialResult);
+            }
         }
-    }
 
-    @Override
-    public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
-        Message msg = Message.obtain();
-        msg.what = MSG_ENQUEUE_METADATA;
-        msg.obj = result;
-        mHandler.sendMessage(msg);
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureCompleted(session, request, result);
+        @Override
+        public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+//        long stamp = result.get(CaptureResult.SENSOR_TIMESTAMP);
+//        Log.d(TAG, "timestamp = " + stamp + " / nano delta for metadata = " + (System.nanoTime() - stamp));
+            Message msg = Message.obtain();
+            msg.what = MSG_ENQUEUE_METADATA;
+            msg.obj = result;
+            mHandler.sendMessage(msg);
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureCompleted(session, request, result);
+            }
         }
-    }
 
-    @Override
-    public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureFailed(session, request, failure);
+        @Override
+        public void onCaptureFailed(CameraCaptureSession session, CaptureRequest request, CaptureFailure failure) {
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureFailed(session, request, failure);
+            }
         }
-    }
 
-    @Override
-    public void onCaptureSequenceCompleted(CameraCaptureSession session, int sequenceId, long frameNumber) {
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureSequenceCompleted(session, sequenceId, frameNumber);
+        @Override
+        public void onCaptureSequenceCompleted(CameraCaptureSession session, int sequenceId, long frameNumber) {
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureSequenceCompleted(session, sequenceId, frameNumber);
+            }
         }
-    }
 
-    @Override
-    public void onCaptureSequenceAborted(CameraCaptureSession session, int sequenceId) {
-        if (mPreviewCallback != null) {
-            mPreviewCallback.onCaptureSequenceAborted(session, sequenceId);
+        @Override
+        public void onCaptureSequenceAborted(CameraCaptureSession session, int sequenceId) {
+            if (mPreviewCallback != null) {
+                mPreviewCallback.onCaptureSequenceAborted(session, sequenceId);
+            }
         }
-    }
+    };
 
 //    @Override
 //    public void onReceive(CaptureRequest request, CaptureResult result) {

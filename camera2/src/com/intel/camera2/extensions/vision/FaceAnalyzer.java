@@ -27,12 +27,21 @@ import com.intel.camera2.extensions.vision.FaceData.RecognitionInfo;
 import com.intel.camera2.extensions.vision.FaceData.SmileInfo;
 
 /**
- * It analyzes the image about Face.<br>
+ * This class analyzes the input image about Face. It provides some facial information
+ * that the bound of face, the position of eye, smiling score, etc. Please refer {@link FaceData} for more supporting value.<p>
+ * 
+ * In addition to these features, it provides the face recognition APIs as below.<br>
+ * - It registers the person information that was got through {@link #getRecognitionInfo()}.<br>
+ * - If several person information are registered in database, it recognizes who is the person in a portrait.<br>
+ * <br>
+ * 
+ * This class needs some libraries what there are dependence on Intel specific platform.
+ * The {@link #isSupported} method informs that your device can be supported.<br>
  */
 public class FaceAnalyzer {
 
     private static final String TAG = "FaceAnalyzer";
-    private static FaceAnalyzer mFaceAnalyzer;
+    public static final int SUCCESS = 0;
     public static final int ERROR = -1;
 
     private String mDbPath;
@@ -56,43 +65,64 @@ public class FaceAnalyzer {
     private boolean mTryToGetBlinkInfo;
 
     /**
-     * Get FaceAnalyzer instance.
-     * @return FaceAnalyzer singleton instance. If it is not supported, it will return NULL.
+     * It checks the FaceAnalyzer library is available.
      */
-    public static FaceAnalyzer getInstance() {
-        if (mFaceAnalyzer == null && PVLibraryLoader.isSupported()) {
-            mFaceAnalyzer = new FaceAnalyzer();
+    public static boolean isSupported() {
+        return PVLibraryLoader.isSupported();
+    }
+
+    /**
+     * It creates new FaceAnalyzer instance. If it's not supported, it will return null.
+     * @return FaceAnalyzer instance
+     */
+    public static FaceAnalyzer newInstance() {
+        try {
+            return new FaceAnalyzer();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return mFaceAnalyzer;
+        return null;
+    }
+
+    private FaceAnalyzer() throws Exception {
+        if (!isSupported()) {
+            throw new Exception("PVLibrary is not supported.");
+        }
     }
 
     /**
      * Release internal library instances and resources.
      */
-    public static void release() {
-        if (mFaceAnalyzer != null) {
-            mFaceAnalyzer.releaseLibraryInstances();
-            mFaceAnalyzer.releaseValues();
-            mFaceAnalyzer = null;
-        }
+    public void release() {
+        releaseLibraryInstances();
+        releaseValues();
     }
 
-    private FaceAnalyzer() {
-    }
-
-    public void loadFaceRecognitionDatabase(String dbPath) {
-        getFaceRecognitionInstance(dbPath);
+    @Override
+    protected void finalize() throws Throwable {
+        release();
+        super.finalize();
     }
 
     /**
-     * Set the image that is analyzed.
-     * It is released the previous image and the results.
+     * Set the face recognition database file path.<br>
+     * The file should be in app directory why the file must be read by HAL.<br>
+     * The database file will be created by JNI.
+     * @param dbPath database file path.
+     */
+    public void setFaceRecognitionDataBase(String dbPath) {
+        setDBPath(dbPath);
+    }
+
+    /**
+     * Set the image that it will be analyzed.
+     * It releases the previous image and the results.
      * 
      * @param image {@link android.media.Image}: The image converts the gray image internally.
-     *                                           So, the input image is able to released after calling this method.
+     *                                           So, the input image should be released after calling this method.
      * @param degree supported degrees: 0, 90, 180, 270.
      */
-    public void setImage(Image image, int degree) {
+    public void setInputImage(Image image, int degree) {
         releaseValues();
 
         try {
@@ -103,14 +133,14 @@ public class FaceAnalyzer {
     }
 
     /**
-     * Set the image that is analyzed.
-     * It is released the previous image and the results.
+     * Set the image that it will be analyzed.
+     * It releases the previous image and the results.
      *
      * @param bitmap {@link android.graphics.Bitmap}: The image converts the gray image internally.
-     *                                                So, the input image is able to released after calling this method.
+     *                                                So, the input image should be released after calling this method.
      * @param degree supported degrees: 0, 90, 180, 270.
      */
-    public void setImage(Bitmap bitmap, int degree) {
+    public void setInputImage(Bitmap bitmap, int degree) {
         releaseValues();
 
         try {
@@ -121,20 +151,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * Set the image that is analyzed.
-     * It is released the previous image and the results.
-     *
-     * @param frame {@link com.intel.camera2.extensions.IaFrame}:
-     *                  The frame instance will be used until to release FaceAnalyzer or to set new image.
-     */
-    public void setImage(IaFrame frame) {
-        releaseValues();
-        mImage = frame;
-    }
-
-    /**
-     * It returns the FaceInfo array.
-     * If there are no the FaceInfo, it analyzes the image.
+     * It returns the analyzed face data.
      *
      * @return FaceInfo[]
      */
@@ -155,8 +172,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the EyeInfo array.
-     * If there are no the EyeInfo, it analyzes the image.
+     * It returns the analyzed eye data.
      *
      * @return EyeInfo[]
      */
@@ -179,7 +195,7 @@ public class FaceAnalyzer {
         return mEyeInfo;
     }
 
-    public static void printInfo(String infoTitle, Object[] info) {
+    private static void printInfo(String infoTitle, Object[] info) {
         if (info != null && info.length > 0) {
             Log.i(TAG, infoTitle + " result count: " + info.length);
             for (int i = 0; i < info.length; i++) {
@@ -191,8 +207,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the RecognitionInfo array.
-     * If there are no the RecognitionInfo, it analyzes the image.
+     * It returns the analyzed face recognition data.
      *
      * @return RecognitionInfo[]
      */
@@ -204,7 +219,7 @@ public class FaceAnalyzer {
 
         EyeInfo[] eyeInfo = getEyeInfo();
         if (eyeInfo != null) {
-            long instance = getFaceRecognitionInstance(mDbPath);
+            long instance = getFaceRecognitionInstance();
             if (instance != 0) {
                 mRecognitionInfo = FaceRecognitionWithDbJNI.runInImage(instance, mImage, eyeInfo);
                 printInfo("FR", mRecognitionInfo);
@@ -215,8 +230,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the SmileInfo array.
-     * If there are no the SmileInfo, it analyzes the image.
+     * It returns the analyzed data about smiling.
      *
      * @return SmileInfo[]
      */
@@ -240,8 +254,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the BlinkInfo array.
-     * If there are no the BlinkInfo, it analyzes the image.
+     * It returns the analyzed data about blinking.
      *
      * @return BlinkInfo[]
      */
@@ -264,8 +277,12 @@ public class FaceAnalyzer {
         return mBlinkInfo;
     }
 
-    public int getNewPersonId() {
-        long instance = getFaceRecognitionInstance(mDbPath);
+    /**
+     * It returns a new person id that was not registered in database.
+     * @return person id
+     */
+    public int createPersonId() {
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             return FaceRecognitionWithDbJNI.getNewPersonId(instance);
         } else {
@@ -273,9 +290,13 @@ public class FaceAnalyzer {
         }
     }
 
-    public FaceData.RecognitionInfo[] getFaceDataInDatabase() {
+    /**
+     * It returns all face data that were registered in database.
+     * @return face data
+     */
+    public FaceData.RecognitionInfo[] getAllFaceDataFromDatabase() {
         FaceData.RecognitionInfo[] info = null;
-        long instance = getFaceRecognitionInstance(mDbPath);
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             info = FaceRecognitionWithDbJNI.getFacedataInDatabase(instance);
         }
@@ -283,48 +304,70 @@ public class FaceAnalyzer {
         return info;
     }
 
-    // deprecated: It should be removed.
-    public int registerFace(RecognitionInfo info) {
+    /**
+     * It registers the recognition info to database.
+     * @param info: The info that was got through calling getRecognitionInfo method.
+     */
+    public int registerFace(FaceData.RecognitionInfo info) {
         int ret = ERROR;
-        long instance = getFaceRecognitionInstance(mDbPath);
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             ret = FaceRecognitionWithDbJNI.registerFace(instance, info);
         }
-        return ret;
+        return (ret >= 0)?SUCCESS:ERROR;
     }
 
-    public void registerPerson(long faceId, int personId) {
-        long instance = getFaceRecognitionInstance(mDbPath);
-        if (instance != 0) {
-            FaceRecognitionWithDbJNI.updatePerson(instance, faceId, personId);
-        }
-    }
-
+    /**
+     * It changes the person id what it applied with face id in database.
+     * @param faceId    It was registered in database.
+     * @param personId  It would like to update in database.
+     * @return success: 0, fail: minus integer
+     */
     public int updatePerson(long faceId, int personId) {
         int ret = ERROR;
-        long instance = getFaceRecognitionInstance(mDbPath);
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             ret = FaceRecognitionWithDbJNI.updatePerson(instance, faceId, personId);
         }
-        return ret;
+        return (ret >= 0)?SUCCESS:ERROR;
     }
 
+    /**
+     * It unregisters the recognition info that it is same with face id in database.
+     * @param faceId    It was registered in database.
+     * @return  success: 0, fail: minus integer
+     */
     public int unregisterFace(long faceId) {
         int ret = ERROR;
-        long instance = getFaceRecognitionInstance(mDbPath);
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             ret = FaceRecognitionWithDbJNI.unregisterFace(instance, faceId);
         }
-        return ret;
+        return (ret >= 0)?SUCCESS:ERROR;
     }
 
+    /**
+     * It unregisters all of the recognition info that there are same with person id in database.
+     * @param personId    It was registered in database.
+     * @return  success: 0, fail: minus integer
+     */
     public int unregisterPerson(int personId) {
         int ret = ERROR;
-        long instance = getFaceRecognitionInstance(mDbPath);
+        long instance = getFaceRecognitionInstance();
         if (instance != 0) {
             ret = FaceRecognitionWithDbJNI.unregisterPerson(instance, personId);
         }
-        return ret;
+        return (ret >= 0)?SUCCESS:ERROR;
+    }
+
+    /**
+     * It initializes all info in database.
+     */
+    public void resetDataBase() {
+        long instance = getFaceRecognitionInstance();
+        if (instance != 0) {
+            FaceRecognitionWithDbJNI.resetDatabase();
+        }
     }
 
     private long getFaceDetectionInstance() {
@@ -359,26 +402,40 @@ public class FaceAnalyzer {
         }
     }
 
-    private long getFaceRecognitionInstance(String dbPath) {
-        if (FaceRecognitionWithDbJNI.isSupported()) {
-            if (dbPath == null) {
-                if (mFaceRecognitionInstance == 0) {
-                    mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
-                    mDbPath = null;
-                }
-            } else {
-                if (mDbPath != null && mDbPath.compareToIgnoreCase(dbPath) != 0) {
-                    if (mFaceRecognitionInstance != 0) {
-                        FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
-                        mFaceRecognitionInstance = 0;
-                    }
-                }
+    private void setDBPath(String dbPath) {
+        if (!FaceRecognitionWithDbJNI.isSupported()) {
+            return;
+        }
 
-                if (mFaceRecognitionInstance == 0 && dbPath != null && !dbPath.isEmpty()) {
-                    mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
-                    mDbPath = dbPath;
-                }
+        boolean pathChanged = false;
+        if (dbPath != null && mDbPath != null) {
+            if (mDbPath.compareToIgnoreCase(dbPath) != 0) {
+                pathChanged = true;
             }
+        } else if (dbPath == null && mDbPath == null) {
+            pathChanged = false;
+        } else {
+            pathChanged = true;
+        }
+
+        if (mFaceRecognitionInstance != 0 && pathChanged) {
+            FaceRecognitionWithDbJNI.destroy(mFaceRecognitionInstance);
+            mFaceRecognitionInstance = 0;
+        }
+
+        if (mFaceRecognitionInstance == 0) {
+            mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(dbPath);
+            mDbPath = dbPath;
+        }
+    }
+
+    private long getFaceRecognitionInstance() {
+        if (!FaceRecognitionWithDbJNI.isSupported()) {
+            return 0;
+        }
+
+        if (mFaceRecognitionInstance == 0) {
+            mFaceRecognitionInstance = FaceRecognitionWithDbJNI.create(mDbPath);
         }
         return mFaceRecognitionInstance;
     }
@@ -424,13 +481,11 @@ public class FaceAnalyzer {
     }
 
     private void releaseLibraryInstances() {
-        if (mFaceAnalyzer != null) {
-            destroyFaceDetectionInstance();
-            destroyEyeDetectionInstance();
-            destroyFaceRecognitionInstance();
-            destroySmileDetectionInstance();
-            destroyBlinkDetectionInstance();
-        }
+        destroyFaceDetectionInstance();
+        destroyEyeDetectionInstance();
+        destroyFaceRecognitionInstance();
+        destroySmileDetectionInstance();
+        destroyBlinkDetectionInstance();
     }
 
     private void releaseValues() {

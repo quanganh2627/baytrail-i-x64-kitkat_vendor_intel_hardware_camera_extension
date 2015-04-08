@@ -125,9 +125,9 @@ jobject SmileDetection_getConfig(JNIEnv* env, jobject thiz, jlong instance)
 void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDResults, int index) {
     jobject edResult = env->GetObjectArrayElement(jEDResults, index);
 
-    getValuePoint(env, &out->left_eye, edResult, "leftEye");
-    getValuePoint(env, &out->right_eye, edResult, "rightEye");
-    out->confidence = getValueInt(env, edResult, "confidence");
+    getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
+    getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
+    out->confidence = getValueInt(env, edResult, STR_ED_confidence);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_smile_detection_result* results, int num)

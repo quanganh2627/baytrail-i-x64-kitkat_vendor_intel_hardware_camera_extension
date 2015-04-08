@@ -18,7 +18,7 @@ package com.intel.camera2.extensions.photography;
 /**
  * the option container class for HDR blending
  */
-public class HdrOption {
+final class HdrOption {
     final public int gammaLutSize;
     final public int ctcGainLutSize;
     public char[] rGammaLut;

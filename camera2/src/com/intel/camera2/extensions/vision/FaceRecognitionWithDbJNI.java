@@ -30,6 +30,7 @@ final class FaceRecognitionWithDbJNI extends PVLibraryLoader {
     public native static int getNumFacesInDatabase(long instance);
     public native static RecognitionInfo[] getFacedataInDatabase(long instance);
     public native static int getNewPersonId(long instance);
+    public native static int resetDatabase();
 
     public native static void setParam(long instance, Param param);
     public native static Param getParam(long instance);

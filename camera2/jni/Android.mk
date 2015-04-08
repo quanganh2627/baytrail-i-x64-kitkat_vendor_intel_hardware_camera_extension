@@ -76,8 +76,7 @@ LOCAL_SRC_FILES := \
     SmileDetection.cpp \
     BlinkDetection.cpp \
     FaceRecognition.cpp
-#FRDummy.cpp \
-    FaceRecognitionWithDb.cpp
+#    FaceRecognitionWithDb.cpp
 
 endif
 
