@@ -15,8 +15,6 @@
  */
 package com.intel.camera2.extensions.vision;
 
-import android.graphics.Bitmap;
-
 import com.intel.camera2.extensions.IaFrame;
 import com.intel.camera2.extensions.vision.FaceData.FaceInfo;
 

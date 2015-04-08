@@ -262,7 +262,7 @@ jobjectArray FaceRecognitionWithDb_getFacedataInDatabase(JNIEnv* env, jobject th
             pvl_face_recognition_with_db_facedata *facedata = NULL;
             pvl_face_recognition_with_db_create_facedata_buffer(fr, numFaces, &facedata);
 
-            int ret = pvl_face_recognition_with_db_get_registered_facedata(fr, facedata);
+            int ret = pvl_face_recognition_with_db_get_registered_facedata(fr, numFaces, facedata);
             LOGV("pvl_face_recognition_with_db_get_registered_facedata: ret(%d)", ret);
             if (ret > 0) {
                 jResult = createJResult(env, facedata, numFaces, fr->facedata_size);
@@ -289,25 +289,25 @@ jint FaceRecognitionWithDb_getNewPersonId(JNIEnv* env, jobject thiz, jlong insta
 void getEDResult(JNIEnv* env, pvl_eye_detection_result *out, jobjectArray jEDResults, int index) {
     jobject edResult = env->GetObjectArrayElement(jEDResults, index);
 
-    getValuePoint(env, &out->left_eye, edResult, "leftEye");
-    getValuePoint(env, &out->right_eye, edResult, "rightEye");
-    out->confidence = getValueInt(env, edResult, "confidence");
+    getValuePoint(env, &out->left_eye, edResult, STR_ED_left_eye);
+    getValuePoint(env, &out->right_eye, edResult, STR_ED_right_eye);
+    out->confidence = getValueInt(env, edResult, STR_ED_confidence);
 }
 
 void getFRDBResult(JNIEnv* env, pvl_face_recognition_with_db_result *out, jobject jFRDBResults) {
     pvl_face_recognition_facedata *facedata = &out->facedata;
 
-    out->similarity = getValueInt(env, jFRDBResults, "similarity");
-    facedata->face_id = getValueLong(env, jFRDBResults, "faceId");
-    facedata->person_id = getValueInt(env, jFRDBResults, "personId");
-    facedata->time_stamp = getValueLong(env, jFRDBResults, "timeStamp");
-    facedata->condition = getValueInt(env, jFRDBResults, "condition");
-    facedata->checksum = getValueInt(env, jFRDBResults, "checksum");
+    out->similarity = getValueInt(env, jFRDBResults, STR_FR_similarity);
+    facedata->face_id = getValueLong(env, jFRDBResults, STR_FR_face_id);
+    facedata->person_id = getValueInt(env, jFRDBResults, STR_FR_person_id);
+    facedata->time_stamp = getValueLong(env, jFRDBResults, STR_FR_time_stamp);
+    facedata->condition = getValueInt(env, jFRDBResults, STR_FR_condition);
+    facedata->checksum = getValueInt(env, jFRDBResults, STR_FR_checksum);
 
     LOGE("faceId(%llu) personId(%d) cond(%d) check(%d)",
             facedata->face_id, facedata->person_id, facedata->condition, facedata->checksum);
 
-    copyValueByteArray(env, facedata->data, jFRDBResults, "feature");
+    copyValueByteArray(env, facedata->data, jFRDBResults, STR_FR_data);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_result* results, int num, int facedataSize) {
@@ -345,18 +345,20 @@ jobjectArray createJResult(JNIEnv* env, pvl_face_recognition_with_db_facedata* f
     LOGE("FaceData: ");
     for (int i = 0; i < num; i++) {
         pvl_face_recognition_facedata* facedata = &facedataList[i];
-        jbyteArray feature = env->NewByteArray(facedataSize);
-        env->SetByteArrayRegion(feature, 0, facedataSize, (jbyte*)facedata->data);
+
+        // No copy features.
+        //jbyteArray feature = env->NewByteArray(facedataSize);
+        //env->SetByteArrayRegion(feature, 0, facedataSize, (jbyte*)facedata->data);
 
         LOGE("i[%d] : faceId(%llu) personId(%d)", i, facedata->face_id, facedata->person_id);
         jobject jResult = env->NewObject(cls, constructor,
-                feature,
+                NULL,//feature,
                 0,
                 facedata->face_id,
                 facedata->person_id,
                 facedata->time_stamp,
                 facedata->condition,
-                facedata->checksum);
+                0);//facedata->checksum);
         env->SetObjectArrayElement(retArray, i, jResult);
     }
 
