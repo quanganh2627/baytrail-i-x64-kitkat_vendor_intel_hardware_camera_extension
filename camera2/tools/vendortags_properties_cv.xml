@@ -1,0 +1,194 @@
+<section name="cv">
+  <controls>
+
+      <entry name="smileDetectMode" type="byte" visibility="public" enum="true" type_notes="Smile detection mode">
+        <enum>
+          <value>OFF
+          <notes>Do not include smile detection statistics in capture results</notes></value>
+          <value>ON
+          <notes>Return smile status and score values</notes></value>
+        </enum>
+        <description>Control of Smile detection.</description>
+        <details>When ON, com.intel.cv.smileDetectStatus (dynamic) and com.intel.cv.smileDetectScores (dynamic) outputs are valid.
+        </details>
+      </entry>
+
+      <entry name="blinkDetectMode" type="byte" visibility="public" enum="true" type_notes="Blink detection mode">
+        <enum>
+          <value>OFF
+          <notes>Do not include blink detection statistics in capture results</notes></value>
+          <value>ON
+          <notes>Return blink status and score values</notes></value>
+        </enum>
+        <description>Control of Blink detection.</description>
+        <details>When ON, com.intel.cv.blinkDetectStatus (dynamic) and com.intel.cv.blinkDetectScores (dynamic) outputs are valid.
+        </details>
+      </entry>
+
+      <entry name="faceRecognizeMode" type="byte" visibility="public" enum="true" type_notes="Face recognition mode">
+        <enum>
+          <value>OFF
+          <notes>Do not include face recognition statistics in capture results</notes></value>
+          <value>ON
+          <notes>Return person id and person similarity </notes></value>
+        </enum>
+        <description>Control of Face recognition.</description>
+        <details>When ON, com.intel.cv.faceRecognizePersonIds (dynamic) and com.intel.cv.faceRecognizePersonSimilarities (dynamic) outputs are valid.
+        </details>
+      </entry>
+  </controls>
+
+  <dynamic>
+      <clone entry="com.intel.cv.smileDetectMode" kind="controls"></clone>
+      <entry name="smileDetectStatus" type="byte" visibility="public" type_notes="Smile detection status" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide a list of smile status of faces. The order of this list is always aligned with the IDs produced by the android-defined metadata tagin. 
+         android.statistics.faceIds.</description>
+        <details>True means smiling face.
+                 False means non-smiling face
+        </details>
+      </entry>
+
+      <entry name="smileDetectScores" type="int32" visibility="public" type_notes="Smile detection scores" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</description>
+        <range>[0,100]</range>
+        <details>0 means it’s no smile at all.
+                 100 means fully smiling face.
+        </details>
+      </entry>
+
+      <clone entry="com.intel.cv.blinkDetectMode" kind="controls"></clone>
+      <entry name="blinkDetectStatus" type="byte" visibility="public" type_notes="Blink detection status" container="array">
+        <array>
+          <size>2 x n</size>
+        </array>
+        <description>This metadata tag will provide a list of blink status of faces. The order of this list is always aligned with the IDs produced by the android-defined metadata tagin. 
+android.statistics.faceIds.</description>
+        <details>True means closed eye.
+                 False means open eye.
+                 The meaning of array should be like:
+                 "0th face lefe eye|0th face right eye|1th face left eye|1th face right eye|2th face left eye|2th face  right eye"
+        </details>
+      </entry>
+
+      <entry name="blinkDetectScores" type="int32" visibility="public" type_notes="Blink detection scores" container="array">
+        <array>
+          <size>2 x n</size>
+        </array>
+        <description>This metadata tag will provide an list of blink confidence scores. The scores are confidence level that the face is blinking.</description>
+        <range>[0,100]</range>
+        <details>0 means closed eye.
+                 100 means wide-open eye.
+        </details>
+      </entry>
+
+      <clone entry="com.intel.cv.faceRecognizeMode" kind="controls"></clone>
+      <entry name="faceRecognizePersonIds" type="int32" visibility="public" type_notes="Face Recognizer Person Ids" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide a list of person Ids from face recognition. Each person is identified as unique positive integer. This is different from android.statistics.faceIds, which is unique among the tracking session</description>
+        <details>-10000 means unkown face.
+                 Positive integer means each person id. 0 is illegal.
+        </details>
+      </entry>
+
+      <entry name="faceRecognizePersonSimilarities" type="int32" visibility="public" type_notes="Face Recognizer Person Similarities" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide a list of person similarities from face recognition. It is the biggest one of the estimated levels between the input face and the faces in databases. It is good to be tread as a kind of score.</description>
+        <range>[0,100]</range>
+        <details>0 is not likely the person
+                 100 is quite sure of the person
+        </details>
+      </entry>
+
+      <entry name="faceDetectRipAngles" type="int32" visibility="public"
+             type_notes="(-180~180) x n, where n is number of faces" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide an list of RIP (Rotation In-Plane) angles from face detection. Represented in degree. Also known as 'rolling'.</description>
+        <units>Degrees</units>
+        <range>[-180,180]</range>
+        <details>The angle is represented as degree. The upright face is 0 degree, clock wise is positive, CC wise is negatives.
+        </details>
+      </entry>
+
+      <entry name="faceDetectRopAngles" type="int32" visibility="public"
+             type_notes="(-1, 0, 1) x n, where n is number of faces" container="array">
+        <array>
+          <size>n</size>
+        </array>
+        <description>This metadata tag will provide an list of ROP (Rotation out-of-plane) angles from face detection. Represented in degree. Also known as 'yawing'. Piching is not supported</description>
+        <range>(-1, 0, 1)</range>
+        <details>The frontal face is 0, left profile face is -1, right profile face is 1.
+        </details>
+      </entry>
+  </dynamic>
+
+  <static>
+    <namespace name="info">
+      <entry name="availableSmileDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of enums from com.intel.cv.smileDetectMode</description>
+        <details>NO is always supported.
+
+                 YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.
+        </details>
+      </entry>
+
+      <entry name="availableBlinkDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of enums from com.intel.cv.blinkDetectMode</description>
+        <details>NO is always supported.
+
+                 YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.
+        </details>
+      </entry>
+
+      <entry name="availableFaceRecognize" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of enums from com.intel.cv.faceRecognizeMode</description>
+        <details>NO is always supported.
+
+                 Yes means the device supports com.intel.cv.faceRecognizePersonIds and com.intel.cv.faceRecognizePersonSimilarities outputs.
+        </details>
+      </entry>
+
+      <entry name="availableObjectTrack" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of enums from com.intel.faceEngineObjectTracking.mode</description>
+        <details>NO is always supported.
+
+                 Yes means the device supports com.intel.cv.objectTrackingBoundingRectangles, com.intel.cv.objectTrackingTrackingIds and com.intel.cv.objectTrackingScores outputs.
+        </details>
+      </entry>
+
+      <entry name="availablePanorama" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+        <array>
+          <size>n</size>
+        </array>
+        <description>List of enums from com.intel.cv.panoramaMode</description>
+        <details>NO is always supported.
+
+                 Yes means the device supports (TO BE DEFINED)
+        </details>
+      </entry>
+    </namespace>
+  </static>
+</section>

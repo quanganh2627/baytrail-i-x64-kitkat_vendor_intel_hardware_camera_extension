@@ -1,0 +1,71 @@
+<section name="statistics">
+  <controls>
+      <entry name="analysisMode" type="byte" visibility="public" enum="true" >
+        <enum>
+          <value>OFF
+          <notes>(default) Do not include AIQ extended results in capture result metadata</notes></value>
+          <value>ON
+          <notes>Include AIQ extended result in capture result metadata</notes></value>
+        </enum>
+        <description>Whether the extended AIQ analysis results are provided for each capture request.</description>
+        <details>This is the list of extra tags that will be present in the result:
+
+                   * multiframeHint
+                   * sceneDected
+                   * hdr.preferedExposures
+        </details>
+      </entry>
+  </controls>
+
+  <dynamic>
+      <clone entry="com.intel.statistics.analysisMode" kind="controls"></clone>
+      <entry name="multiFrameHint" type="byte" visibility="public" enum="true" >
+        <enum>
+          <value>NONE
+          <notes>(default) No multiframe processing is required</notes></value>
+          <value>ULL
+          <notes>Capture would benefit of using Ultra Low Light post processing</notes></value>
+          <value>HDR
+          <notes>Capture would benefit of using High Dynamic Range post processing</notes></value>
+        </enum>
+        <description>This reports the recommendation from the Intel 3A to use one of the multi-frame postprocessing algotithms.</description>
+        <details>To be added...
+        </details>
+      </entry>
+
+      <entry name="sceneDetected" type="byte" visibility="public" enum="true" >
+        <enum>
+          <value>NONE
+          <notes>ia_aiq_scene_mode_none</notes></value>
+          <value>CLOSE_UP_PORTRAIT
+          <notes>ia_aiq_scene_mode_close_up_portrait</notes></value>
+          <value>PORTRAIT
+          <notes>ia_aiq_scene_mode_portrait</notes></value>
+          <value>LOWLIGHT_PORTRAIT
+          <notes>ia_aiq_scene_mode_lowlight_portrait</notes></value>
+          <value>LOWLIGHT
+          <notes>ia_aiq_scene_mode_low_light</notes></value>
+          <value>ACTION
+          <notes>ia_aiq_scene_mode_action</notes></value>
+          <value>BACKLIGHT
+          <notes>ia_aiq_scene_mode_backlight</notes></value>
+          <value>LANDSCAPE
+          <notes>ia_aiq_scene_mode_landscape</notes></value>
+          <value>DOCUMENT
+          <notes>ia_aiq_scene_mode_document</notes></value>
+          <value>FIREWORK
+          <notes>ia_aiq_scene_mode_firework</notes></value>
+          <value>LOWLIGHT_ACTION
+          <notes>ia_aiq_scene_mode_lowlight_action</notes></value>
+          <value>BABY
+          <notes>ia_aiq_scene_mode_baby</notes></value>
+          <value>BARCODE
+          <notes>ia_aiq_scene_mode_barcode</notes></value>
+        </enum>
+        <description>This reports the recommended scene mode the user should select for optimal quality.</description>
+        <details>This is the ouput of the Intel Discrete Scene Detection algorithm.
+        </details>
+      </entry>
+
+  </dynamic>
+</section>
