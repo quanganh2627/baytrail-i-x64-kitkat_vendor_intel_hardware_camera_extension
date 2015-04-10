@@ -31,8 +31,8 @@ import android.util.LongSparseArray;
 import android.util.Size;
 
 /**
- * <p>this class provide multi-frame blending APIs.</p>
- * <<p>currently, it supports {@link TYPE#HDR HDR} and {@link TYPE#ULL ULL} composition.
+ * <p>this class provides multi-frame blending APIs.</p>
+ * <p>currently, it supports {@link TYPE#HDR HDR} and {@link TYPE#ULL ULL} composition.
  * each composition will be done through adding source frames to call {{@link #addInputFrame(Image, CaptureResult)}
  * for the designated number of frames.</p>
  * <p>the composition process will be performed in the separated thread, and then the result will be delivered through
@@ -142,7 +142,7 @@ public class MultiFrameBlender {
 
     /**
      * configure {@link MultiFrameBlender} to the given setting.
-     * if blender already configured with different settings, it will re-initialize blender with the given new settings.
+     * if blender is already configured with different settings, it will re-initialize blender with the given new settings.
      * @param type the type of blender. it could be {@link TYPE#HDR} or {@link TYPE#ULL} now.
      * @param size the size of source frames
      * @param target the target unit of composition run on.

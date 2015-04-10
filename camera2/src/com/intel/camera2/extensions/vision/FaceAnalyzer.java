@@ -31,8 +31,8 @@ import com.intel.camera2.extensions.vision.FaceData.SmileInfo;
  * that the bound of face, the position of eye, smiling score, etc. Please refer {@link FaceData} for more supporting value.<p>
  * 
  * In addition to these features, it provides the face recognition APIs as below.<br>
- * - It registers the person information that was got through {@link #getRecognitionInfo()}.<br>
- * - If several person information are registered in database, it recognizes who is the person in a portrait.<br>
+ * - It registers the person information that was received through {@link #getRecognitionInfo()}.<br>
+ * - If several person information are registered in the database, it recognizes who the person is in a portrait.<br>
  * <br>
  * 
  * This class needs some libraries what there are dependence on Intel specific platform.
@@ -65,7 +65,7 @@ public class FaceAnalyzer {
     private boolean mTryToGetBlinkInfo;
 
     /**
-     * It checks the FaceAnalyzer library is available.
+     * It checks for the availability of the FaceAnalyzer library.
      */
     public static boolean isSupported() {
         return PVLibraryLoader.isSupported();
@@ -115,7 +115,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * Set the image that it will be analyzed.
+     * Set the image that will be analyzed.
      * It releases the previous image and the results.
      * 
      * @param image {@link android.media.Image}: The image converts the gray image internally.
@@ -133,7 +133,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * Set the image that it will be analyzed.
+     * Set the image that will be analyzed.
      * It releases the previous image and the results.
      *
      * @param bitmap {@link android.graphics.Bitmap}: The image converts the gray image internally.
@@ -230,7 +230,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the analyzed data about smiling.
+     * It returns the analyzed data on smiling.
      *
      * @return SmileInfo[]
      */
@@ -254,7 +254,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It returns the analyzed data about blinking.
+     * It returns the analyzed data on blinking.
      *
      * @return BlinkInfo[]
      */
@@ -306,7 +306,7 @@ public class FaceAnalyzer {
 
     /**
      * It registers the recognition info to database.
-     * @param info: The info that was got through calling getRecognitionInfo method.
+     * @param info: The info that was received through calling getRecognitionInfo method.
      */
     public int registerFace(FaceData.RecognitionInfo info) {
         int ret = ERROR;
@@ -318,7 +318,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It changes the person id what it applied with face id in database.
+     * It changes the person id to what was applied with face id in the database.
      * @param faceId    It was registered in database.
      * @param personId  It would like to update in database.
      * @return success: 0, fail: minus integer
@@ -333,7 +333,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It unregisters the recognition info that it is same with face id in database.
+     * It unregisters the recognition info that is the same with face id in database.
      * @param faceId    It was registered in database.
      * @return  success: 0, fail: minus integer
      */
@@ -347,7 +347,7 @@ public class FaceAnalyzer {
     }
 
     /**
-     * It unregisters all of the recognition info that there are same with person id in database.
+     * It unregisters all of the recognition info that is the same with person id in database.
      * @param personId    It was registered in database.
      * @return  success: 0, fail: minus integer
      */

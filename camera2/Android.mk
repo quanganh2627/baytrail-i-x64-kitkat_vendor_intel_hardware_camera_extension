@@ -34,10 +34,6 @@ include $(BUILD_JAVA_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := $(call all-java-files-under, tools) \
-                   src/com/intel/camera2/extensions/IaFrame.java \
-                   src/com/intel/camera2/extensions/photography/BlenderOption.java \
-                   src/com/intel/camera2/extensions/photography/UllOption.java \
-                   src/com/intel/camera2/extensions/photography/HdrOption.java \
                    src/com/intel/camera2/extensions/photography/MultiFrameBlender.java \
                    src/com/intel/camera2/extensions/photography/Panorama.java \
                    src/com/intel/camera2/extensions/photography/ZSLCaptureManager.java \
