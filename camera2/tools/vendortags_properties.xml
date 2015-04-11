@@ -398,28 +398,28 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
               </entry>
 
               <entry name="brightness" type="int32" visibility="public" >
-                <range>[-10,10]; 10 is maximum brightening, 0 is neutral</range>
-                <details> value of brightness </details>
+                <range>[-10,10]</range>
+                <details> value of brightness, its range is [-10, 10]; 10 is maximum brightening, 0 is neutral. </details>
               </entry>
 
               <entry name="contrast" type="int32" visibility="public" >
-                <range>[-10,10]; 10 is maximum contrast, 0 is neutral</range>
-                <details> value of contrast</details>
+                <range>[0,10]</range>
+                <details> value of contrast, its range is [0, 10]; 10 is maximum contrast, 5 is neutral. </details>
               </entry>
 
               <entry name="saturation" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum saturation, 0 is neutral</range>
-                <details> value of saturation</details>
+                <range>[0,10]</range>
+                <details> value of saturation, its range is [0, 10]; 10 is maximum contrast, 5 is neutral. </details>
               </entry>
 
               <entry name="hue" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum hue, 0 is neutral</range>
-                <details> value of hue</details>
+                <range>[-10,10]</range>
+                <details> value of hue, its range is [-10, 10]; 10 is maximum brightening, 0 is neutral. </details>
               </entry>
 
               <entry name="sharpness" type="int32" visibility="public" >
-                <range>[-10,10], 10 is maximum sharpening, 0 is neutral</range>
-                <details> value of sharpness</details>
+                <range>[-10,10]</range>
+                <details> value of sharpness, its range is [-10, 10]; 10 is maximum brightening, 0 is neutral. </details>
               </entry>
           </controls>
 
