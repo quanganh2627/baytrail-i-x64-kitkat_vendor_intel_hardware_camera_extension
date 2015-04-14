@@ -15,20 +15,12 @@
  */
 package com.intel.camera2.extensions;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-
-import org.apache.http.entity.ByteArrayEntity;
-
-import android.animation.IntArrayEvaluator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Bitmap.Config;
 import android.media.Image;
-import android.media.Image.Plane;
-import android.util.Log;
+import java.nio.ByteBuffer;
 
 /**
  * common image object class to use across the engine library and classes of extensions packages.
@@ -133,10 +125,10 @@ public class IaFrame {
             switch (format) {
                 case PvlFormat.GRAY:
                 case IaFormat.RAW:
-                    this.imageData = getGrayImageData(image);
+                    this.imageData = ImageConverter.getGrayImageData(image);
                     break;
                 case PvlFormat.NV12: // same with IaFormat.NV12
-                    this.imageData = getYuvImageData(image);
+                    this.imageData = ImageConverter.getYuvImageData(image);
                     break;
                 default:
                     throw new IllegalArgumentException("not support format("+format+") for IaFrame.");
@@ -178,10 +170,10 @@ public class IaFrame {
         switch (format) {
             case PvlFormat.GRAY:
             case IaFormat.RAW:
-                this.imageData = getGrayImageData(bitmap, this.stride, this.width, this.height);
+                this.imageData = ImageConverter.getGrayImageData(bitmap, this.stride, this.width, this.height);
                 break;
             case PvlFormat.NV12:    // same with IaFormat.NV12
-                this.imageData = getYUV420SPImageData(bitmap, this.stride, this.width, this.height);
+                this.imageData = ImageConverter.getYUV420SPImageData(bitmap, this.stride, this.width, this.height);
                 break;
             default:
                 throw new IllegalArgumentException("not support format("+format+") for IaFrame.");
@@ -192,177 +184,6 @@ public class IaFrame {
         } else {
             this.size = 0;
         }
-    }
-
-    /**
-     * It converts from Image to yuv byte array.
-     * @param yuvImage {@link android.media.Image}: It supports YUV_420_888 format only.
-     * @return byte array: yuv image.
-     */
-    public static byte[] getYuvImageData(Image yuvImage) {
-        if (yuvImage.getFormat() != ImageFormat.YUV_420_888) {
-            throw new IllegalArgumentException("not supported yuv format");
-        }
-        byte[] imageData;
-        Plane[] planes = yuvImage.getPlanes();
-        ByteBuffer yBuffer = planes[0].getBuffer();
-        ByteBuffer uBuffer = planes[1].getBuffer();
-        ByteBuffer vBuffer = planes[2].getBuffer();
-        int yBufferSize = yBuffer.capacity();
-        int uBufferSize = uBuffer.capacity();
-        int vBufferSize = vBuffer.capacity();
-
-        if (yBuffer == null || uBuffer == null || vBuffer == null) {
-            Log.e(TAG, "yuvBuffer is null");
-            return null;
-        }
-
-        Log.d(TAG, "image y plane size = " + yBufferSize + ", row stride = " + planes[0].getRowStride() + ", pixel stride = " + planes[0].getPixelStride());
-        Log.d(TAG, "image u plane size = " + uBufferSize + ", row stride = " + planes[1].getRowStride() + ", pixel stride = " + planes[1].getPixelStride());
-        Log.d(TAG, "image v plane size = " + vBufferSize + ", row stride = " + planes[2].getRowStride() + ", pixel stride = " + planes[2].getPixelStride());
-
-        int uPixelStride = planes[1].getPixelStride();
-        int vPixelStride = planes[2].getPixelStride();
-        if (uPixelStride != vPixelStride) {
-            Log.e(TAG, "uv pixelStride is different");
-            return null;
-        }
-
-        int height = yuvImage.getHeight();
-        int yRowStride = planes[0].getRowStride();
-        int ySize = yRowStride * height;
-        int vaildYsize = Math.min(ySize, yBufferSize);
-
-        if (uPixelStride == 1) {
-            int uSize = ySize >> 2;
-            int vSize = uSize;
-            int imageDataSize = ySize + (uSize + vSize);
-            int vaildUsize = Math.min(uSize, uBufferSize);
-            int vaildVsize = Math.min(vSize, vBufferSize);
-
-            imageData = new byte[imageDataSize];
-            byte[] uData = new byte[uSize];
-            byte[] vData = new byte[vSize];
-
-            yBuffer.get(imageData, 0, vaildYsize);
-            yBuffer.rewind();
-            uBuffer.get(uData, 0, vaildUsize);
-            uBuffer.rewind();
-            vBuffer.get(vData, 0, vaildVsize);
-            vBuffer.rewind();
-            int offset = ySize;
-            for (int i=0; i < vaildUsize; i++) {
-                imageData[offset++] = uData[i];
-                imageData[offset++] = vData[i];
-            }
-        } else if (uPixelStride == 2) {
-            int uSize = ySize >> 1;
-            int imageDataSize = ySize + uSize;
-            int vaildUsize = Math.min(uSize, uBufferSize);
-
-            imageData = new byte[imageDataSize];
-
-            yBuffer.get(imageData, 0, vaildYsize);
-            yBuffer.rewind();
-            int offset = ySize;
-            uBuffer.get(imageData, offset, vaildUsize);
-            uBuffer.rewind();
-        } else {
-            imageData = null;
-            Log.e(TAG, "yuv error!");
-        }
-        return imageData;
-    }
-
-    private static void printPlane(Plane plane) {
-        Log.i(TAG, "PixelStride("+plane.getPixelStride()+") RowStride("+plane.getRowStride()+")");
-    }
-
-    /**
-     * It converts from Image to gray byte array.
-     * @param yuvImage {@link android.media.Image}: It supports YUV_420_888 format only.
-     * @return byte array: gray image.
-     */
-    public static byte[] getGrayImageData(Image yuvImage) {
-        if (yuvImage.getFormat() != ImageFormat.YUV_420_888) {
-            throw new IllegalArgumentException("not supported yuv format");
-        }
-        Plane[] planes = yuvImage.getPlanes();
-        ByteBuffer yBuffer = planes[0].getBuffer();
-        int ySize = yBuffer.capacity();
-        byte[] imageData = new byte[ySize];
-        yBuffer.get(imageData, 0, ySize);
-        yBuffer.rewind();
-        return imageData;
-    }
-
-    private static byte[] getGrayImageData(Bitmap bitmap, int stride, int width, int height) {
-        byte[] gray = new byte[stride * height];
-        int[] argb = new int[stride * height];
-
-        Buffer dst = IntBuffer.wrap(argb);
-        bitmap.copyPixelsToBuffer(dst);
-
-        int yIndex = 0;
-        int R, G, B, Y;
-        int index = 0;
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < stride; i++) {
-
-//                a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
-                R = (argb[index] & 0xff0000) >> 16;
-                G = (argb[index] & 0xff00) >> 8;
-                B = (argb[index] & 0xff) >> 0;
-
-                // well known RGB to Gray algorithm
-                Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
-
-                gray[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
-
-                index ++;
-            }
-        }
-        return gray;
-    }
-
-    private static byte[] getYUV420SPImageData(Bitmap bitmap, int stride, int width, int height) {
-        byte[] yuv420sp = new byte[stride * height * 3 / 2];
-        int[] argb = new int[stride * height];
-
-        Buffer dst = IntBuffer.wrap(argb);
-        bitmap.copyPixelsToBuffer(dst);
-
-        int yIndex = 0;
-        int uvIndex = stride * height;
-
-        int R, G, B, Y, U, V;
-        int index = 0;
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < stride; i++) {
-
-//                a = (argb[index] & 0xff000000) >> 24; // a is not used obviously
-                R = (argb[index] & 0xff0000) >> 16;
-                G = (argb[index] & 0xff00) >> 8;
-                B = (argb[index] & 0xff) >> 0;
-
-                // well known RGB to YUV algorithm
-                Y = ( (  66 * R + 129 * G +  25 * B + 128) >> 8) +  16;
-                U = ( ( -38 * R -  74 * G + 112 * B + 128) >> 8) + 128;
-                V = ( ( 112 * R -  94 * G -  18 * B + 128) >> 8) + 128;
-
-                // NV21 has a plane of Y and interleaved planes of VU each sampled by a factor of 2
-                //    meaning for every 4 Y pixels there are 1 V and 1 U.  Note the sampling is every other
-                //    pixel AND every other scanline.
-                yuv420sp[yIndex++] = (byte) ((Y < 0) ? 0 : ((Y > 255) ? 255 : Y));
-                if (j % 2 == 0 && index % 2 == 0) { 
-                    yuv420sp[uvIndex++] = (byte)((U<0) ? 0 : ((U > 255) ? 255 : U));
-                    yuv420sp[uvIndex++] = (byte)((V<0) ? 0 : ((V > 255) ? 255 : V));
-                }
-
-                index ++;
-            }
-        }
-        return yuv420sp;
     }
 
     public String toString() {

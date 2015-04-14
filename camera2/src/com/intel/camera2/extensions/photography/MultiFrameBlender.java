@@ -16,8 +16,10 @@
 package com.intel.camera2.extensions.photography;
 
 import com.intel.camera2.extensions.IaFrame;
+import com.intel.camera2.extensions.ImageConverter;
 
 import android.graphics.ImageFormat;
+import android.graphics.YuvImage;
 import android.hardware.camera2.CaptureResult;
 import android.media.Image;
 import android.os.Handler;
@@ -28,6 +30,14 @@ import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.Size;
 
+/**
+ * <p>this class provide multi-frame blending APIs.</p>
+ * <<p>currently, it supports {@link TYPE#HDR HDR} and {@link TYPE#ULL ULL} composition.
+ * each composition will be done through adding source frames to call {{@link #addInputFrame(Image, CaptureResult)}
+ * for the designated number of frames.</p>
+ * <p>the composition process will be performed in the separated thread, and then the result will be delivered through
+ * the {@link MultiFrameBlendCallback callback} which is set by {{@link #setCallback(MultiFrameBlendCallback)}</p>.
+ */
 public class MultiFrameBlender {
     private static final String TAG = MultiFrameBlender.class.getSimpleName();
 
@@ -37,11 +47,16 @@ public class MultiFrameBlender {
         ULL
     }
 
+    public static enum TARGET {
+        CPU,
+        IPU,
+    }
+
     private long mCPInstance;
 
     private TYPE mType = TYPE.NONE;
     private Size mSize;
-    private BlenderOption mOption;
+    private TARGET mTarget;
 
     private LongSparseArray<IaFrame> mFrames;
     private LongSparseArray<CaptureResult> mMetadatas;
@@ -69,46 +84,57 @@ public class MultiFrameBlender {
     private int mState = STATUS_INVALID;
 
     /**
+     * to check multi-frame blending feature supportiveness 
+     * @return true if it is supported, or false
      */
     public static boolean isSupported() {
         return CPJNI.isSupported();
     }
 
     /**
-     * create new {@link MultiFrameBlender blender} instance with given {@link MultiFrameBlendCallback callback} instance.
-     * 
-     * @param callback the callback interface to get the process result of {@link MultiFrameBlender blender}
-     * @param frameCount the number of frame to be blended by this instance
-     * @return {@link MultiFrameBlender blender} instance
+     * create new {@link MultiFrameBlender blender} instance.
+     * @return the instance of {@link MultiFrameBlender blender}
      */
-    public static MultiFrameBlender newInstance(MultiFrameBlendCallback callback, int frameCount) {
-        return new MultiFrameBlender(callback, frameCount);
+    public static MultiFrameBlender newInstance() {
+        if (!isSupported()) {
+            return null;
+        }
+        return new MultiFrameBlender();
     }
 
-    private MultiFrameBlender(MultiFrameBlendCallback callback, int frameCount) {
-        if (callback == null) {
-            throw new IllegalArgumentException("callback should not be null");
-        }
-        if (CPJNI.isSupported()) {
-            mCPInstance = CPJNI.init();
-        }
-        if (mCPInstance == 0) {
-            throw new IllegalArgumentException("CP library can't be loaded.");
-        }
-
-        mCallback = callback;
-        mFrameCount = frameCount;
-
+    /**
+     * create new {@link MultiFrameBlender blender} instance with given {@link MultiFrameBlendCallback callback} instance.
+     * @param callback the {@link MultiFrameBlendCallback callback} interface to get the process result of {@link MultiFrameBlender blender}
+     */
+    private MultiFrameBlender() {
         HandlerThread ht = new HandlerThread("MultiFrameBlenderThread");
         ht.start();
         mHandler = new CallbackHandler(ht.getLooper());
     };
 
-    public int getType() {
-        checkAndThrowException();
-        return mType.ordinal();
+    /**
+     * set the {@link MultiFrameBlendCallback callback} interface to get the processing result of {@link MultiFrameBlender blender}
+     * @param callback the {@link MultiFrameBlendCallback callback} interface
+     */
+    public void setCallback(MultiFrameBlendCallback callback) {
+        if (callback != null) {
+            mCallback = callback;
+        }
     }
 
+    /**
+     * get the configured {@link TYPE type} of this blender
+     * @return the {@link TYPE type}
+     */
+    public TYPE getType() {
+        checkAndThrowException();
+        return mType;
+    }
+
+    /**
+     * get the configured {@link android.util.Size size} of this blender
+     * @return the {@link android.util.Size size}
+     */
     public Size getSize() {
         checkAndThrowException();
         return mSize;
@@ -118,29 +144,39 @@ public class MultiFrameBlender {
      * configure {@link MultiFrameBlender} to the given setting.
      * if blender already configured with different settings, it will re-initialize blender with the given new settings.
      * @param type the type of blender. it could be {@link TYPE#HDR} or {@link TYPE#ULL} now.
-     * @param size the size of blended target image.
-     * @param option the {@link BlenderOption option} to be used for initializing {@link MultiFrameBlender}.
-     * @return the result value for initializing blender.
+     * @param size the size of source frames
+     * @param target the target unit of composition run on.
+     * @param numberOfFrames the number of source frames which are used to compose
+     * @return the result of the multi-frame blender initialization
      */
-    public boolean config(int type, Size size, BlenderOption option) {
+    public boolean configureBlender(TYPE type, Size size, TARGET target, int numberOfFrames) {
         // TODO : create proper blender option
-        if (option == null) {
-            option = new BlenderOption(0, CPJNI.TARGET_CPU);
-        }
 
+        mCPInstance = CPJNI.init();
+        if (mCPInstance == 0) {
+            throw new IllegalArgumentException("fail to create CP instance");
+        }
+        mFrameCount = numberOfFrames;
         Log.d(TAG, "type = " + type + ", w = " + size.getWidth() + ", h = " + size.getHeight());
         int ret = IA_ERR_NONE;
-        if (type == TYPE.NONE.ordinal()|| size.getWidth() == 0 || size.getHeight() == 0) {
+        if (type == TYPE.NONE|| size.getWidth() == 0 || size.getHeight() == 0) {
             throw new IllegalArgumentException("Invalid argument(s)!");
         }
-        if (type != mType.ordinal() || !size.equals(mSize) || option.equals(mOption)) {
+        if (type != mType || !size.equals(mSize) || target != mTarget) {
             if (mType == TYPE.HDR) {
                 CPJNI.hdrUninit(mCPInstance);
             } else if (mType == TYPE.ULL) {
                 CPJNI.ullUninit(mCPInstance);
             }
         }
-        mType = type == TYPE.NONE.ordinal() ? TYPE.NONE : (type == TYPE.HDR.ordinal() ? TYPE.HDR : TYPE.ULL);
+        BlenderOption option;
+        if (target == TARGET.IPU) {
+            option = new BlenderOption(0, CPJNI.TARGET_IPU);
+        } else {
+            option = new BlenderOption(0, CPJNI.TARGET_CPU);
+        }
+        mTarget = target;
+        mType = type;
         mSize = size;
         if (mType == TYPE.HDR) {
             ret = CPJNI.hdrInit(mCPInstance, size.getWidth(), size.getHeight(), option);
@@ -176,56 +212,34 @@ public class MultiFrameBlender {
     }
 
     /**
-     * close all frames and metadatas and than close native CP context.
-     * After calling this method, this {@link MultiFrameBlendCallback} can not be used anymore.
-     * @return the result code .
-     */
-    public int close() {
-        int ret = IA_ERR_NONE;
-        if (mType == TYPE.HDR) {
-            ret = CPJNI.hdrUninit(mCPInstance);
-        } else if (mType == TYPE.ULL) {
-            ret = CPJNI.ullUninit(mCPInstance);
-        }
-        CPJNI.uninit(mCPInstance);
-        mCPInstance = 0;
-
-        mSize = null;
-        mFrames.clear();
-        mFrames = null;
-        mMetadatas.clear();
-        mMetadatas = null;
-        mState = STATUS_INVALID;
-        return ret;
-    }
-
-    /**
-     * add an Image to {@link MultiFrameBlender} which is converted to an IaFrame internally.
-     * converting operation will be performed in the separate thread since it could block the
-     * caller's thread.
+     * add an Image to {@link MultiFrameBlender}. when the number of added image reach to the frame count
+     * blending will be performed automatically.
+     * which are configured through {@link #configureBlender(int, Size, BlenderOption, int)} 
      * once given Image object converted to IaFrame object, Image object will be closed automatically
      * to release Image object's memory.
      * 
      * @param image the acquired Image instance read from ImageReader.
      * @param metadata the CaptureResult instance which is matched with image instance.
+     * @return number of added images or 0 if it has error
      */
-    public void addFrame(Image image, CaptureResult metadata) {
+    public int addInputFrame(Image image, CaptureResult metadata) {
         Log.d(TAG,"");
+        int ret = 0;
         checkAndThrowException();
         if (mState == STATUS_INVALID) {
             throw new IllegalStateException("blender is not initilazed");
         }
         if (image == null) {
             Log.e(TAG, "image is null");
-            return;
+            return ret;
         }
         if (image.getWidth() != mSize.getWidth() || image.getHeight() != mSize.getHeight()) {
             Log.e(TAG, "image size is not suitable for this blender! request  = " + mSize.toString() + ", captured = " + image.getWidth() + "x" + image.getHeight());
-            return;
+            return ret;
         }
         if (image.getFormat() != ImageFormat.YUV_420_888) {
             Log.e(TAG, "not supported image format! " + image.getFormat());
-            return;
+            return ret;
         }
         if (metadata != null) {
             long key = image.getTimestamp();
@@ -234,16 +248,18 @@ public class MultiFrameBlender {
                 Log.w(TAG, "image and metadata timestamp are not identical!");
             }
             mMetadatas.put(metadataTimestamp, metadata);
+            ret = mMetadatas.size();
             ImageConvertThread convertThread = new ImageConvertThread(image);
             convertThread.start();
         }
+        return ret;
     }
 
     /**
      * blend all added frames into the configured {@link TYPE} of output.
      * result will be delivered through {@link MultiFrameBlendCallback}
      */
-    public void blend() {
+    private void blend() {
         checkAndThrowException();
         if (mState != STATUS_READY || mMetadatas.size() != mFrames.size()) {
             Log.e(TAG, "blender is not in ready state");
@@ -306,7 +322,7 @@ public class MultiFrameBlender {
                 if (outFrame != null) {
                     Message msg = Message.obtain();
                     msg.what = MSG_BLEND_DONE;
-                    msg.obj = outFrame;
+                    msg.obj = ImageConverter.convertToYuvImage(outFrame.imageData, ImageFormat.YUV_420_888, outFrame.stride, outFrame.width, outFrame.height);
                     mHandler.sendMessage(msg);
                 } else {
                     Message msg = Message.obtain();
@@ -321,7 +337,7 @@ public class MultiFrameBlender {
     }
 
     /**
-     * not implemented yet
+     * abort blending if the blender is in the blending process.
      */
     public void abortBlending() {
         checkAndThrowException();
@@ -340,7 +356,7 @@ public class MultiFrameBlender {
     /**
      * release all resources and metadatas of this {@link MultiFrameBlender}
      */
-    public void destroy() {
+    public void release() {
         flush();
         if (mType == TYPE.HDR) {
             CPJNI.hdrUninit(mCPInstance);
@@ -352,16 +368,29 @@ public class MultiFrameBlender {
 
         mState = STATUS_INVALID;
         mType = TYPE.NONE;
+        mSize = null;
+        mFrames = null;
+        mMetadatas = null;
+        mCallback = null;
     }
+
+    
+    @Override
+    protected void finalize() throws Throwable {
+        if (mState != STATUS_INVALID) {
+            release();
+        }
+        super.finalize();
+    }
+
 
     /**
      * callback interface to notify {@link MultiFrameBlender blender's} event.
      */
     public interface MultiFrameBlendCallback {
         public void onAddedFrame(Image image, CaptureResult metadata);
-        public void onReadyToBlend();
-        public void onBlendDone(IaFrame frame);
-        public void onBlendFail(int error);
+        public void onBlendCompleted(YuvImage image);
+        public void onBlendFailed(int error);
         public void onBlendAborted();
     }
 
@@ -391,21 +420,19 @@ public class MultiFrameBlender {
                     if (mConvertedCount == mFrameCount) {
                         mState = STATUS_READY;
                         mConvertedCount = 0;
-                        if (mCallback != null) {
-                            mCallback.onReadyToBlend();
-                        }
+                        blend();
                     }
                     break;
                 }
                 case MSG_BLEND_DONE: {
                     if (mCallback != null) {
-                        mCallback.onBlendDone((IaFrame)msg.obj);
+                        mCallback.onBlendCompleted((YuvImage)msg.obj);
                     }
                     break;
                 }
                 case MSG_BLEND_FAIL: {
                     if (mCallback != null) {
-                        mCallback.onBlendFail(msg.arg1);
+                        mCallback.onBlendFailed(msg.arg1);
                     }
                     break;
                 }

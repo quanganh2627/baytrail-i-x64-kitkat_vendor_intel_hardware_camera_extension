@@ -189,9 +189,11 @@ static JNINativeMethod gMethods[] = {
       "(J"SIG_IAFRAME")["SIG_FACE_DETECTION_INFO,
       (void*)FaceDetection_runInImage },
 
+#if 0
     { "convertToGray",
       "("SIG_BITMAP")[B",
       (void*)FaceDetection_convertToGray },
+#endif
 
     { "setParam",
       "(J"SIG_FACE_DETECTION_PARAM")V",

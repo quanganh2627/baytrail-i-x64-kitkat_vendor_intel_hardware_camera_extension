@@ -109,6 +109,18 @@
   <ul class="toc">
     <li><a href="#tag_index" class="toc_section_header">Tags</a></li>
     <li>
+      <span class="toc_section_header"><a href="#section_extensions">extensions</a></span>
+      <ul class="toc_section">
+        <li>
+          <span class="toc_kind_header">static</span>
+          <ul class="toc_section">
+            <li
+            ><a href="#static_com.intel.extensions.availableGroups">com.intel.extensions.availableGroups</a></li>
+          </ul>
+        </li>
+      </ul> <!-- toc_section -->
+    </li>
+    <li>
       <span class="toc_section_header"><a href="#section_statistics">statistics</a></span>
       <ul class="toc_section">
         <li>
@@ -177,10 +189,6 @@
           <ul class="toc_section">
 
             <li
-            ><a href="#static_com.intel.cv.info.availableSmileDetect">com.intel.cv.info.availableSmileDetect</a></li>
-            <li
-            ><a href="#static_com.intel.cv.info.availableBlinkDetect">com.intel.cv.info.availableBlinkDetect</a></li>
-            <li
             ><a href="#static_com.intel.cv.info.availableFaceRecognize">com.intel.cv.info.availableFaceRecognize</a></li>
             <li
             ><a href="#static_com.intel.cv.info.availableObjectTrack">com.intel.cv.info.availableObjectTrack</a></li>
@@ -214,8 +222,6 @@
 
             <li
             ><a href="#static_com.intel.device.info.availableDualCameraMode">com.intel.device.info.availableDualCameraMode</a></li>
-            <li
-            ><a href="#static_com.intel.device.info.availableExtensions">com.intel.device.info.availableExtensions</a></li>
 
           </ul>
         </li>
@@ -236,6 +242,8 @@
             <li
             ><a href="#controls_com.intel.imageEnhance.saturation">com.intel.imageEnhance.saturation</a></li>
             <li
+            ><a href="#controls_com.intel.imageEnhance.hue">com.intel.imageEnhance.hue</a></li>
+            <li
             ><a href="#controls_com.intel.imageEnhance.sharpness">com.intel.imageEnhance.sharpness</a></li>
           </ul>
         </li>
@@ -251,7 +259,18 @@
             <li
             ><a href="#dynamic_com.intel.imageEnhance.saturation">com.intel.imageEnhance.saturation</a></li>
             <li
+            ><a href="#dynamic_com.intel.imageEnhance.hue">com.intel.imageEnhance.hue</a></li>
+            <li
             ><a href="#dynamic_com.intel.imageEnhance.sharpness">com.intel.imageEnhance.sharpness</a></li>
+          </ul>
+        </li>
+        <li>
+          <span class="toc_kind_header">static</span>
+          <ul class="toc_section">
+
+            <li
+            ><a href="#static_com.intel.imageEnhance.info.availablecolorEffects">com.intel.imageEnhance.info.availablecolorEffects</a></li>
+
           </ul>
         </li>
       </ul> <!-- toc_section -->
@@ -274,6 +293,105 @@
     </thead> <!-- so that the first occurrence of thead is not
                          above the first occurrence of tr -->
 <!-- <namespace name="intel"> -->
+  <tr><td colspan="6" id="section_extensions" class="section">extensions</td></tr>
+
+
+      <tr><td colspan="6" class="kind">static</td></tr>
+
+      <thead class="entries_header">
+        <tr>
+          <th class="th_name">Property Name</th>
+          <th class="th_type">Type</th>
+          <th class="th_description">Description</th>
+          <th class="th_units">Units</th>
+          <th class="th_range">Range</th>
+          <th class="th_tags">Tags</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        
+
+        
+
+        
+
+        
+
+                
+          <tr class="entry" id="static_com.intel.extensions.availableGroups">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>extensions.<wbr/>available<wbr/>Groups
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name entry_type_name_enum">byte</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+
+                <ul class="entry_type_enum">
+                  <li>
+                    <span class="entry_type_enum_name">STATISTICS</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports statistics analisys </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">CV</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports computer vision </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">ENHANCEMENT</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports image enhancement,<wbr/> eg saturation </p></span>
+                  </li>
+                  <li>
+                    <span class="entry_type_enum_name">DEVICE</span>
+                    <span class="entry_type_enum_notes"><p>camera extension supports special features in device,<wbr/>eg dual video </p></span>
+                  </li>
+                </ul>
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>List of enums from com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions</p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>The empty list means no camera extension support</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+        
+
+      <!-- end of kind -->
+      </tbody>
+
+  <!-- end of section -->
   <tr><td colspan="6" id="section_statistics" class="section">statistics</td></tr>
 
 
@@ -983,8 +1101,7 @@ False means non-smiling face</p>
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>0 means it’s no smile at all.<wbr/>
-100 means fully smiling face.<wbr/></p>
+              <p>A person's smile intensity is able to be detected.<wbr/> Along with detecting features of a face,<wbr/> the changes and movements of the face are also analyzed in order to index smile intensity.<wbr/></p>
             </td>
           </tr>
 
@@ -1145,8 +1262,7 @@ The meaning of array should be like:
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>0 means closed eye.<wbr/>
-100 means wide-open eye.<wbr/></p>
+              <p>A person's blink intensity is able to be detected.<wbr/> Along with detecting features of eyes,<wbr/> the changes and movements of eyes are also analyzed in order to index blink intensity.<wbr/></p>
             </td>
           </tr>
 
@@ -1445,108 +1561,6 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
                 
             
 
-                
-          <tr class="entry" id="static_com.intel.cv.info.availableSmileDetect">
-            <td class="entry_name
-             " rowspan="3">
-              com.<wbr/>intel.<wbr/>cv.<wbr/>info.<wbr/>available<wbr/>Smile<wbr/>Detect
-            </td>
-            <td class="entry_type">
-                <span class="entry_type_name">byte</span>
-                <span class="entry_type_container">x</span>
-
-                <span class="entry_type_array">
-                  n
-                </span>
-              <span class="entry_type_visibility"> [public as enumList]</span>
-
-
-
-
-                <div class="entry_type_notes">List of enums</div>
-
-
-            </td> <!-- entry_type -->
-
-            <td class="entry_description">
-              <p>List of enums from com.<wbr/>intel.<wbr/>cv.<wbr/>smile<wbr/>Detect<wbr/>Mode</p>
-            </td>
-
-            <td class="entry_units">
-            </td>
-
-            <td class="entry_range">
-            </td>
-
-            <td class="entry_tags">
-            </td>
-
-          </tr>
-          <tr class="entries_header">
-            <th class="th_details" colspan="5">Details</th>
-          </tr>
-          <tr class="entry_cont">
-            <td class="entry_details" colspan="5">
-              <p>NO is always supported.<wbr/></p>
-<p>YES means the device supports com.<wbr/>intel.<wbr/>cv.<wbr/>smile<wbr/>Detect<wbr/>Status and com.<wbr/>intel.<wbr/>cv.<wbr/>smile<wbr/>Detect<wbr/>Scores outputs.<wbr/></p>
-            </td>
-          </tr>
-
-
-          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
-           <!-- end of entry -->
-        
-                
-          <tr class="entry" id="static_com.intel.cv.info.availableBlinkDetect">
-            <td class="entry_name
-             " rowspan="3">
-              com.<wbr/>intel.<wbr/>cv.<wbr/>info.<wbr/>available<wbr/>Blink<wbr/>Detect
-            </td>
-            <td class="entry_type">
-                <span class="entry_type_name">byte</span>
-                <span class="entry_type_container">x</span>
-
-                <span class="entry_type_array">
-                  n
-                </span>
-              <span class="entry_type_visibility"> [public as enumList]</span>
-
-
-
-
-                <div class="entry_type_notes">List of enums</div>
-
-
-            </td> <!-- entry_type -->
-
-            <td class="entry_description">
-              <p>List of enums from com.<wbr/>intel.<wbr/>cv.<wbr/>blink<wbr/>Detect<wbr/>Mode</p>
-            </td>
-
-            <td class="entry_units">
-            </td>
-
-            <td class="entry_range">
-            </td>
-
-            <td class="entry_tags">
-            </td>
-
-          </tr>
-          <tr class="entries_header">
-            <th class="th_details" colspan="5">Details</th>
-          </tr>
-          <tr class="entry_cont">
-            <td class="entry_details" colspan="5">
-              <p>NO is always supported.<wbr/></p>
-<p>YES means the device supports com.<wbr/>intel.<wbr/>cv.<wbr/>blink<wbr/>Detect<wbr/>Status and com.<wbr/>intel.<wbr/>cv.<wbr/>blink<wbr/>Detect<wbr/>Scores outputs.<wbr/></p>
-            </td>
-          </tr>
-
-
-          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
-           <!-- end of entry -->
-        
                 
           <tr class="entry" id="static_com.intel.cv.info.availableFaceRecognize">
             <td class="entry_name
@@ -1951,73 +1965,6 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
            <!-- end of entry -->
         
-                
-          <tr class="entry" id="static_com.intel.device.info.availableExtensions">
-            <td class="entry_name
-             " rowspan="3">
-              com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions
-            </td>
-            <td class="entry_type">
-                <span class="entry_type_name entry_type_name_enum">byte</span>
-                <span class="entry_type_container">x</span>
-
-                <span class="entry_type_array">
-                  n
-                </span>
-              <span class="entry_type_visibility"> [public]</span>
-
-
-
-
-
-                <ul class="entry_type_enum">
-                  <li>
-                    <span class="entry_type_enum_name">STATISTICS</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports statistics analisys </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">CV</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports computer vision </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">ENHANCEMENT</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports image enhancement,<wbr/> eg saturation </p></span>
-                  </li>
-                  <li>
-                    <span class="entry_type_enum_name">DEVICE</span>
-                    <span class="entry_type_enum_notes"><p>camera extension supports special features in device,<wbr/>eg dual video </p></span>
-                  </li>
-                </ul>
-
-            </td> <!-- entry_type -->
-
-            <td class="entry_description">
-              <p>List of enums from com.<wbr/>intel.<wbr/>device.<wbr/>info.<wbr/>available<wbr/>Extensions</p>
-            </td>
-
-            <td class="entry_units">
-            </td>
-
-            <td class="entry_range">
-            </td>
-
-            <td class="entry_tags">
-            </td>
-
-          </tr>
-          <tr class="entries_header">
-            <th class="th_details" colspan="5">Details</th>
-          </tr>
-          <tr class="entry_cont">
-            <td class="entry_details" colspan="5">
-              <p>The empty list means no camera extension support</p>
-            </td>
-          </tr>
-
-
-          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
-           <!-- end of entry -->
-        
         
         
 
@@ -2070,6 +2017,10 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
 
                 <ul class="entry_type_enum">
                   <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>disable Intel color effect</p></span>
+                  </li>
+                  <li>
                     <span class="entry_type_enum_name">SKY_BLUE</span>
                     <span class="entry_type_enum_notes"><p>ia_<wbr/>aiq_<wbr/>color_<wbr/>effect_<wbr/>sky_<wbr/>blue</p></span>
                   </li>
@@ -2098,7 +2049,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td> <!-- entry_type -->
 
             <td class="entry_description">
-              <p>This contains the color effect modes from Intel 3A that can be applied to images.<wbr/></p>
+              <p>This contains the color effect modes supported by Intel 3A that can be applied to images.<wbr/></p>
             </td>
 
             <td class="entry_units">
@@ -2116,7 +2067,11 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>To be added...<wbr/></p>
+              <p>Intel color effect can be used like as an extension to the standard control(android.<wbr/>control.<wbr/>effect<wbr/>Mode).<wbr/>
+But due to range checks in android standard API,<wbr/> those keys can't be sent by android.<wbr/>control.<wbr/>effect<wbr/>Mode,<wbr/>
+it's right way to send by separate control tag.<wbr/>
+If a request with both tags arrives at the HAL,<wbr/> the Android standard metadata should take precedence
+over the Intel's.<wbr/></p>
             </td>
           </tr>
 
@@ -2149,7 +2104,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum brightening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2194,7 +2149,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum contrast,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2239,7 +2194,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum saturation,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2252,6 +2207,51 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
               <p>value of saturation</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="controls_com.intel.imageEnhance.hue">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>image<wbr/>Enhance.<wbr/>hue
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum hue,<wbr/> 0 is neutral</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>value of hue</p>
             </td>
           </tr>
 
@@ -2284,7 +2284,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum sharpening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2348,6 +2348,10 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
 
                 <ul class="entry_type_enum">
                   <li>
+                    <span class="entry_type_enum_name">OFF</span>
+                    <span class="entry_type_enum_notes"><p>disable Intel color effect</p></span>
+                  </li>
+                  <li>
                     <span class="entry_type_enum_name">SKY_BLUE</span>
                     <span class="entry_type_enum_notes"><p>ia_<wbr/>aiq_<wbr/>color_<wbr/>effect_<wbr/>sky_<wbr/>blue</p></span>
                   </li>
@@ -2376,7 +2380,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td> <!-- entry_type -->
 
             <td class="entry_description">
-              <p>This contains the color effect modes from Intel 3A that can be applied to images.<wbr/></p>
+              <p>This contains the color effect modes supported by Intel 3A that can be applied to images.<wbr/></p>
             </td>
 
             <td class="entry_units">
@@ -2394,7 +2398,11 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           </tr>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
-              <p>To be added...<wbr/></p>
+              <p>Intel color effect can be used like as an extension to the standard control(android.<wbr/>control.<wbr/>effect<wbr/>Mode).<wbr/>
+But due to range checks in android standard API,<wbr/> those keys can't be sent by android.<wbr/>control.<wbr/>effect<wbr/>Mode,<wbr/>
+it's right way to send by separate control tag.<wbr/>
+If a request with both tags arrives at the HAL,<wbr/> the Android standard metadata should take precedence
+over the Intel's.<wbr/></p>
             </td>
           </tr>
 
@@ -2427,7 +2435,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum brightening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2472,7 +2480,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10]; 10 is maximum contrast,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2517,7 +2525,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum saturation,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2530,6 +2538,51 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           <tr class="entry_cont">
             <td class="entry_details" colspan="5">
               <p>value of saturation</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+                
+          <tr class="entry" id="dynamic_com.intel.imageEnhance.hue">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>image<wbr/>Enhance.<wbr/>hue
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">int32</span>
+
+              <span class="entry_type_visibility"> [public]</span>
+
+
+
+
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum hue,<wbr/> 0 is neutral</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>value of hue</p>
             </td>
           </tr>
 
@@ -2562,7 +2615,7 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
             </td>
 
             <td class="entry_range">
-              <p>[1,<wbr/>10]</p>
+              <p>[-10,<wbr/>10],<wbr/> 10 is maximum sharpening,<wbr/> 0 is neutral</p>
             </td>
 
             <td class="entry_tags">
@@ -2582,6 +2635,90 @@ Positive integer means each person id.<wbr/> 0 is illegal.<wbr/></p>
           <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
            <!-- end of entry -->
         
+        
+
+      <!-- end of kind -->
+      </tbody>
+      <tr><td colspan="6" class="kind">static</td></tr>
+
+      <thead class="entries_header">
+        <tr>
+          <th class="th_name">Property Name</th>
+          <th class="th_type">Type</th>
+          <th class="th_description">Description</th>
+          <th class="th_units">Units</th>
+          <th class="th_range">Range</th>
+          <th class="th_tags">Tags</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        
+
+        
+
+        
+
+        
+                
+            
+
+                
+          <tr class="entry" id="static_com.intel.imageEnhance.info.availablecolorEffects">
+            <td class="entry_name
+             " rowspan="3">
+              com.<wbr/>intel.<wbr/>image<wbr/>Enhance.<wbr/>info.<wbr/>availablecolor<wbr/>Effects
+            </td>
+            <td class="entry_type">
+                <span class="entry_type_name">byte</span>
+                <span class="entry_type_container">x</span>
+
+                <span class="entry_type_array">
+                  n
+                </span>
+              <span class="entry_type_visibility"> [public as enumList]</span>
+
+
+
+
+                <div class="entry_type_notes">List of enums</div>
+
+
+            </td> <!-- entry_type -->
+
+            <td class="entry_description">
+              <p>List of color effect modes for com.<wbr/>intel.<wbr/>image<wbr/>Enhance.<wbr/>color<wbr/>Effect that can be applied to images.<wbr/></p>
+            </td>
+
+            <td class="entry_units">
+            </td>
+
+            <td class="entry_range">
+              <p>Any value listed in com.<wbr/>intel.<wbr/>image<wbr/>Enhance.<wbr/>color<wbr/>Effect</p>
+            </td>
+
+            <td class="entry_tags">
+            </td>
+
+          </tr>
+          <tr class="entries_header">
+            <th class="th_details" colspan="5">Details</th>
+          </tr>
+          <tr class="entry_cont">
+            <td class="entry_details" colspan="5">
+              <p>Android standard color effect modes and Intel color effect modes can't be applied at same time,<wbr/>
+Android color effect should have higher priority</p>
+            </td>
+          </tr>
+
+
+          <tr class="entry_spacer"><td class="entry_spacer" colspan="6"></td></tr>
+           <!-- end of entry -->
+        
+        
+        
+
         
 
       <!-- end of kind -->

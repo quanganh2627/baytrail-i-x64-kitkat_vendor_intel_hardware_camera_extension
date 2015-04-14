@@ -67,6 +67,29 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
 
   <namespace name="com">
       <namespace name="intel">
+        <section name="extensions">
+          <static>
+              <entry name="availableGroups" type="byte" visibility="public" enum="true" container="array">
+                <array>
+                  <size>n</size>
+                </array>
+                <enum>
+                  <value>STATISTICS
+                  <notes>camera extension supports statistics analisys </notes></value>
+                  <value>CV
+                  <notes>camera extension supports computer vision </notes></value>
+                  <value>ENHANCEMENT
+                  <notes>camera extension supports image enhancement, eg saturation </notes></value>
+                  <value>DEVICE
+                  <notes>camera extension supports special features in device,eg dual video </notes></value>
+                </enum>
+                <description>List of enums from com.intel.device.info.availableExtensions</description>
+                <details>The empty list means no camera extension support
+                </details>
+              </entry>
+          </static>
+        </section>
+
       <!--@O~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
       * The sections below this point are generated from metadata
       * definitions vendortags_properties_*.xml. Do not modify by
@@ -202,8 +225,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </array>
                 <description>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</description>
                 <range>[0,100]</range>
-                <details>0 means it’s no smile at all.
-                         100 means fully smiling face.
+                <details>A person's smile intensity is able to be detected. Along with detecting features of a face, the changes and movements of the face are also analyzed in order to index smile intensity.
                 </details>
               </entry>
 
@@ -227,8 +249,7 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 </array>
                 <description>This metadata tag will provide an list of blink confidence scores. The scores are confidence level that the face is blinking.</description>
                 <range>[0,100]</range>
-                <details>0 means closed eye.
-                         100 means wide-open eye.
+                <details>A person's blink intensity is able to be detected. Along with detecting features of eyes, the changes and movements of eyes are also analyzed in order to index blink intensity.
                 </details>
               </entry>
 
@@ -280,28 +301,6 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
 
           <static>
             <namespace name="info">
-              <entry name="availableSmileDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.smileDetectMode</description>
-                <details>NO is always supported.
-
-                         YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.
-                </details>
-              </entry>
-
-              <entry name="availableBlinkDetect" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
-                <array>
-                  <size>n</size>
-                </array>
-                <description>List of enums from com.intel.cv.blinkDetectMode</description>
-                <details>NO is always supported.
-
-                         YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.
-                </details>
-              </entry>
-
               <entry name="availableFaceRecognize" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
                 <array>
                   <size>n</size>
@@ -365,25 +364,6 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                 <details>OFF Dual camera mode is off. ON Dual camera mode is on.
                 </details>
               </entry>
-
-              <entry name="availableExtensions" type="byte" visibility="public" enum="true" container="array">
-                <array>
-                  <size>n</size>
-                </array>
-                <enum>
-                  <value>STATISTICS
-                  <notes>camera extension supports statistics analisys </notes></value>
-                  <value>CV
-                  <notes>camera extension supports computer vision </notes></value>
-                  <value>ENHANCEMENT
-                  <notes>camera extension supports image enhancement, eg saturation </notes></value>
-                  <value>DEVICE
-                  <notes>camera extension supports special features in device,eg dual video </notes></value>
-                </enum>
-                <description>List of enums from com.intel.device.info.availableExtensions</description>
-                <details>The empty list means no camera extension support
-                </details>
-              </entry>
             </namespace>
           </static>
 
@@ -392,6 +372,8 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
           <controls>
               <entry name="colorEffect" type="byte" visibility="public" enum="true" >
                 <enum>
+                  <value>OFF
+                  <notes>disable Intel color effect</notes></value>
                   <value>SKY_BLUE
                   <notes>ia_aiq_color_effect_sky_blue</notes></value>
                   <value>GRASS_GREEN
@@ -405,28 +387,38 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
                   <value>VIVID
                   <notes>ia_aiq_color_effect_vivid</notes></value>
                 </enum>
-                <description>This contains the color effect modes from Intel 3A that can be applied to images.</description>
-                <details>To be added...
+                <description>This contains the color effect modes supported by Intel 3A that can be applied to images.</description>
+                <details>
+                  Intel color effect can be used like as an extension to the standard control(android.control.effectMode).
+                  But due to range checks in android standard API, those keys can't be sent by android.control.effectMode,
+                  it's right way to send by separate control tag.
+                  If a request with both tags arrives at the HAL, the Android standard metadata should take precedence
+                  over the Intel's.
                 </details>
               </entry>
 
               <entry name="brightness" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10]; 10 is maximum brightening, 0 is neutral</range>
                 <details> value of brightness </details>
               </entry>
 
               <entry name="contrast" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10]; 10 is maximum contrast, 0 is neutral</range>
                 <details> value of contrast</details>
               </entry>
 
               <entry name="saturation" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10], 10 is maximum saturation, 0 is neutral</range>
                 <details> value of saturation</details>
               </entry>
 
+              <entry name="hue" type="int32" visibility="public" >
+                <range>[-10,10], 10 is maximum hue, 0 is neutral</range>
+                <details> value of hue</details>
+              </entry>
+
               <entry name="sharpness" type="int32" visibility="public" >
-                <range>[1,10]</range>
+                <range>[-10,10], 10 is maximum sharpening, 0 is neutral</range>
                 <details> value of sharpness</details>
               </entry>
           </controls>
@@ -436,8 +428,26 @@ xsi:schemaLocation="http://schemas.android.com/service/camera/metadata/ metadata
               <clone entry="com.intel.imageEnhance.brightness" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.contrast" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.saturation" kind="controls"></clone>
+              <clone entry="com.intel.imageEnhance.hue" kind="controls"></clone>
               <clone entry="com.intel.imageEnhance.sharpness" kind="controls"></clone>
           </dynamic>
+
+          <static>
+            <namespace name="info">
+              <entry name="availablecolorEffects" type="byte" visibility="public" type_notes="List of enums" container="array" typedef="enumList">
+                <array>
+                  <size>n</size>
+                </array>
+                <description>List of color effect modes for com.intel.imageEnhance.colorEffect that can be applied to images.</description>
+                <range>Any value listed in com.intel.imageEnhance.colorEffect</range>
+                <details>
+                  Android standard color effect modes and Intel color effect modes can't be applied at same time,
+                  Android color effect should have higher priority
+                </details>
+              </entry>
+            </namespace>
+          </static>
+
         </section>
       <!--@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
       * End generated code

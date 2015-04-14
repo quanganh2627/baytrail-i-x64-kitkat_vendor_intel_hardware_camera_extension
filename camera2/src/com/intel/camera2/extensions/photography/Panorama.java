@@ -15,20 +15,31 @@
  */
 package com.intel.camera2.extensions.photography;
 
+import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
+import android.graphics.YuvImage;
+import android.media.Image;
 import android.util.Log;
 
 import com.intel.camera2.extensions.IaFrame;
+import com.intel.camera2.extensions.ImageConverter;
 
 /**
+ * It receives some images that are received in one direction.
+ * It returns one panoramic image what the received images are stitched.
  * 
+ * This class needs some libraries what there are dependence on Intel specific platform.
+ * The {@link #isSupported} method informs that your device can be supported.
  */
 public class Panorama {
     private static final String TAG = "Panorama";
-    private static Panorama mPanorama;
     private long mJNIInstance;
-    private final int MAX_SUPPORTED_NUM_IMAGES;
+    private static int MAX_SUPPORTED_NUM_IMAGES = -1;
     private int mPicIndex;
     private Direction mSetDirection = Direction.Still;
+
+    public static final int SUCCESS = 0;
+    public static final int ERROR = -1;
 
     /**
      * The enumerated values to specify the panning direction of panoramic stitch.
@@ -44,18 +55,6 @@ public class Panorama {
         Down,
         /** Upward panning */
         Up,
-        /** The direction of panning is automatically detected in preview mode. */
-        PreviewAuto,
-    }
-
-    private Panorama(long instance) {
-        mJNIInstance = instance;
-        PanoramaJNI.Config config = PanoramaJNI.getConfig(instance);
-        if (config != null) {
-            MAX_SUPPORTED_NUM_IMAGES = config.max_supported_num_images;
-        } else {
-            MAX_SUPPORTED_NUM_IMAGES = 0;
-        }
     }
 
     /**
@@ -66,35 +65,56 @@ public class Panorama {
     }
 
     /**
-     * Return the panorama instance that is kept single instance.
-     * @return Panorama singleton instance.
+     * Get a count that this class can stitch.
+     * @return Supported image count
      */
-    public static Panorama getInstance() {
-        if (mPanorama == null && PanoramaJNI.isSupported()) {
-            long jniInstance = PanoramaJNI.create();
-            if (jniInstance != 0) {
-                mPanorama = new Panorama(jniInstance);
+    public static int getMaxCountSupported() {
+        if (MAX_SUPPORTED_NUM_IMAGES == -1) {
+            long instance = PanoramaJNI.create();
+            if (instance != 0) {
+                PanoramaJNI.Config config = PanoramaJNI.getConfig(instance);
+                if (config != null) {
+                    MAX_SUPPORTED_NUM_IMAGES = config.max_supported_num_images;
+                }
+                PanoramaJNI.destroy(instance);
             }
         }
-        return mPanorama;
+        return MAX_SUPPORTED_NUM_IMAGES;
     }
 
     /**
-     * It will release all resources are allocated internally.<br>
-     * This method must be called after finishing panorama.
+     * It creates new panorama instance. If it's not supported, it will return null.
+     * @return Panorama instance
      */
-    public static void release() {
-        if (mPanorama != null) {
-            mPanorama.releaseLibraryInstances();
-            mPanorama = null;
+    public static Panorama newInstance() {
+        try {
+            return new Panorama();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
-    private void releaseLibraryInstances() {
+    private Panorama() {
+        mJNIInstance = PanoramaJNI.create();
+        getMaxCountSupported();
+    }
+
+    /**
+     * It releases all resources are allocated internally.<br>
+     * This method must be called after finishing panorama.
+     */
+    public void release() {
         if (mJNIInstance != 0) {
             PanoramaJNI.destroy(mJNIInstance);
             mJNIInstance = 0;
         }
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        release();
+        super.finalize();
     }
 
     /**
@@ -108,7 +128,7 @@ public class Panorama {
 
     /**
      * Set direction for stitching.<br>
-     * This method should be called before calling addImage or getStitchedImage.
+     * This method should be called before calling addImage.
      * @param direction {@link Direction}
      */
     public void setDirection(Direction direction) {
@@ -118,12 +138,48 @@ public class Panorama {
 
     /**
      * It adds the image for stitching.
-     * @param image Only {@link IaFrame.PvlFormat}.NV12 is supported.
      */
-    public void addImage(IaFrame image) {
+    public int addInputImage(Bitmap bitmap, int degree) {
+        if (checkToAddInputImage()) {
+            IaFrame iaFrame = new IaFrame(bitmap, IaFrame.PvlFormat.NV12, degree);
+            addInputImage(iaFrame);
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+    }
+
+    /**
+     * It adds the image for stitching.
+     */
+    public int addInputImage(Image image, int degree) {
+        if (checkToAddInputImage()) {
+            IaFrame iaFrame = new IaFrame(image, IaFrame.PvlFormat.NV12, degree);
+            addInputImage(iaFrame);
+            return SUCCESS;
+        } else {
+            return ERROR;
+        }
+    }
+
+    /**
+     * It returns the stitched image that are added through addImage() method.
+     * @return YuvImage panorama image.
+     */
+    public YuvImage getPanoramaImage() {
+        if (mPicIndex > 0) {
+            IaFrame frame = PanoramaJNI.run(mJNIInstance);
+            if (frame != null) {
+                return ImageConverter.convertToYuvImage(frame.imageData, ImageFormat.YUV_420_888, frame.stride, frame.width, frame.height);
+            }
+        }
+        return null;
+    }
+
+    private boolean checkToAddInputImage() {
         if (mPicIndex >= MAX_SUPPORTED_NUM_IMAGES) {
             Log.e(TAG, "MAX_SUPPORTED_NUM_IMAGES is " + MAX_SUPPORTED_NUM_IMAGES);
-            return;
+            return false;
         }
         switch(mSetDirection) {
             case Left:
@@ -133,32 +189,21 @@ public class Panorama {
                 break;
             default:
                 Log.e(TAG, "Direction(" + mSetDirection + ") is not supported on addImage() method.");
-                return;
+                return false;
         }
 
         if (mPicIndex == 0) {
             PanoramaJNI.Param param = PanoramaJNI.getParam(mJNIInstance);
             if (param != null && param.direction == PanoramaJNI.DIRECTION_STILL) {
                 Log.e(TAG, "panorama's direction is not set.");
-                return;
+                return false;
             }
         }
-        PanoramaJNI.stitch(mJNIInstance, image, mPicIndex);
+        return true;
+    }
+
+    private void addInputImage(IaFrame frame) {
+        PanoramaJNI.stitch(mJNIInstance, frame, mPicIndex);
         mPicIndex++;
-    }
-
-    /**
-     * It returns the stitched image that are added through addImage() method.
-     * @return stitched image.
-     */
-    public IaFrame getStitchedImage() {
-        if (mPicIndex > 0) {
-            return PanoramaJNI.run(mJNIInstance);
-        }
-        return null;
-    }
-
-    public void setDebug(int debug) {
-        PanoramaJNI.setDebug(mJNIInstance, debug);
     }
 }

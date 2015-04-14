@@ -18,7 +18,7 @@ package com.intel.camera2.extensions.photography;
 /**
  * the option container class for {@link MultiFrameBlender}
  */
-public class BlenderOption {
+final class BlenderOption {
     public byte[] binaryData;
     public int binarySize;
     public int target;

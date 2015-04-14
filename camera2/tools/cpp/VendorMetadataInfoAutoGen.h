@@ -45,14 +45,15 @@ const metadata_value_t com_intel_device_dualCameraMode_values[] = {
                  {"ON", COM_INTEL_DEVICE_DUAL_CAMERA_MODE_ON },
          };
 
-const metadata_value_t com_intel_device_info_availableExtensions_values[] = {
-                 {"STATISTICS", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS },
-                 {"CV", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV },
-                 {"ENHANCEMENT", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT },
-                 {"DEVICE", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE },
+const metadata_value_t com_intel_extensions_availableGroups_values[] = {
+                 {"STATISTICS", COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS },
+                 {"CV", COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV },
+                 {"ENHANCEMENT", COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT },
+                 {"DEVICE", COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE },
          };
 
 const metadata_value_t com_intel_imageEnhance_colorEffect_values[] = {
+                 {"OFF", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF },
                  {"SKY_BLUE", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE },
                  {"GRASS_GREEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN },
                  {"SKIN_WHITEN", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN },
@@ -109,22 +110,23 @@ const metadata_value_t vendorMetadataNames[] = {
         {"com.intel.imageEnhance.brightness", COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS},
         {"com.intel.imageEnhance.contrast", COM_INTEL_IMAGE_ENHANCE_CONTRAST},
         {"com.intel.imageEnhance.saturation", COM_INTEL_IMAGE_ENHANCE_SATURATION},
+        {"com.intel.imageEnhance.hue", COM_INTEL_IMAGE_ENHANCE_HUE},
         {"com.intel.imageEnhance.sharpness", COM_INTEL_IMAGE_ENHANCE_SHARPNESS},
 };
 
 const metadata_tag_t static_vendor_tags_table[] = {
+    // EXTENSIONS
+    {"extensions.availableGroups", COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS, TYPE_BYTE, com_intel_extensions_availableGroups_values, 4, true, {-1,0,0}, 0 },
     // STATISTICS
     // CV
-    {"cv.info.availableSmileDetect", COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT, TYPE_BYTE, com_intel_cv_smileDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"cv.info.availableBlinkDetect", COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT, TYPE_BYTE, com_intel_cv_blinkDetectMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availableFaceRecognize", COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE, TYPE_BYTE, com_intel_cv_faceRecognizeMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availableObjectTrack", COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     {"cv.info.availablePanorama", COM_INTEL_CV_INFO_AVAILABLE_PANORAMA, TYPE_BYTE, NULL, 0, true, {-1,0,0}, ENUM_LIST },
     // DEVICE
     {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_dualCameraMode_values, 2, true, {-1,0,0}, ENUM_LIST },
-    {"device.info.availableExtensions", COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS, TYPE_BYTE, com_intel_device_info_availableExtensions_values, 4, true, {-1,0,0}, 0 },
     // IMAGE_ENHANCE
+    {"imageEnhance.info.availablecolorEffects", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS, TYPE_BYTE, com_intel_imageEnhance_colorEffect_values, 7, true, {-1,0,0}, ENUM_LIST },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 7
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 6
 

@@ -19,28 +19,28 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 /**
- * The result info of detection or recognition.
+ * The result info class of analyzing.
  */
 public class FaceData {
 
     /**
-     * 
+     * The result info class of face detection.
      */
     public static class FaceInfo {
         /** The rectangular region of the detected face. */
-        public Rect faceRect;
+        public Rect bound;
         /** The confidence value of the detected face [0, 100]. */
         public int confidence;
         /** The approximated value of RIP angle (in degree) of the detected face. */
         public int ripAngle;
         /** The approximated value of ROP angle (in degree) of the detected face. */
-        public int ropAngle;
+        private int ropAngle;
         /** The tracking id of the face. Only valid in preview mode.
          *  The value will be unique throughout the component life cycle. */
-        public int trackingId;
+        private int trackingId;
 
         public FaceInfo(Rect rect, int confidence, int ripAngle, int ropAngle, int trackingId) {
-            this.faceRect = rect;
+            this.bound = rect;
             this.confidence = confidence;
             this.ripAngle = ripAngle;
             this.ropAngle = ropAngle;
@@ -49,41 +49,48 @@ public class FaceData {
 
         @Override
         public String toString() {
-            return "rect("+faceRect.toShortString()+") confidence("+confidence+") rip("+ripAngle+") rop("+ropAngle+") trackingId("+trackingId+")";
+            return "rect("+bound.toShortString()+") confidence("+confidence+") rip("+ripAngle+") rop("+ropAngle+") trackingId("+trackingId+")";
         }
     }
 
     /**
-     * 
+     * The result info class of eye detection.
      */
     public static class EyeInfo {
         /** The center position on the left eye */
-        public Point leftEye;
+        public Point leftEyePosition;
         /** The center position on the right eye */
-        public Point rightEye;
+        public Point rightEyePosition;
         /**< The confidence value of the detected eyes. The value is negative if the eye detection failed. */
         public int confidence;
 
         public EyeInfo(Point left, Point right, int confidence) {
-            this.leftEye = left;
-            this.rightEye = right;
+            this.leftEyePosition = left;
+            this.rightEyePosition = right;
             this.confidence = confidence;
         }
 
         @Override
         public String toString() {
-            return "left("+leftEye.toString()+") right("+rightEye.toString()+") confidence("+confidence+")";
+            return "left("+leftEyePosition.toString()+") right("+rightEyePosition.toString()+") confidence("+confidence+")";
         }
     }
 
     /**
-     *
+     * The result info class of smile detection.
      */
     public static class SmileInfo {
+        public static final int STATE_NO_SMILE = 0;
+        public static final int STATE_SMILE = 1;
+
         /** The smile score of the face in the range of 0 to 100, where 0 means non-smile and 100 means full smile. */
         public int score;
 
-        /** The state of the smile of the face. */
+        /**
+         * The state of the smile of the face.<br>
+         * - 0 ({@link #STATE_NO_SMILE}): Person is not smiling.<br>
+         * - 1 ({@link #STATE_SMILE}): Person is smiling.
+         */
         public int state;
 
         public SmileInfo(int score, int state) {
@@ -98,39 +105,43 @@ public class FaceData {
     }
 
     /**
-     *
+     * The result info class of blink detection.
      */
     public static class BlinkInfo {
+        public static final int STATE_OPEN = 0;
+        public static final int STATE_CLOSE = 1;
+
         /** The blink score on the left eye in range between 0 and 100, where 0 means wide opened eye and 100 means fully closed eye. */
-        public int left_score;
+        public int leftEyeScore;
 
         /** The blink state on the left eye. */
-        public int left_state;
+        public int leftEyeState;
 
         /** The blink score on the right eye in range between 0 and 100, where 0 means wide opened eye and 100 means fully closed eye. */
-        public int right_score;
+        public int rightEyeScore;
 
         /** The blink state on the right eye. */
-        public int right_state;
+        public int rightEyeState;
 
         public BlinkInfo(int left_score, int left_state, int right_score, int right_state) {
-            this.left_score = left_score;
-            this.left_state = left_state;
-            this.right_score = right_score;
-            this.right_state = right_state;
+            this.leftEyeScore = left_score;
+            this.leftEyeState = left_state;
+            this.rightEyeScore = right_score;
+            this.rightEyeState = right_state;
         }
 
         @Override
         public String toString() {
-            return "left_score("+left_score+") left_state("+left_state+") right_score("+right_score+") right_state("+right_state+")";
+            return "left_score("+leftEyeScore+") left_state("+leftEyeState+") right_score("+rightEyeScore+") right_state("+rightEyeState+")";
         }
     }
 
     /**
-     *
+     * The result info class of face recognition.
      */
     public static class RecognitionInfo {
-        public static final int UNKOWN_PERSON_ID = -1;
+        /** It's default person id which the recognition library couldn't search the person in database. */
+        public static final int UNKOWN_PERSON_ID = -10000;
 
         /** The estimated similarity between the input face and the faces in the database. The biggest value will be assigned. */
         public int similarity;
@@ -143,11 +154,11 @@ public class FaceData {
         /** The environmental information of the face. Reserved for future use. */
         public int condition;
         /** The checksum value of the face data. */
-        public int checksum;
+        private int checksum;
         /** The pointer to the actual face data. Face data is essentially a binary encoded representation of the face generated from the gray face image. */
-        public byte[] feature;
+        private byte[] feature;
 
-        public RecognitionInfo(int similarity, long faceId, int personId, long timeStamp, int condition, int checksum, byte[] feature) {
+        public RecognitionInfo(byte[] feature, int similarity, long faceId, int personId, long timeStamp, int condition, int checksum) {
             this.similarity = similarity;
             this.faceId = faceId;
             this.personId = personId;
@@ -159,7 +170,8 @@ public class FaceData {
 
         @Override
         public String toString() {
-            return "similarity("+similarity+") faceId("+faceId+") personId("+personId+") timeStamp("+timeStamp+") condition("+condition+") checksum("+checksum+") feature("+feature+" / size: "+feature.length+")";
+            return "similarity("+similarity+") faceId("+faceId+") personId("+personId+") timeStamp("+timeStamp+")" +
+                   " condition("+condition+") checksum("+checksum+") feature("+feature+" / size: "+(feature!=null?feature.length:0)+")";
         }
     }
 }

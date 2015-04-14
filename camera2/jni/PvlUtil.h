@@ -67,22 +67,57 @@
 #define CLASS_PANORAMA_PARAM            CLASS_PANORAMA "$Param"
 #define SIG_PANORAMA_PARAM              "L" CLASS_PANORAMA_PARAM ";"
 
+
+
+/////////////////////////////////////////////////
+// class FaceData
 #define CLASS_FACE_DATA                 PACKAGE "/vision/FaceData"
 
+// class FaceData.FaceInfo
 #define CLASS_FACE_DETECTION_INFO       CLASS_FACE_DATA "$FaceInfo"
 #define SIG_FACE_DETECTION_INFO         "L" CLASS_FACE_DETECTION_INFO ";"
 
+#define STR_FD_rect                     "bound"
+#define STR_FD_confidence               "confidence"
+#define STR_FD_rip_angle                "ripAngle"
+#define STR_FD_rop_angle                "ripAngle"
+#define STR_FD_tracking_id              "trackingId"
+
+// class FaceData.EyeInfo
 #define CLASS_EYE_DETECTION_INFO        CLASS_FACE_DATA "$EyeInfo"
 #define SIG_EYE_DETECTION_INFO          "L" CLASS_EYE_DETECTION_INFO ";"
 
+#define STR_ED_left_eye                 "leftEyePosition"
+#define STR_ED_right_eye                "rightEyePosition"
+#define STR_ED_confidence               "confidence"
+
+// class FaceData.RecognitionInfo
 #define CLASS_FACE_RECOGNITION_INFO     CLASS_FACE_DATA "$RecognitionInfo"
 #define SIG_FACE_RECOGNITION_INFO       "L" CLASS_FACE_RECOGNITION_INFO ";"
 
+#define STR_FR_similarity               "similarity"
+#define STR_FR_face_id                  "faceId"
+#define STR_FR_person_id                "personId"
+#define STR_FR_time_stamp               "timeStamp"
+#define STR_FR_condition                "condition"
+#define STR_FR_checksum                 "checksum"
+#define STR_FR_data                     "feature"
+
+// class FaceData.SmileInfo
 #define CLASS_SMILE_DETECTION_INFO      CLASS_FACE_DATA "$SmileInfo"
 #define SIG_SMILE_DETECTION_INFO        "L" CLASS_SMILE_DETECTION_INFO ";"
 
+#define STR_SD_score                    "score"
+#define STR_SD_state                    "state"
+
+// class FaceData.BlinkInfo
 #define CLASS_BLINK_DETECTION_INFO      CLASS_FACE_DATA "$BlinkInfo"
 #define SIG_BLINK_DETECTION_INFO        "L" CLASS_BLINK_DETECTION_INFO ";"
+
+#define STR_BD_left_score               "leftEyeScore"
+#define STR_BD_left_state               "leftEyeState"
+#define STR_BD_right_score              "rightEyeScore"
+#define STR_BD_right_state              "rightEyeState"
 
 void mapImage(JNIEnv* env, pvl_image* dst, jobject src);
 jobject createIaFrame(JNIEnv* env, pvl_image* src);

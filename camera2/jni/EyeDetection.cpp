@@ -102,11 +102,11 @@ jobject EyeDetection_getConfig(JNIEnv* env, jobject thiz, jlong instance)
 void getFDResult(JNIEnv* env, pvl_face_detection_result *out, jobjectArray jFDResults, int index)
 {
     jobject fdResult = env->GetObjectArrayElement(jFDResults, index);
-    getValueRect(env, &out->rect, fdResult, "faceRect");
-    out->confidence = getValueInt(env, fdResult, "confidence");
-    out->rip_angle = getValueInt(env, fdResult, "ripAngle");
-    out->rop_angle = getValueInt(env, fdResult, "ropAngle");
-    out->tracking_id = getValueInt(env, fdResult, "trackingId");
+    getValueRect(env, &out->rect, fdResult, STR_FD_rect);
+    out->confidence = getValueInt(env, fdResult, STR_FD_confidence);
+    out->rip_angle = getValueInt(env, fdResult, STR_FD_rip_angle);
+    out->rop_angle = getValueInt(env, fdResult, STR_FD_rop_angle);
+    out->tracking_id = getValueInt(env, fdResult, STR_FD_tracking_id);
 }
 
 jobjectArray createJResult(JNIEnv* env, pvl_eye_detection_result* results, int num)

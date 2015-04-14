@@ -31,12 +31,20 @@
  */
 
 const char *intel_camera_metadata_section_names[INTEL_CAMERA_SECTION_COUNT] = {
+    [COM_INTEL_EXTENSIONS]         = "com.intel.extensions",
     [COM_INTEL_STATISTICS]         = "com.intel.statistics",
     [COM_INTEL_CV]                 = "com.intel.cv",
     [COM_INTEL_CV_INFO]            = "com.intel.cv.info",
     [COM_INTEL_DEVICE]             = "com.intel.device",
     [COM_INTEL_DEVICE_INFO]        = "com.intel.device.info",
     [COM_INTEL_IMAGE_ENHANCE]      = "com.intel.imageEnhance",
+    [COM_INTEL_IMAGE_ENHANCE_INFO] = "com.intel.imageEnhance.info",
+};
+
+static tag_info_t com_intel_extensions_tags[COM_INTEL_EXTENSIONS_END -
+        COM_INTEL_EXTENSIONS_START] = {
+    [ COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS - COM_INTEL_EXTENSIONS_START ] =
+    { "availableGroups",               TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_statistics_tags[COM_INTEL_STATISTICS_END -
@@ -78,10 +86,6 @@ static tag_info_t com_intel_cv_tags[COM_INTEL_CV_END -
 
 static tag_info_t com_intel_cv_info_tags[COM_INTEL_CV_INFO_END -
         COM_INTEL_CV_INFO_START] = {
-    [ COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT - COM_INTEL_CV_INFO_START ] =
-    { "availableSmileDetect",          TYPE_BYTE   },
-    [ COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT - COM_INTEL_CV_INFO_START ] =
-    { "availableBlinkDetect",          TYPE_BYTE   },
     [ COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE - COM_INTEL_CV_INFO_START ] =
     { "availableFaceRecognize",        TYPE_BYTE   },
     [ COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK - COM_INTEL_CV_INFO_START ] =
@@ -100,8 +104,6 @@ static tag_info_t com_intel_device_info_tags[COM_INTEL_DEVICE_INFO_END -
         COM_INTEL_DEVICE_INFO_START] = {
     [ COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE - COM_INTEL_DEVICE_INFO_START ] =
     { "availableDualCameraMode",       TYPE_BYTE   },
-    [ COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS - COM_INTEL_DEVICE_INFO_START ] =
-    { "availableExtensions",           TYPE_BYTE   },
 };
 
 static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
@@ -114,11 +116,26 @@ static tag_info_t com_intel_image_enhance_tags[COM_INTEL_IMAGE_ENHANCE_END -
     { "contrast",                      TYPE_INT32  },
     [ COM_INTEL_IMAGE_ENHANCE_SATURATION - COM_INTEL_IMAGE_ENHANCE_START ] =
     { "saturation",                    TYPE_INT32  },
+    [ COM_INTEL_IMAGE_ENHANCE_HUE - COM_INTEL_IMAGE_ENHANCE_START ] =
+    { "hue",                           TYPE_INT32  },
     [ COM_INTEL_IMAGE_ENHANCE_SHARPNESS - COM_INTEL_IMAGE_ENHANCE_START ] =
     { "sharpness",                     TYPE_INT32  },
 };
 
+static tag_info_t com_intel_image_enhance_info_tags[COM_INTEL_IMAGE_ENHANCE_INFO_END -
+        COM_INTEL_IMAGE_ENHANCE_INFO_START] = {
+    [ COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS - COM_INTEL_IMAGE_ENHANCE_INFO_START ] =
+    { "availablecolorEffects",         TYPE_BYTE   },
+};
 
+
+
+static tag_section_t section_com_intel_extensions = {
+    "com.intel.extensions",
+    (uint32_t) COM_INTEL_EXTENSIONS_START,
+    (uint32_t) COM_INTEL_EXTENSIONS_END,
+    com_intel_extensions_tags
+};
 
 static tag_section_t section_com_intel_statistics = {
     "com.intel.statistics",
@@ -162,14 +179,23 @@ static tag_section_t section_com_intel_image_enhance = {
     com_intel_image_enhance_tags
 };
 
+static tag_section_t section_com_intel_image_enhance_info = {
+    "com.intel.imageEnhance.info",
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_INFO_START,
+    (uint32_t) COM_INTEL_IMAGE_ENHANCE_INFO_END,
+    com_intel_image_enhance_info_tags
+};
+
 
 tag_section_t intel_tag_sections[INTEL_CAMERA_SECTION_COUNT] = {
+    section_com_intel_extensions,
     section_com_intel_statistics,
     section_com_intel_cv,
     section_com_intel_cv_info,
     section_com_intel_device,
     section_com_intel_device_info,
     section_com_intel_image_enhance,
+    section_com_intel_image_enhance_info,
 };
 
 int intel_camera_metadata_enum_snprint(uint32_t tag,
@@ -180,6 +206,30 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
     int ret = -1;
 
     switch(tag) {
+        case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS: {
+            switch (value) {
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS:
+                    msg = "STATISTICS";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV:
+                    msg = "CV";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT:
+                    msg = "ENHANCEMENT";
+                    ret = 0;
+                    break;
+                case COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE:
+                    msg = "DEVICE";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
+            break;
+        }
+
         case COM_INTEL_STATISTICS_ANALYSIS_MODE: {
             switch (value) {
                 case COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF:
@@ -344,12 +394,6 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
             break;
         }
 
-        case COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT: {
-            break;
-        }
-        case COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT: {
-            break;
-        }
         case COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE: {
             break;
         }
@@ -379,32 +423,13 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         case COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE: {
             break;
         }
-        case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS: {
-            switch (value) {
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS:
-                    msg = "STATISTICS";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV:
-                    msg = "CV";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT:
-                    msg = "ENHANCEMENT";
-                    ret = 0;
-                    break;
-                case COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE:
-                    msg = "DEVICE";
-                    ret = 0;
-                    break;
-                default:
-                    msg = "error: enum value out of range";
-            }
-            break;
-        }
 
         case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT: {
             switch (value) {
+                case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF:
+                    msg = "OFF";
+                    ret = 0;
+                    break;
                 case COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE:
                     msg = "SKY_BLUE";
                     ret = 0;
@@ -443,7 +468,14 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         case COM_INTEL_IMAGE_ENHANCE_SATURATION: {
             break;
         }
+        case COM_INTEL_IMAGE_ENHANCE_HUE: {
+            break;
+        }
         case COM_INTEL_IMAGE_ENHANCE_SHARPNESS: {
+            break;
+        }
+
+        case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS: {
             break;
         }
 

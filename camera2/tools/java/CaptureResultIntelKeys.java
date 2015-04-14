@@ -113,8 +113,7 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>This metadata tag will provide an list of smile confidence scores. The scores are confidence level that the face is smiling.</p>
-     * <p>0 means it’s no smile at all.
-     * 100 means fully smiling face.</p>
+     * <p>A person's smile intensity is able to be detected. Along with detecting features of a face, the changes and movements of the face are also analyzed in order to index smile intensity.</p>
      */
     public static final Key<int[]> INTEL_CV_SMILE_DETECT_SCORES =
             new Key<int[]>("com.intel.cv.smileDetectScores", int[].class);
@@ -141,8 +140,7 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
 
     /**
      * <p>This metadata tag will provide an list of blink confidence scores. The scores are confidence level that the face is blinking.</p>
-     * <p>0 means closed eye.
-     * 100 means wide-open eye.</p>
+     * <p>A person's blink intensity is able to be detected. Along with detecting features of eyes, the changes and movements of eyes are also analyzed in order to index blink intensity.</p>
      */
     public static final Key<int[]> INTEL_CV_BLINK_DETECT_SCORES =
             new Key<int[]>("com.intel.cv.blinkDetectScores", int[].class);
@@ -196,8 +194,13 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
             new Key<Integer>("com.intel.device.dualCameraMode", int.class);
 
     /**
-     * <p>This contains the color effect modes from Intel 3A that can be applied to images.</p>
-     * <p>To be added...</p>
+     * <p>This contains the color effect modes supported by Intel 3A that can be applied to images.</p>
+     * <p>Intel color effect can be used like as an extension to the standard control(android.control.effectMode).
+     * But due to range checks in android standard API, those keys can't be sent by android.control.effectMode,
+     * it's right way to send by separate control tag.
+     * If a request with both tags arrives at the HAL, the Android standard metadata should take precedence
+     * over the Intel's.</p>
+     * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN
      * @see #INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN
@@ -225,6 +228,12 @@ public class CaptureResultIntelKeys extends CameraMetadataIntel
      */
     public static final Key<Integer> INTEL_IMAGE_ENHANCE_SATURATION =
             new Key<Integer>("com.intel.imageEnhance.saturation", int.class);
+
+    /**
+     * <p>value of hue</p>
+     */
+    public static final Key<Integer> INTEL_IMAGE_ENHANCE_HUE =
+            new Key<Integer>("com.intel.imageEnhance.hue", int.class);
 
     /**
      * <p>value of sharpness</p>

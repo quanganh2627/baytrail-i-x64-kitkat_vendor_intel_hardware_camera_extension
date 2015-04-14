@@ -18,7 +18,7 @@ package com.intel.camera2.extensions.photography;
 /**
  * the option container class for ULL blending
  */
-public class UllOption {
+final class UllOption {
     final public float analogGain;
     final public float aperture;
     final public float digitalGain;

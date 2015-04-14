@@ -32,20 +32,15 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
 
 
     /**
-     * <p>List of enums from com.intel.cv.smileDetectMode</p>
-     * <p>NO is always supported.</p>
-     * <p>YES means the device supports com.intel.cv.smileDetectStatus and com.intel.cv.smileDetectScores outputs.</p>
+     * <p>List of enums from com.intel.device.info.availableExtensions</p>
+     * <p>The empty list means no camera extension support</p>
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT
+     * @see #INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE
      */
-    public static final Key<int[]> INTEL_CV_INFO_AVAILABLE_SMILE_DETECT =
-            new Key<int[]>("com.intel.cv.info.availableSmileDetect", int[].class);
-
-    /**
-     * <p>List of enums from com.intel.cv.blinkDetectMode</p>
-     * <p>NO is always supported.</p>
-     * <p>YES means the device supports com.intel.cv.blinkDetectStatus and com.intel.cv.blinkDetectScores outputs.</p>
-     */
-    public static final Key<int[]> INTEL_CV_INFO_AVAILABLE_BLINK_DETECT =
-            new Key<int[]>("com.intel.cv.info.availableBlinkDetect", int[].class);
+    public static final Key<int[]> INTEL_EXTENSIONS_AVAILABLE_GROUPS =
+            new Key<int[]>("com.intel.extensions.availableGroups", int[].class);
 
     /**
      * <p>List of enums from com.intel.cv.faceRecognizeMode</p>
@@ -79,15 +74,12 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
             new Key<int[]>("com.intel.device.info.availableDualCameraMode", int[].class);
 
     /**
-     * <p>List of enums from com.intel.device.info.availableExtensions</p>
-     * <p>The empty list means no camera extension support</p>
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT
-     * @see #INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE
+     * <p>List of color effect modes for com.intel.imageEnhance.colorEffect that can be applied to images.</p>
+     * <p>Android standard color effect modes and Intel color effect modes can't be applied at same time,
+     * Android color effect should have higher priority</p>
      */
-    public static final Key<int[]> INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS =
-            new Key<int[]>("com.intel.device.info.availableExtensions", int[].class);
+    public static final Key<int[]> INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS =
+            new Key<int[]>("com.intel.imageEnhance.info.availablecolorEffects", int[].class);
 
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code

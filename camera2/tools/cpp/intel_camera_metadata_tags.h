@@ -33,12 +33,14 @@
  * existing enumerations.
  */
 typedef enum intel_camera_metadata_section {
+    COM_INTEL_EXTENSIONS,
     COM_INTEL_STATISTICS,
     COM_INTEL_CV,
     COM_INTEL_CV_INFO,
     COM_INTEL_DEVICE,
     COM_INTEL_DEVICE_INFO,
     COM_INTEL_IMAGE_ENHANCE,
+    COM_INTEL_IMAGE_ENHANCE_INFO,
     INTEL_CAMERA_SECTION_COUNT,
 } intel_camera_metadata_section_t;
 
@@ -47,12 +49,16 @@ typedef enum intel_camera_metadata_section {
  * defined with tag >= VENDOR_SECTION_START
  */
 typedef enum intel_camera_metadata_section_start {
+    COM_INTEL_EXTENSIONS_START     = (COM_INTEL_EXTENSIONS     << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_STATISTICS_START     = (COM_INTEL_STATISTICS     << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_CV_START             = (COM_INTEL_CV             << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_CV_INFO_START        = (COM_INTEL_CV_INFO        << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_DEVICE_START         = (COM_INTEL_DEVICE         << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_DEVICE_INFO_START    = (COM_INTEL_DEVICE_INFO    << 16 ) | VENDOR_SECTION_START,
     COM_INTEL_IMAGE_ENHANCE_START  = (COM_INTEL_IMAGE_ENHANCE  << 16 ) | VENDOR_SECTION_START,
+    COM_INTEL_IMAGE_ENHANCE_INFO_START
+                                   = (COM_INTEL_IMAGE_ENHANCE_INFO
+                                                                << 16 ) | VENDOR_SECTION_START,
 } intel_camera_metadata_section_start_t;
 
 /**
@@ -62,6 +68,10 @@ typedef enum intel_camera_metadata_section_start {
  * intel_camera_metadata_tag_info.c
  */
 typedef enum intel_camera_metadata_tag {
+    COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS =           // enum[]       | public
+            COM_INTEL_EXTENSIONS_START,
+    COM_INTEL_EXTENSIONS_END,
+
     COM_INTEL_STATISTICS_ANALYSIS_MODE =              // enum         | public
             COM_INTEL_STATISTICS_START,
     COM_INTEL_STATISTICS_MULTI_FRAME_HINT,            // enum         | public
@@ -82,10 +92,8 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_CV_FACE_DETECT_ROP_ANGLES,              // int32[]      | public
     COM_INTEL_CV_END,
 
-    COM_INTEL_CV_INFO_AVAILABLE_SMILE_DETECT =        // byte[]       | public
+    COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE =      // byte[]       | public
             COM_INTEL_CV_INFO_START,
-    COM_INTEL_CV_INFO_AVAILABLE_BLINK_DETECT,         // byte[]       | public
-    COM_INTEL_CV_INFO_AVAILABLE_FACE_RECOGNIZE,       // byte[]       | public
     COM_INTEL_CV_INFO_AVAILABLE_OBJECT_TRACK,         // byte[]       | public
     COM_INTEL_CV_INFO_AVAILABLE_PANORAMA,             // byte[]       | public
     COM_INTEL_CV_INFO_END,
@@ -97,7 +105,6 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE = 
                                                       // byte[]       | public
             COM_INTEL_DEVICE_INFO_START,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS,       // enum[]       | public
     COM_INTEL_DEVICE_INFO_END,
 
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT =            // enum         | public
@@ -105,14 +112,29 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_IMAGE_ENHANCE_BRIGHTNESS,               // int32        | public
     COM_INTEL_IMAGE_ENHANCE_CONTRAST,                 // int32        | public
     COM_INTEL_IMAGE_ENHANCE_SATURATION,               // int32        | public
+    COM_INTEL_IMAGE_ENHANCE_HUE,                      // int32        | public
     COM_INTEL_IMAGE_ENHANCE_SHARPNESS,                // int32        | public
     COM_INTEL_IMAGE_ENHANCE_END,
+
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS = 
+                                                      // byte[]       | public
+            COM_INTEL_IMAGE_ENHANCE_INFO_START,
+    COM_INTEL_IMAGE_ENHANCE_INFO_END,
 
 } intel_camera_metadata_tag_t;
 
 /**
  * Enumeration definitions for the various entries that need them
  */
+
+// COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS
+typedef enum intel_camera_metadata_enum_com_intel_extensions_available_groups {
+    COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS,
+    COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV,
+    COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT,
+    COM_INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE,
+} intel_camera_metadata_enum_com_intel_extensions_available_groups_t;
+
 
 // COM_INTEL_STATISTICS_ANALYSIS_MODE
 typedef enum intel_camera_metadata_enum_com_intel_statistics_analysis_mode {
@@ -172,17 +194,10 @@ typedef enum intel_camera_metadata_enum_com_intel_device_dual_camera_mode {
 } intel_camera_metadata_enum_com_intel_device_dual_camera_mode_t;
 
 
-// COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
-typedef enum intel_camera_metadata_enum_com_intel_device_info_available_extensions {
-    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT,
-    COM_INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE,
-} intel_camera_metadata_enum_com_intel_device_info_available_extensions_t;
-
 
 // COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT
 typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
+    COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN,
@@ -190,6 +205,7 @@ typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH,
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID,
 } intel_camera_metadata_enum_com_intel_image_enhance_color_effect_t;
+
 
 
 #endif

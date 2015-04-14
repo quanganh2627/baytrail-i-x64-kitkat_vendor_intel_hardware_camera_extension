@@ -45,32 +45,32 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+    // Enumeration values for IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
     //
 
     /**
      * <p>camera extension supports statistics analisys </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_STATISTICS = 0;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS = 0;
 
     /**
      * <p>camera extension supports computer vision </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_CV = 1;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV = 1;
 
     /**
      * <p>camera extension supports image enhancement, eg saturation </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_ENHANCEMENT = 2;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT = 2;
 
     /**
      * <p>camera extension supports special features in device,eg dual video </p>
-     * @see IntelCameraCharacteristics#INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS
+     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
-    public static final int INTEL_DEVICE_INFO_AVAILABLE_EXTENSIONS_DEVICE = 3;
+    public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE = 3;
 
     //
     // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
@@ -157,40 +157,46 @@ public class CameraMetadataIntel {
     //
 
     /**
+     * <p>disable Intel color effect</p>
+     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     */
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF = 0;
+
+    /**
      * <p>ia_aiq_color_effect_sky_blue</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE = 0;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE = 1;
 
     /**
      * <p>ia_aiq_color_effect_grass_green</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN = 1;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN = 2;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN = 2;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN = 3;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten_low</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW = 3;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW = 4;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten_high</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH = 4;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH = 5;
 
     /**
      * <p>ia_aiq_color_effect_vivid</p>
      * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
-    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID = 5;
+    public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID = 6;
 
     //
     // Enumeration values for IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
