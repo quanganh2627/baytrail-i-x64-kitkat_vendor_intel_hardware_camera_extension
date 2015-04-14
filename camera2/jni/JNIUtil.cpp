@@ -378,7 +378,7 @@ jmethodID envGetMethodID(JNIEnv *env, jclass cls, const char* method_name, const
 {
     jmethodID methodID = env->GetMethodID(cls, method_name, sig_name);
     if (methodID == NULL) {
-        LOGE("class[0x%08x] method[%s] sig[%s]", (uint32_t)cls, method_name, sig_name);
+        LOGE("class[%p] method[%s] sig[%s]", cls, method_name, sig_name);
         env->ExceptionClear();
     }
     return methodID;
