@@ -86,7 +86,7 @@ jint CP_hdrInit(JNIEnv* env, jobject thiz, jlong instance, jint width, jint heig
     ia_cp_context* ctx = getCpContext(instance);
     ia_cp_hdr* hdr = getCpHDR(instance);
     if (cpe == NULL || hdr != NULL) {
-        LOGE("CPEngine(0x%08x) CpContext(0x%08x) CpHDR(0x%08x)", (uint32_t)cpe, (uint32_t)ctx, (uint32_t)hdr);
+        LOGE("CPEngine(%p) CpContext(%p) CpHDR(%p)", cpe, ctx, hdr);
         return ia_err_general;
     }
 
@@ -215,7 +215,7 @@ jint CP_ullInit(JNIEnv* env, jobject thiz, jlong instance, jint width, jint heig
     ia_cp_context* ctx = getCpContext(instance);
     ia_cp_ull* ull = getCpULL(instance);
     if (cpe == NULL || ctx == NULL || ull != NULL) {
-        LOGE("CPEngine(0x%08x) CpContext(0x%08x) CpUll(0x%08x)", (uint32_t)cpe, (uint32_t)ctx, (uint32_t)ull);
+        LOGE("CPEngine(%p) CpContext(%p) CpUll(%p)", cpe, ctx, ull);
         return ia_err_general;
     }
 
