@@ -324,8 +324,12 @@ int AccService::CPInit()
 {
     ALOG1("%s", __FUNCTION__);
 
-    CPEngine* cpe = (CPEngine*)calloc(1, sizeof(CPEngine));
-
+    CPEngine* cpe = NULL;
+    cpe = (CPEngine*)calloc(1, sizeof(CPEngine));
+    if (NULL == cpe) {
+        ALOGE("@%s, allocate memory for cpe fail", __FUNCTION__);
+        return -1;
+    }
     cpe->iaEnv.vdebug = vdebug;
     cpe->iaEnv.verror = verror;
     cpe->iaEnv.vinfo = vinfo;
@@ -672,13 +676,19 @@ ia_cp_ull* AccService::getCpULL(CPEngine* instance)
 void AccService::debugDumpData(const char* filename, unsigned char* data, int bytes)
 {
     ALOG1("dumping data %p -> %s", data, filename);
-    FILE *fp;
+    FILE *fp = NULL;
     size_t ret;
-    fp = fopen(filename, "w+");
-    if (fp != NULL && data != NULL && bytes > 0) {
-        ret = fwrite(data, sizeof(unsigned char), bytes, fp);
+
+    if (NULL == filename || NULL == data || 0 >= bytes) {
+        ALOGE("@%s, data is null or the bytes is 0", __FUNCTION__);
+        return;
     }
-    fclose(fp);
+
+    fp = fopen(filename, "w+");
+    if (fp) {
+        ret = fwrite(data, sizeof(unsigned char), bytes, fp);
+        fclose(fp);
+    }
 }
 
 } // namespace android
