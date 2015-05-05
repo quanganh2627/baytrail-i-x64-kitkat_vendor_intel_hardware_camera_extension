@@ -17,7 +17,7 @@
 #define LOG_TAG "CameraAccLib"
 #include <stdio.h>
 #include <stdlib.h>
-#include<stdbool.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -33,8 +33,11 @@
 
 #include "acc.h"
 #include "LogHelper.h"
+#include "event_thread.h"
 
 namespace android {
+
+#define xioctl(req, arg) _xioctl(req, arg, #req)
 
 AccControl::AccControl() :
     mAccDevice("/dev/video4"),
@@ -63,8 +66,12 @@ AccControl::AccControl(char* accDevice) :
 AccControl::~AccControl()
 {
     LOG2("AccControl for device %s get destroyed", mAccDevice);
+    mEventThread.clear();
 }
 
+const KeyedVector<unsigned int, EventWaiter *> AccControl::getAllWaiters() {
+    return mAllWaiters;
+}
 
 /***********************************************************
  * ACC internel misc utility functions.
@@ -224,6 +231,7 @@ int AccControl::newAccPipeFw(unsigned int handle)
     if (waiter) {// for code analyzers
         waiter->handle = handle;
         mAllWaiters.add(handle, waiter);
+        mEventThread->SubscribeEvent(handle);
     } else {
         ALOGE("Not enough memory to allocate event waiter");
         return -1;
@@ -362,6 +370,14 @@ int AccControl::acc_init()
     LOG2 ("Opened ACC Device %s\n", mAccDevice);
 
     fetch_isp_versions();
+
+    LOG2("Create ACC event polling thread and start it");
+    mEventThread = new EventThread(this);
+    status_t threadStatus = mEventThread->run("ACC_Event_Thread");
+    if (threadStatus != NO_ERROR) {
+        ALOGE("Error in starting ACC event thread.");
+    }
+
     return mAccDeviceHandle;
 }
 
@@ -370,6 +386,8 @@ void AccControl::acc_deinit(int fd)
     if (fd >= 0) {
         close(fd);
     }
+
+    mEventThread.clear();
 }
 
 void * AccControl::acc_open_fw(const char *fw_path, unsigned *size)
@@ -452,6 +470,7 @@ int AccControl::acc_unload_ex_fw(unsigned handle)
     if (index >= 0) {
         EventWaiter *waiter = mAllWaiters.editValueAt(index);
 
+        mEventThread->UnsubscribeEvent(handle);
         mAllWaiters.removeItem(handle);
         delete waiter;
         waiter = NULL;

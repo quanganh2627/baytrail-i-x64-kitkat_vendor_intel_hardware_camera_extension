@@ -75,6 +75,44 @@
           Android color effect should have higher priority
         </details>
       </entry>
+      <entry name="availableManualControls" type="byte" visibility="public" type_notes="List of enums" container="array" enum="true">
+        <array>
+          <size>n</size>
+        </array>
+        <enum>
+            <value>BRIGHTNESS
+              <notes>The dynamic metadata tag com.intel.imageEnhance.brightness will
+                  be available for application use
+              </notes>
+            </value>
+            <value>CONTRAST
+              <notes>The dynamic metadata tag com.intel.imageEnhance.contrast will
+                  be available for application use
+              </notes>
+            </value>
+            <value>SATURATION
+              <notes>The dynamic metadata tag com.intel.imageEnhance.saturation will
+                  be available for application use
+              </notes>
+            </value>
+            <value>SHARPNESS
+              <notes>The dynamic metadata tag com.intel.imageEnhance.sharpness will
+                  be available for application use
+              </notes>
+            </value>
+            <value>HUE
+              <notes>The dynamic metadata tag com.intel.imageEnhance.hue will
+                  be available for application use
+              </notes>
+            </value>
+        </enum>
+        <description>List of available manual controls.</description>
+        <details>
+          This static tag can be used to signal that certain devices do not support
+          some of the manual controls. If this tag is not available it is assumed
+          that ALL the controls are available
+        </details>
+      </entry>
     </namespace>
   </static>
 

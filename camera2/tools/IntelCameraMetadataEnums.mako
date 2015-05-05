@@ -77,13 +77,13 @@ ${generate_enum(entry, target_class)}\
 
 ##
 ## Static properties only
-${single_kind_keys('static','IntelCameraCharacteristics')}\
+${single_kind_keys('static','CameraCharacteristicsIntelKeys')}\
 ##
 ## Controls properties only
-${single_kind_keys('controls','IntelCaptureRequest')}\
+${single_kind_keys('controls','CaptureRequestIntelKeys')}\
 ##
 ## Dynamic properties only
-${single_kind_keys('dynamic','IntelCaptureResult')}\
+${single_kind_keys('dynamic','CaptureResultIntelKeys')}\
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

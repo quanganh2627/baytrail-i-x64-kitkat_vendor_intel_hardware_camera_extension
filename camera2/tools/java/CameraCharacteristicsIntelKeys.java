@@ -73,6 +73,20 @@ public final class CameraCharacteristicsIntelKeys extends CameraMetadataIntel
     public static final Key<int[]> INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS =
             new Key<int[]>("com.intel.imageEnhance.info.availablecolorEffects", int[].class);
 
+    /**
+     * <p>List of available manual controls.</p>
+     * <p>This static tag can be used to signal that certain devices do not support
+     * some of the manual controls. If this tag is not available it is assumed
+     * that ALL the controls are available</p>
+     * @see #INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_BRIGHTNESS
+     * @see #INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_CONTRAST
+     * @see #INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SATURATION
+     * @see #INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SHARPNESS
+     * @see #INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_HUE
+     */
+    public static final Key<int[]> INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS =
+            new Key<int[]>("com.intel.imageEnhance.info.availableManualControls", int[].class);
+
     /*~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~
      * End generated code
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~O@*/

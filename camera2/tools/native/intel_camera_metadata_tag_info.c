@@ -124,6 +124,8 @@ static tag_info_t com_intel_image_enhance_info_tags[COM_INTEL_IMAGE_ENHANCE_INFO
         COM_INTEL_IMAGE_ENHANCE_INFO_START] = {
     [ COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS - COM_INTEL_IMAGE_ENHANCE_INFO_START ] =
     { "availablecolorEffects",         TYPE_BYTE   },
+    [ COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS - COM_INTEL_IMAGE_ENHANCE_INFO_START ] =
+    { "availableManualControls",       TYPE_BYTE   },
 };
 
 
@@ -471,6 +473,33 @@ int intel_camera_metadata_enum_snprint(uint32_t tag,
         }
 
         case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS: {
+            break;
+        }
+        case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS: {
+            switch (value) {
+                case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_BRIGHTNESS:
+                    msg = "BRIGHTNESS";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_CONTRAST:
+                    msg = "CONTRAST";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SATURATION:
+                    msg = "SATURATION";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SHARPNESS:
+                    msg = "SHARPNESS";
+                    ret = 0;
+                    break;
+                case COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_HUE:
+                    msg = "HUE";
+                    ret = 0;
+                    break;
+                default:
+                    msg = "error: enum value out of range";
+            }
             break;
         }
 

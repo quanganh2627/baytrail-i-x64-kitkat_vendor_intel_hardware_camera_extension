@@ -62,6 +62,14 @@ const metadata_value_t com_intel_imageEnhance_colorEffect_values[] = {
                  {"VIVID", COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID },
          };
 
+const metadata_value_t com_intel_imageEnhance_info_availableManualControls_values[] = {
+                 {"BRIGHTNESS", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_BRIGHTNESS },
+                 {"CONTRAST", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_CONTRAST },
+                 {"SATURATION", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SATURATION },
+                 {"SHARPNESS", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SHARPNESS },
+                 {"HUE", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_HUE },
+         };
+
 const metadata_value_t com_intel_statistics_analysisMode_values[] = {
                  {"OFF", COM_INTEL_STATISTICS_ANALYSIS_MODE_OFF },
                  {"ON", COM_INTEL_STATISTICS_ANALYSIS_MODE_ON },
@@ -125,7 +133,8 @@ const metadata_tag_t static_vendor_tags_table[] = {
     {"device.info.availableDualCameraMode", COM_INTEL_DEVICE_INFO_AVAILABLE_DUAL_CAMERA_MODE, TYPE_BYTE, com_intel_device_dualCameraMode_values, 2, true, {-1,0,0}, ENUM_LIST },
     // IMAGE_ENHANCE
     {"imageEnhance.info.availablecolorEffects", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS, TYPE_BYTE, com_intel_imageEnhance_colorEffect_values, 7, true, {-1,0,0}, ENUM_LIST },
+    {"imageEnhance.info.availableManualControls", COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS, TYPE_BYTE, com_intel_imageEnhance_info_availableManualControls_values, 5, true, {-1,0,0}, 0 },
 };
 
-#define STATIC_VENDOR_TAGS_TABLE_SIZE 5
+#define STATIC_VENDOR_TAGS_TABLE_SIZE 6
 
