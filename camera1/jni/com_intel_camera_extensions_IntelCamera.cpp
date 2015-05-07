@@ -98,17 +98,28 @@ static void com_intel_camera_extensions_IntelCamera_native_setup(JNIEnv *env, jo
     sp<IntelCameraListener> l = new IntelCameraListener(listener, weak_this, clazz);
     l->incStrong(thiz);
     camera->setListener(l);
-    env->SetIntField(thiz, fields.intel_listener, (int)l.get());
+
+    env->SetLongField(thiz, fields.intel_listener, (int64_t)l.get());
+
 
     acc = new CameraAcc(camera);
+}
+
+static IntelCameraListener* getIntelListener(JNIEnv *env, jobject thiz) {
+
+    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetLongField(thiz, fields.intel_listener));
+
+    return intel_listener;
 }
 
 static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, jobject thiz)
 {
     ALOGV("native_release");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     // Make sure we do not attempt to callback on a deleted Java object.
-    env->SetIntField(thiz, fields.intel_listener, 0);
+
+    env->SetLongField(thiz, fields.intel_listener, 0);
+
     if (intel_listener != NULL)
         // remove context to prevent further Java access
         intel_listener->decStrong(thiz);
@@ -117,7 +128,7 @@ static void com_intel_camera_extensions_IntelCamera_native_release(JNIEnv *env, 
 static bool com_intel_camera_extensions_IntelCamera_enableIntelCamera(JNIEnv *env, jobject thiz, jobject cameraDevice)
 {
     ALOGV("enableIntelCamera");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         ALOGE("get camera handle failed");
@@ -130,7 +141,7 @@ static bool com_intel_camera_extensions_IntelCamera_enableIntelCamera(JNIEnv *en
 static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *env, jobject thiz)
 {
     ALOGV("startSceneDetection");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         ALOGE("get camera handle failed");
@@ -143,7 +154,7 @@ static void com_intel_camera_extensions_IntelCamera_startSceneDetection(JNIEnv *
 static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopSceneDetection");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL) {
         ALOGE("get camera handle failed");
@@ -156,7 +167,7 @@ static void com_intel_camera_extensions_IntelCamera_stopSceneDetection(JNIEnv *e
 static void com_intel_camera_extensions_IntelCamera_startPanorama(JNIEnv *env, jobject thiz)
 {
     ALOGV("startPanorama");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL)
         return;
@@ -169,7 +180,7 @@ static void com_intel_camera_extensions_IntelCamera_startPanorama(JNIEnv *env, j
 static void com_intel_camera_extensions_IntelCamera_stopPanorama(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopPanorama");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
     if (camera == NULL)
         return;
@@ -182,7 +193,7 @@ static void com_intel_camera_extensions_IntelCamera_stopPanorama(JNIEnv *env, jo
 static void com_intel_camera_extensions_IntelCamera_startSmileShutter(JNIEnv *env, jobject thiz)
 {
     ALOGV("startSmileShutter");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -197,7 +208,7 @@ static void com_intel_camera_extensions_IntelCamera_startSmileShutter(JNIEnv *en
 static void com_intel_camera_extensions_IntelCamera_stopSmileShutter(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopSmileShutter");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -211,7 +222,7 @@ static void com_intel_camera_extensions_IntelCamera_stopSmileShutter(JNIEnv *env
 static void com_intel_camera_extensions_IntelCamera_startBlinkShutter(JNIEnv *env, jobject thiz)
 {
     ALOGV("startBlinkShutter");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -226,7 +237,7 @@ static void com_intel_camera_extensions_IntelCamera_startBlinkShutter(JNIEnv *en
 static void com_intel_camera_extensions_IntelCamera_stopBlinkShutter(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopBlinkShutter");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -240,7 +251,7 @@ static void com_intel_camera_extensions_IntelCamera_stopBlinkShutter(JNIEnv *env
 static void com_intel_camera_extensions_IntelCamera_cancelSmartShutterPicture(JNIEnv *env, jobject thiz)
 {
     ALOGV("cancelSmartShutterPicture");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -254,7 +265,7 @@ static void com_intel_camera_extensions_IntelCamera_cancelSmartShutterPicture(JN
 static void com_intel_camera_extensions_IntelCamera_forceSmartShutterPicture(JNIEnv *env, jobject thiz)
 {
     ALOGV("forceSmartShutterPicture");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -268,7 +279,7 @@ static void com_intel_camera_extensions_IntelCamera_forceSmartShutterPicture(JNI
 static void com_intel_camera_extensions_IntelCamera_startFaceRecognition(JNIEnv *env, jobject thiz)
 {
     ALOGV("startFaceRecognition");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -283,7 +294,7 @@ static void com_intel_camera_extensions_IntelCamera_startFaceRecognition(JNIEnv 
 static void com_intel_camera_extensions_IntelCamera_stopFaceRecognition(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopFaceRecognition");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -297,7 +308,7 @@ static void com_intel_camera_extensions_IntelCamera_stopFaceRecognition(JNIEnv *
 static void com_intel_camera_extensions_IntelCamera_startContinuousShooting(JNIEnv *env, jobject thiz)
 {
     ALOGV("startContinuousShooting");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -311,7 +322,7 @@ static void com_intel_camera_extensions_IntelCamera_startContinuousShooting(JNIE
 static void com_intel_camera_extensions_IntelCamera_stopContinuousShooting(JNIEnv *env, jobject thiz)
 {
     ALOGV("stopContinuousShooting");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -325,7 +336,7 @@ static void com_intel_camera_extensions_IntelCamera_stopContinuousShooting(JNIEn
 static void com_intel_camera_extensions_IntelCamera_pausePreviewFrameUpdate(JNIEnv *env, jobject thiz)
 {
     ALOGV("pausePreviewFrameUpdate");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -339,7 +350,7 @@ static void com_intel_camera_extensions_IntelCamera_pausePreviewFrameUpdate(JNIE
 static void com_intel_camera_extensions_IntelCamera_resumePreviewFrameUpdate(JNIEnv *env, jobject thiz)
 {
     ALOGV("resumePreviewFrameUpdate");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -353,7 +364,7 @@ static void com_intel_camera_extensions_IntelCamera_resumePreviewFrameUpdate(JNI
 static void com_intel_camera_extensions_IntelCamera_setPreviewFrameCaptureId(JNIEnv *env, jobject thiz, jint id)
 {
     ALOGV("setPreviewFrameCaptureId");
-    IntelCameraListener* intel_listener = reinterpret_cast<IntelCameraListener*>(env->GetIntField(thiz, fields.intel_listener));
+    IntelCameraListener* intel_listener = getIntelListener(env, thiz);
     sp<Camera> camera = intel_listener->getCamera();
 
     if (camera == NULL) {
@@ -518,7 +529,7 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
         case CAMERA_MSG_PANORAMA_SNAPSHOT:
             pPic = reinterpret_cast<jbyte *>(heapBase + offset + sizeof(camera_panorama_metadata));
             if (pMetadata == NULL || pPic == NULL)
-                ALOGE("Null snaphost data. pMetadata %d pPic %d", (int) pMetadata, (int) pPic);
+                ALOGE("Null snaphost data. pMetadata %p pPic %p", pMetadata, pPic);
             else {
                 size_t arraySize = size - sizeof(camera_panorama_metadata);
                 // construct metadata object
@@ -574,7 +585,7 @@ void IntelCameraListener::postData(int32_t msgType, const sp<IMemory>& dataPtr,
         const jbyte *ullPic = reinterpret_cast<jbyte*>(heapBase + offset + sizeof(camera_ull_metadata));
 
         if (ullPic == NULL) {
-            ALOGE("Null ULL snapshot data. pPic %d", (int)ullPic);
+            ALOGE("Null ULL snapshot data. pPic %p", ullPic);
         } else {
             size_t arraySize = size - sizeof(camera_ull_metadata);
             jbyteArray array = env->NewByteArray(arraySize);
@@ -712,7 +723,9 @@ int register_com_intel_camera_extensions_IntelCamera(JNIEnv *env)
 {
     ALOGV("regist intel camera");
     jclass clazz = env->FindClass("com/intel/camera/extensions/IntelCamera");
-    jfieldID field = env->GetFieldID(clazz, "mNativeContext", "I");
+
+    jfieldID field = env->GetFieldID(clazz, "mNativeContext", "J");
+
     if (field != NULL) fields.intel_listener = field;
     fields.post_event = env->GetStaticMethodID(clazz, "postEventFromNative",
                                         "(Ljava/lang/Object;IIILjava/lang/Object;)V");

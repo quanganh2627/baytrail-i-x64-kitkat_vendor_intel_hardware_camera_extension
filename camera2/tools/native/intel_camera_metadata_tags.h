@@ -118,6 +118,8 @@ typedef enum intel_camera_metadata_tag {
     COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLECOLOR_EFFECTS = 
                                                       // byte[]       | public
             COM_INTEL_IMAGE_ENHANCE_INFO_START,
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS,
+                                                      // enum[]       | public
     COM_INTEL_IMAGE_ENHANCE_INFO_END,
 
 } intel_camera_metadata_tag_t;
@@ -205,6 +207,15 @@ typedef enum intel_camera_metadata_enum_com_intel_image_enhance_color_effect {
     COM_INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID,
 } intel_camera_metadata_enum_com_intel_image_enhance_color_effect_t;
 
+
+// COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+typedef enum intel_camera_metadata_enum_com_intel_image_enhance_info_available_manual_controls {
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_BRIGHTNESS,
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_CONTRAST,
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SATURATION,
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SHARPNESS,
+    COM_INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_HUE,
+} intel_camera_metadata_enum_com_intel_image_enhance_info_available_manual_controls_t;
 
 
 #endif

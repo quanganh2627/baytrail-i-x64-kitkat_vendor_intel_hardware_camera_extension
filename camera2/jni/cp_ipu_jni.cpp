@@ -313,7 +313,7 @@ jobject CP_ipu_ullCompose(JNIEnv* env, jobject thiz, jlong instance, jobjectArra
      }
      destroy_ia_frame(&out);
      destroy_ia_frame(&out_pv);
-     LOGD("hdr post process done,cost %dus",(unsigned)((systemTime() - startTime) / 1000));
+     LOGD("ull post process done,cost %dus",(unsigned)((systemTime() - startTime) / 1000));
      return jOutputIaFrame;
 }
 

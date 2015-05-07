@@ -45,260 +45,299 @@ public class CameraMetadataIntel {
      *~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~@~*/
 
     //
-    // Enumeration values for IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
+    // Enumeration values for CameraCharacteristicsIntelKeys#INTEL_EXTENSIONS_AVAILABLE_GROUPS
     //
 
     /**
      * <p>camera extension supports statistics analisys </p>
-     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
+     * @see CameraCharacteristicsIntelKeys#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
     public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_STATISTICS = 0;
 
     /**
      * <p>camera extension supports computer vision </p>
-     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
+     * @see CameraCharacteristicsIntelKeys#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
     public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_CV = 1;
 
     /**
      * <p>camera extension supports image enhancement, eg saturation </p>
-     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
+     * @see CameraCharacteristicsIntelKeys#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
     public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_ENHANCEMENT = 2;
 
     /**
      * <p>camera extension supports special features in device,eg dual video </p>
-     * @see IntelCameraCharacteristics#INTEL_EXTENSIONS_AVAILABLE_GROUPS
+     * @see CameraCharacteristicsIntelKeys#INTEL_EXTENSIONS_AVAILABLE_GROUPS
      */
     public static final int INTEL_EXTENSIONS_AVAILABLE_GROUPS_DEVICE = 3;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
+    // Enumeration values for CameraCharacteristicsIntelKeys#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+    //
+
+    /**
+     * <p>The dynamic metadata tag com.intel.imageEnhance.brightness will
+     * be available for application use</p>
+     * @see IntelCameraCharacteristics#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+     */
+    public static final int INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_BRIGHTNESS = 0;
+
+    /**
+     * <p>The dynamic metadata tag com.intel.imageEnhance.contrast will
+     * be available for application use</p>
+     * @see IntelCameraCharacteristics#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+     */
+    public static final int INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_CONTRAST = 1;
+
+    /**
+     * <p>The dynamic metadata tag com.intel.imageEnhance.saturation will
+     * be available for application use</p>
+     * @see IntelCameraCharacteristics#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+     */
+    public static final int INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SATURATION = 2;
+
+    /**
+     * <p>The dynamic metadata tag com.intel.imageEnhance.sharpness will
+     * be available for application use</p>
+     * @see IntelCameraCharacteristics#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+     */
+    public static final int INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_SHARPNESS = 3;
+
+    /**
+     * <p>The dynamic metadata tag com.intel.imageEnhance.hue will
+     * be available for application use</p>
+     * @see IntelCameraCharacteristics#INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS
+     */
+    public static final int INTEL_IMAGE_ENHANCE_INFO_AVAILABLE_MANUAL_CONTROLS_HUE = 4;
+
+    //
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_STATISTICS_ANALYSIS_MODE
     //
 
     /**
      * <p>(default) Do not include AIQ extended results in capture result metadata</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
+     * @see CaptureRequestIntelKeys#INTEL_STATISTICS_ANALYSIS_MODE
      */
     public static final int INTEL_STATISTICS_ANALYSIS_MODE_OFF = 0;
 
     /**
      * <p>Include AIQ extended result in capture result metadata</p>
-     * @see IntelCaptureRequest#INTEL_STATISTICS_ANALYSIS_MODE
+     * @see CaptureRequestIntelKeys#INTEL_STATISTICS_ANALYSIS_MODE
      */
     public static final int INTEL_STATISTICS_ANALYSIS_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_CV_SMILE_DETECT_MODE
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_CV_SMILE_DETECT_MODE
     //
 
     /**
      * <p>Do not include smile detection statistics in capture results</p>
-     * @see IntelCaptureRequest#INTEL_CV_SMILE_DETECT_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_SMILE_DETECT_MODE
      */
     public static final int INTEL_CV_SMILE_DETECT_MODE_OFF = 0;
 
     /**
      * <p>Return smile status and score values</p>
-     * @see IntelCaptureRequest#INTEL_CV_SMILE_DETECT_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_SMILE_DETECT_MODE
      */
     public static final int INTEL_CV_SMILE_DETECT_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_CV_BLINK_DETECT_MODE
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_CV_BLINK_DETECT_MODE
     //
 
     /**
      * <p>Do not include blink detection statistics in capture results</p>
-     * @see IntelCaptureRequest#INTEL_CV_BLINK_DETECT_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_BLINK_DETECT_MODE
      */
     public static final int INTEL_CV_BLINK_DETECT_MODE_OFF = 0;
 
     /**
      * <p>Return blink status and score values</p>
-     * @see IntelCaptureRequest#INTEL_CV_BLINK_DETECT_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_BLINK_DETECT_MODE
      */
     public static final int INTEL_CV_BLINK_DETECT_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_CV_FACE_RECOGNIZE_MODE
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_CV_FACE_RECOGNIZE_MODE
     //
 
     /**
      * <p>Do not include face recognition statistics in capture results</p>
-     * @see IntelCaptureRequest#INTEL_CV_FACE_RECOGNIZE_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_FACE_RECOGNIZE_MODE
      */
     public static final int INTEL_CV_FACE_RECOGNIZE_MODE_OFF = 0;
 
     /**
      * <p>Return person id and person similarity </p>
-     * @see IntelCaptureRequest#INTEL_CV_FACE_RECOGNIZE_MODE
+     * @see CaptureRequestIntelKeys#INTEL_CV_FACE_RECOGNIZE_MODE
      */
     public static final int INTEL_CV_FACE_RECOGNIZE_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_DEVICE_DUAL_CAMERA_MODE
     //
 
     /**
      * <p>(default) Dual camera mode is off.</p>
-     * @see IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
+     * @see CaptureRequestIntelKeys#INTEL_DEVICE_DUAL_CAMERA_MODE
      */
     public static final int INTEL_DEVICE_DUAL_CAMERA_MODE_OFF = 0;
 
     /**
      * <p>Dual camera mode is on</p>
-     * @see IntelCaptureRequest#INTEL_DEVICE_DUAL_CAMERA_MODE
+     * @see CaptureRequestIntelKeys#INTEL_DEVICE_DUAL_CAMERA_MODE
      */
     public static final int INTEL_DEVICE_DUAL_CAMERA_MODE_ON = 1;
 
     //
-    // Enumeration values for IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+    // Enumeration values for CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
     //
 
     /**
      * <p>disable Intel color effect</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_OFF = 0;
 
     /**
      * <p>ia_aiq_color_effect_sky_blue</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKY_BLUE = 1;
 
     /**
      * <p>ia_aiq_color_effect_grass_green</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_GRASS_GREEN = 2;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN = 3;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten_low</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_LOW = 4;
 
     /**
      * <p>ia_aiq_color_effect_skin_whiten_high</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_SKIN_WHITEN_HIGH = 5;
 
     /**
      * <p>ia_aiq_color_effect_vivid</p>
-     * @see IntelCaptureRequest#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
+     * @see CaptureRequestIntelKeys#INTEL_IMAGE_ENHANCE_COLOR_EFFECT
      */
     public static final int INTEL_IMAGE_ENHANCE_COLOR_EFFECT_VIVID = 6;
 
     //
-    // Enumeration values for IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
+    // Enumeration values for CaptureResultIntelKeys#INTEL_STATISTICS_MULTI_FRAME_HINT
     //
 
     /**
      * <p>(default) No multiframe processing is required</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_MULTI_FRAME_HINT
      */
     public static final int INTEL_STATISTICS_MULTI_FRAME_HINT_NONE = 0;
 
     /**
      * <p>Capture would benefit of using Ultra Low Light post processing</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_MULTI_FRAME_HINT
      */
     public static final int INTEL_STATISTICS_MULTI_FRAME_HINT_ULL = 1;
 
     /**
      * <p>Capture would benefit of using High Dynamic Range post processing</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_MULTI_FRAME_HINT
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_MULTI_FRAME_HINT
      */
     public static final int INTEL_STATISTICS_MULTI_FRAME_HINT_HDR = 2;
 
     //
-    // Enumeration values for IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+    // Enumeration values for CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
     //
 
     /**
      * <p>ia_aiq_scene_mode_none</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_NONE = 0;
 
     /**
      * <p>ia_aiq_scene_mode_close_up_portrait</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_CLOSE_UP_PORTRAIT = 1;
 
     /**
      * <p>ia_aiq_scene_mode_portrait</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_PORTRAIT = 2;
 
     /**
      * <p>ia_aiq_scene_mode_lowlight_portrait</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_PORTRAIT = 3;
 
     /**
      * <p>ia_aiq_scene_mode_low_light</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT = 4;
 
     /**
      * <p>ia_aiq_scene_mode_action</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_ACTION = 5;
 
     /**
      * <p>ia_aiq_scene_mode_backlight</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_BACKLIGHT = 6;
 
     /**
      * <p>ia_aiq_scene_mode_landscape</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_LANDSCAPE = 7;
 
     /**
      * <p>ia_aiq_scene_mode_document</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_DOCUMENT = 8;
 
     /**
      * <p>ia_aiq_scene_mode_firework</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_FIREWORK = 9;
 
     /**
      * <p>ia_aiq_scene_mode_lowlight_action</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_LOWLIGHT_ACTION = 10;
 
     /**
      * <p>ia_aiq_scene_mode_baby</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_BABY = 11;
 
     /**
      * <p>ia_aiq_scene_mode_barcode</p>
-     * @see IntelCaptureResult#INTEL_STATISTICS_SCENE_DETECTED
+     * @see CaptureResultIntelKeys#INTEL_STATISTICS_SCENE_DETECTED
      */
     public static final int INTEL_STATISTICS_SCENE_DETECTED_BARCODE = 12;
 

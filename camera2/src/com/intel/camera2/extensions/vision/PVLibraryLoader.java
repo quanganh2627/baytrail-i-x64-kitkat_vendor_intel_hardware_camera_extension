@@ -45,8 +45,9 @@ class PVLibraryLoader {
             this.description = description;
         }
 
+        @Override
         public String toString() {
-            return major + "/" + minor + "patch("+patch+") desc("+description+")";
+            return "major("+major+") minor("+minor+") patch("+patch+") desc("+description+")";
         }
     }
 }

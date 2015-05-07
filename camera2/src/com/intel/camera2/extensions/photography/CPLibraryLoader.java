@@ -45,5 +45,10 @@ class CPLibraryLoader {
             this.patch = patch;
             this.description = description;
         }
+
+        @Override
+        public String toString() {
+            return "major("+major+") minor("+minor+") patch("+patch+") desc("+description+")";
+        }
     }
 }

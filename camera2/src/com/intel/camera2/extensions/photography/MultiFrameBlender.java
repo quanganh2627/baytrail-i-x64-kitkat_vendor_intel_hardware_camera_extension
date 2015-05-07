@@ -15,9 +15,6 @@
  */
 package com.intel.camera2.extensions.photography;
 
-import com.intel.camera2.extensions.IaFrame;
-import com.intel.camera2.extensions.ImageConverter;
-
 import android.graphics.ImageFormat;
 import android.graphics.YuvImage;
 import android.hardware.camera2.CaptureResult;
@@ -29,6 +26,9 @@ import android.os.Message;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.Size;
+
+import com.intel.camera2.extensions.IaFrame;
+import com.intel.camera2.extensions.ImageConverter;
 
 /**
  * <p>this class provides multi-frame blending APIs.</p>
@@ -202,7 +202,13 @@ public class MultiFrameBlender {
         mTarget = target;
         mType = type;
         mSize = size;
-
+        if (mType == TYPE.ULL) {
+            mCPInstance = CPJNI.init(mTarget.ordinal());
+            if (mCPInstance == 0) {
+                throw new IllegalArgumentException("fail to create CP instance");
+            }
+            ret = CPJNI.ullInit(mCPInstance, size.getWidth(), size.getHeight(), mBlenderOption);
+        }
         if (mFrames == null) {
             mFrames = new LongSparseArray<IaFrame>();
         }
@@ -222,7 +228,7 @@ public class MultiFrameBlender {
      * if the internal status of blender is BLENDING, blending operation will be aborted.
      */
     public void flush() {
-        Log.d(TAG, "");
+        Log.d(TAG, "flush()");
         if (mState == STATUS_BLENDING) {
             abortBlending();
         }
@@ -244,7 +250,7 @@ public class MultiFrameBlender {
      * @return number of added images or 0 if it has error
      */
     public int addInputFrame(Image image, CaptureResult metadata) {
-        Log.d(TAG,"");
+        Log.d(TAG,"added a input frame");
         int ret = 0;
         checkAndThrowException();
         if (mState == STATUS_INVALID) {
@@ -277,13 +283,49 @@ public class MultiFrameBlender {
     }
 
     /**
+     * add an yuv image to blender.
+     * it can be use only for the internal validation.
+     * @param yuv
+     * @return
+     * 
+     * @hide
+     */
+    public int addInputFrame(YuvImage yuv) {
+        Log.d(TAG,"");
+        int ret = 0;
+        checkAndThrowException();
+        if (mState == STATUS_INVALID) {
+            throw new IllegalStateException("blender is not initilazed");
+        }
+        if (yuv == null) {
+            Log.e(TAG, "image is null");
+            return ret;
+        }
+        if (yuv.getWidth() != mSize.getWidth() || yuv.getHeight() != mSize.getHeight()) {
+            Log.e(TAG, "image size is not suitable for this blender! request  = " + mSize.toString() + ", captured = " + yuv.getWidth() + "x" + yuv.getHeight());
+            return ret;
+        }
+        if (yuv.getYuvFormat() != ImageFormat.NV21) {
+            Log.e(TAG, "not supported image format! " + yuv.getYuvFormat());
+            return ret;
+        }
+        IaFrame frame = new IaFrame(yuv.getYuvData(), yuv.getStrides()[0], yuv.getWidth(), yuv.getHeight(), IaFrame.IaFormat.NV12, 0);
+        mFrames.append(0, frame);
+        ret = mFrames.size();
+        if (mCallback != null) {
+            mCallback.onAddedFrame(null, null, ret);
+        }
+        return ret;
+    }
+    /**
      * blend all added frames into the configured {@link TYPE} of output.
      * result will be delivered through {@link MultiFrameBlendCallback}
      */
     public void blend() {
+        Log.d(TAG,"");
         checkAndThrowException();
         if (mState != STATUS_READY || mMetadatas.size() != mFrames.size()) {
-            Log.e(TAG, "blender is not in ready state");
+            Log.e(TAG, "blender is not in ready state " + mState);
             Message msg = Message.obtain();
             msg.what = MSG_BLEND_FAIL;
             msg.arg1 = IA_ERR_INTERNAL;
@@ -306,15 +348,16 @@ public class MultiFrameBlender {
                 long time = System.currentTimeMillis();
 
                 /* Create & Initialize CP instance */
-                mCPInstance = CPJNI.init(mTarget.ordinal());
-                if (mCPInstance == 0) {
-                    throw new IllegalArgumentException("fail to create CP instance");
-                }
                 if (type == TYPE.HDR) {
+                    mCPInstance = CPJNI.init(mTarget.ordinal());
+                    if (mCPInstance == 0) {
+                        throw new IllegalArgumentException("fail to create CP instance");
+                    }
                     ret = CPJNI.hdrInit(mCPInstance, size.getWidth(), size.getHeight(), blenderOption);
-                } else if (type == TYPE.ULL) {
-                    ret = CPJNI.ullInit(mCPInstance, size.getWidth(), size.getHeight(), blenderOption);
                 }
+//                else if (type == TYPE.ULL) {
+//                    ret = CPJNI.ullInit(mCPInstance, size.getWidth(), size.getHeight(), blenderOption);
+//                }
 
                 /* Blend images. */
                 if (type == TYPE.HDR) {
@@ -359,11 +402,12 @@ public class MultiFrameBlender {
                 /* Release CP instance. */
                 if (type == TYPE.HDR) {
                     CPJNI.hdrUninit(mCPInstance);
-                } else if (type == TYPE.ULL) {
-                    CPJNI.ullUninit(mCPInstance);
+                    CPJNI.uninit(mCPInstance);
+                    mCPInstance = 0;
                 }
-                CPJNI.uninit(mCPInstance);
-                mCPInstance = 0;
+//                else if (type == TYPE.ULL) {
+//                    CPJNI.ullUninit(mCPInstance);
+//                }
 
                 /* Notify to finish blending. */
                 Log.d(TAG, "elapsed time for composition = " + (System.currentTimeMillis() - time));
@@ -389,6 +433,7 @@ public class MultiFrameBlender {
      * abort blending if the blender is in the blending process.
      */
     public void abortBlending() {
+        Log.d(TAG,"");
         checkAndThrowException();
         if (mState == STATUS_BLENDING) {
             if (mType == TYPE.HDR) {
@@ -406,8 +451,14 @@ public class MultiFrameBlender {
      * release all resources and metadatas of this {@link MultiFrameBlender}
      */
     public void release() {
+        Log.d(TAG,"relaese()");
         flush();
 
+        if (mType == TYPE.ULL) {
+            CPJNI.ullUninit(mCPInstance);
+            CPJNI.uninit(mCPInstance);
+            mCPInstance = 0;
+        }
         mState = STATUS_INVALID;
         mType = TYPE.NONE;
         mSize = null;

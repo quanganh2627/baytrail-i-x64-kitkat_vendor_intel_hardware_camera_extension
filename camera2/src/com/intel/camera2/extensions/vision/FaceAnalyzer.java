@@ -45,6 +45,7 @@ public class FaceAnalyzer {
     public static final int ERROR = -1;
     private static final int MAX_FACE_NUM = 30;
     private static final String KEY_SYSTEM_PROPERTY_DB_PATH = "com.intel.facedb.";
+    private static final boolean DEBUG_PRINT_RESULT = false;
 
     private String mDbPath;
 
@@ -224,6 +225,8 @@ public class FaceAnalyzer {
     }
 
     private static void printInfo(String infoTitle, Object[] info) {
+        if (!DEBUG_PRINT_RESULT) return;
+
         if (info != null && info.length > 0) {
             Log.i(TAG, infoTitle + " result count: " + info.length);
             for (int i = 0; i < info.length; i++) {

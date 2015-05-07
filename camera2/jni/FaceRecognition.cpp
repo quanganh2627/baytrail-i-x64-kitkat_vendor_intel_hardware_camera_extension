@@ -257,11 +257,11 @@ jobjectArray createJResult2(JNIEnv* env, pvl_face_detection_result* fdResults, p
     jmethodID setFDdataMID = env->GetMethodID(cls, "setFDdata", "(" SIG_RECT "IIII)V");
     jmethodID setEDdataMID = env->GetMethodID(cls, "setEDdata", "(" SIG_POINT SIG_POINT ")V");
     jmethodID setFRdataMID = env->GetMethodID(cls, "setFRdata", "(IJIJII[B)V");
-    LOGE("MID: constructor(0x%08x) fd(0x%08x) ed(0x%08x) fr(0x%08x)", (uint32_t)constructor, (uint32_t)setFDdataMID, (uint32_t)setEDdataMID, (uint32_t)setFRdataMID);
+    LOGE("MID: constructor(%p) fd(%p) ed(%p) fr(%p)", constructor, setFDdataMID, setEDdataMID, setFRdataMID);
 
     for (int i = 0; i < num; i++) {
         jobject jResult = env->NewObject(cls, constructor);
-        LOGE("id(%d) jResult(0x%08x)", i, (uint32_t)jResult);
+        LOGE("id(%d) jResult(%p)", i, jResult);
 
         //* FD *****
         pvl_face_detection_result* fd = &fdResults[i];

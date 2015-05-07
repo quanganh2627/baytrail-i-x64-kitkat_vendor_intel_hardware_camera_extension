@@ -61,7 +61,7 @@ jlong Panorama_create(JNIEnv* env, jobject thiz)
         pe = (PanoramaEngine*)calloc(1, sizeof(PanoramaEngine));
         if (pe != NULL) {
             pe->panorama = pano;
-            LOGI("calloc pe(0x%08x) pano(0x%08x)", (uint32_t)pe, (uint32_t)pano);
+            LOGI("calloc pe(%p) pano(%p)", pe, pano);
             LOGI("max(%d) min(%d) max(%d), def(%d)", pano->max_supported_num_images, pano->min_overlapping_ratio, pano->max_overlapping_ratio, pano->default_overlapping_ratio);
         } else {
             pvl_panorama_destroy(pano);
@@ -75,7 +75,7 @@ void Panorama_destroy(JNIEnv* env, jobject thiz, jlong instance)
 {
     pvl_panorama* pano = getPanorama(instance);
     if (pano != NULL) {
-        LOGI("calloc instance(0x%08x) pano(0x%08x)", (uint32_t)instance, (uint32_t)pano);
+        LOGI("calloc instance(%p) pano(%p)", instance, pano);
         pvl_panorama_destroy(pano);
         free((void*)instance);
     }

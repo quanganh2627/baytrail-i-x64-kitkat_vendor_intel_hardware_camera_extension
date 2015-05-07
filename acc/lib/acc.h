@@ -17,14 +17,14 @@
 #ifndef _LIB_ACC_H_
 #define _LIB_ACC_H_
 
-#include <stdint.h>
 #include <utils/Mutex.h>
 #include <utils/Condition.h>
 #include <utils/KeyedVector.h>
-#include <utils/VectorImpl.h>
-#define xioctl(req, arg) _xioctl(req, arg, #req)
+#include <utils/RefBase.h>
 
 namespace android {
+
+class EventThread;
 
 /* Buffer shared between CPU and CSS.
    Depending on what the platform supports, this is implemented with
@@ -45,6 +45,13 @@ enum AccelerationFwDst {
     ACC_QOS
 };
 
+struct EventWaiter {
+        Condition mWaitCond;
+        Mutex mWaitLock;
+        unsigned int handle;
+        bool enabled;
+};
+
 class AccControl {
 
 public:
@@ -53,16 +60,12 @@ public:
     ~AccControl();
 
 private:
+    // ACC event polling thread
+    sp<EventThread> mEventThread;
     /********************************************************
      * ACC interface internal data.
      ********************************************************/
     Mutex mACCEventSystemLock;
-    struct EventWaiter {
-        Condition mWaitCond;
-        Mutex mWaitLock;
-        unsigned int handle;
-        bool enabled;
-    };
     KeyedVector<unsigned int, EventWaiter *> mAllWaiters;
     KeyedVector<unsigned int, EventWaiter *> mSleepingWaiters;
     KeyedVector<unsigned int, unsigned int>  mUpdates;
@@ -111,6 +114,8 @@ public:
     acc_buf* acc_buf_create(void *cpu_ptr, size_t size);
 
     void acc_buf_free(acc_buf *buf);
+
+    const KeyedVector<unsigned int, EventWaiter *> getAllWaiters();
 
     /* Buffer sychronization. These functions make sure buffers are properly
        synced before being passed from CPU to CSS or vice versa.

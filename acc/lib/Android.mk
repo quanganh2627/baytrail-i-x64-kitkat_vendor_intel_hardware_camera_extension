@@ -9,6 +9,8 @@ include $(BUILD_COPY_HEADERS)
 ####################### Make shared lib ###################
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := acc_android.cpp \
+                   v4l2device.cpp \
+                   event_thread.cpp \
                    ../common/LogHelper.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../common
 LOCAL_STATIC_LIBRARIES :=
@@ -24,6 +26,8 @@ include $(BUILD_SHARED_LIBRARY)
 ####################### Make static lib ###################
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := acc_android.cpp \
+                   v4l2device.cpp \
+                   event_thread.cpp \
                    ../common/LogHelper.cpp
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../common
 LOCAL_STATIC_LIBRARIES :=

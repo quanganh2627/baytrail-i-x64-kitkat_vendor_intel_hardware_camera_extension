@@ -260,7 +260,7 @@ public class IntelCamera {
     private boolean mPanoramaRunning = false;
     private boolean mSmileShutterRunning = false;
     private boolean mBlinkShutterRunning = false;
-    private int mNativeContext; //accessed by native methods
+    private long mNativeContext; //accessed by native methods
 
     private static final String TAG = "com.intel.cameraext.Camera";
 

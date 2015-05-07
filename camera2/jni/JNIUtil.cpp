@@ -305,7 +305,7 @@ jbyteArray convertToGray(JNIEnv* env, jobject jBitmap)
     }
 
     //LOGV("stride(%d) height(%d) size(%d)", stride, height, size);
-    //LOGV("src(0x%08x) dst(0x%08x)", (uint32_t)src, (uint32_t)dst);
+    //LOGV("src(%p) dst(%p)", src, dst);
 
     unsigned char *r, *g, *b, *out;
     for (int j = 0; j < height; j++) {

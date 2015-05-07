@@ -53,7 +53,7 @@ jlong FaceDetection_create(JNIEnv* env, jobject thiz)
         fde = (FaceDetectionEngine*)calloc(1, sizeof(FaceDetectionEngine));
         if (fde != NULL) {
             fde->facedetection = fd;
-            LOGE("calloc fd(0x%08x) fde(0x%08x)", (uint32_t)fd, (uint32_t)fde);
+            LOGE("calloc fd(%p) fde(%p)", fd, fde);
         } else {
             pvl_face_detection_destroy(fd);
         }
@@ -67,7 +67,7 @@ void FaceDetection_destroy(JNIEnv* env, jobject thiz, jlong instance)
     pvl_face_detection* fd = getFaceDetection(instance);
     if (fd != NULL) {
         pvl_face_detection_destroy(fd);
-        LOGE("free fd(0x%08x) fde(0x%08x)", (uint32_t)fd, (uint32_t)instance);
+        LOGE("free fd(%p) fde(%p)", fd, instance);
         free((void*)instance);
     }
 }
