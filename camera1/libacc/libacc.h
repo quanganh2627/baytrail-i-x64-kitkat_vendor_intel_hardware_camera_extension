@@ -56,7 +56,7 @@ class CameraAcc: public Thread
                                    unsigned int height, const char* name);
 
         // Callbacks
-        void notifyPointer(int32_t data, int32_t idx);
+        void notifyPointer(intptr_t data, int32_t idx);
         void notifyFinished();
         void postArgumentBuffer(sp<IMemoryHeap> heap, uint8_t *heapBase, size_t size, ssize_t offset);
         void postPreviewBuffer(sp<IMemoryHeap> heap, uint8_t *heapBase, size_t size, ssize_t offset);

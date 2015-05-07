@@ -53,7 +53,8 @@ public class ZSLCaptureManager {
     private long mTimestampWaitingFor;
     private ZSLCaptureCallback mWaitingZSLCallback;
 
-    private final int MAX_TEMP_QUEUE_SIZE = 2;
+    private final int MAX_TEMP_IMAGE_QUEUE_SIZE = 1;
+    private final int MAX_TEMP_METADATA_QUEUE_SIZE = 10;
 
     public static final int ERROR_NO_MATCHED_IMAGE = -1;    //
     public static final int ERROR_UNKNOWN = -2;
@@ -227,7 +228,7 @@ public class ZSLCaptureManager {
             mHistoryQueue = null;
         }
         mHistoryQueue = new ImageHistoryBuffer(zslQueueSize, zslInterval, historyQueueSize, historyInterval);
-        int maxImages = mHistoryQueue.getQueueSize() + MAX_TEMP_QUEUE_SIZE + 1 + 1;
+        int maxImages = mHistoryQueue.getQueueSize() + MAX_TEMP_IMAGE_QUEUE_SIZE + 1;
         Log.v(TAG, "max acquire images for ImageReader " + maxImages + ", it will use approximatly " + (maxImages * mImageObjectSize / 1024 / 1024) + " MB memory");
         if (mImageReader == null) {
             Log.d(TAG, "created new ImageReader instance");
@@ -690,7 +691,7 @@ public class ZSLCaptureManager {
 //            Log.d(TAG, "receive metadata " + key);
             Image tempImage = mTempImages.get(key);
             if (tempImage != null) {
-                long now = System.nanoTime() / 1000 * 1000;
+                long now = System.nanoTime();
                 ImageResult entry = new ImageResult(now, tempImage, metadata);
                 enqueue(entry);
                 mTempImages.remove(key);
@@ -699,7 +700,9 @@ public class ZSLCaptureManager {
 //                    mThreadTick = 0;
 //                }
             } else {
-                if (mTempMetadatas.size() == MAX_TEMP_QUEUE_SIZE) {
+                if (mTempMetadatas.size() == MAX_TEMP_METADATA_QUEUE_SIZE) {
+                    CaptureResult oldTempResult = mTempMetadatas.valueAt(0); 
+                    Log.e(TAG, "no Image object delivered for a CaptureResult " + oldTempResult.get(CaptureResult.SENSOR_TIMESTAMP) + " timestamp");
                     mTempMetadatas.removeAt(0);
                 }
                 mTempMetadatas.put(key, metadata);
@@ -712,7 +715,7 @@ public class ZSLCaptureManager {
 //            Log.d(TAG, "receive image " + key);
             CaptureResult tempMetadata = mTempMetadatas.get(key);
             if (tempMetadata != null) {
-                long now = System.nanoTime() / 1000 * 1000;
+                long now = System.nanoTime();
                 ImageResult entry = new ImageResult(now, newImage, tempMetadata);
                 enqueue(entry);
                 mTempMetadatas.remove(key);
@@ -721,9 +724,10 @@ public class ZSLCaptureManager {
 //                    mThreadTick = 0;
 //                }
             } else {
-                if (mTempImages.size() == MAX_TEMP_QUEUE_SIZE) {
+                if (mTempImages.size() == MAX_TEMP_IMAGE_QUEUE_SIZE) {
                     Image image = mTempImages.valueAt(0);
                     if (image != null) {
+                        Log.e(TAG, "no CaptureResult object delivered for an Image " + image.getTimestamp() + " timestamp");
                         image.close();
                         sAcquiredcount--;
                     }
@@ -735,7 +739,7 @@ public class ZSLCaptureManager {
 
 //        final long refresh = 3000;
         private void enqueue(ImageResult entry) {
-            long current = entry.timestamp;
+            long current = entry.timestamp /  1000000; // convert nanosec to millisec
 //            Log.d(TAG, "enqueue(" + current + ")");
             if (current - mLv1LastTime > mLv1Interval) {
 //                Log.d(TAG, "enqueueLv1()");
@@ -744,7 +748,6 @@ public class ZSLCaptureManager {
                 if (oldestLv1Entry != null) {
                     if (current - mLv2LastTime > mLv2Interval) {
                         mLv2LastTime = current;
-//                        Log.d(TAG, "enqueueLv2()");
                         ImageResult oldestLv2Entry = enqueueLv2(oldestLv1Entry);
                         if (oldestLv2Entry != null) {
                             oldestLv2Entry.release();
@@ -780,7 +783,7 @@ public class ZSLCaptureManager {
                 return moveImageResultToInvokedQueue(1, -1);
             }
             timeStamp -= mDeviceLatency;
-            Log.d(TAG,"adjusted timestamp = " + timeStamp);
+            Log.d(TAG,"device latency = " + mDeviceLatency + ", adjusted timestamp = " + timeStamp);
             long minDiff = Long.MAX_VALUE;
             int minIndex = -1;
             long diff;

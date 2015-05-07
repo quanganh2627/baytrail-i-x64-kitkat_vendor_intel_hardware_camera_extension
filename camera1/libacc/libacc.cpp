@@ -394,7 +394,7 @@ status_t CameraAcc::handleExit()
  *
  * After we stored the Pointer, we can unblock the calling function acc_map
  **/
-void CameraAcc::notifyPointer(int32_t data, int32_t idx)
+void CameraAcc::notifyPointer(intptr_t data, int32_t idx)
 {
     LOG1("@%s, data=%x, idx=%d", __FUNCTION__, data, idx);
 

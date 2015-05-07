@@ -19,7 +19,7 @@ endif
 endif
 LOCAL_COPY_HEADERS += \
 	libacc/Ilibacc.h
-LOCAL_MULTILIB := 32
+LOCAL_MULTILIB := both
 include $(BUILD_COPY_HEADERS)
 
 ################# MAKE_LIB ############################
@@ -51,7 +51,7 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include/latest
 endif
 endif
-LOCAL_MULTILIB := 32
+LOCAL_MULTILIB := both
 include $(BUILD_SHARED_LIBRARY)
 
 ################# MAKE_XML ############################

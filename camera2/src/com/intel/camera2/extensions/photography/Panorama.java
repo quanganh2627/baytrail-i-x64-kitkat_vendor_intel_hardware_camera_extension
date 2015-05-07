@@ -34,12 +34,39 @@ import com.intel.camera2.extensions.ImageConverter;
 public class Panorama {
     private static final String TAG = "Panorama";
     private long mJNIInstance;
-    private static int MAX_SUPPORTED_NUM_IMAGES = -1;
+    private static Config mConfig;
     private int mPicIndex;
     private Direction mSetDirection = Direction.Still;
 
     public static final int SUCCESS = 0;
     public static final int ERROR = -1;
+
+    public static class Config {
+        /** The version information. */
+        public final String version;
+        /** The maximum number of input images supported by this component. */
+        public final int maxSupportedNumImages;
+        /** The minimum configurable value of overlapping ratio. (0 ~ 1.0f) */
+        public final float minOverlappingRatio;
+        /** The maximum configurable value of overlapping ratio. (0 ~ 1.0f) */
+        public final float maxOverlappingRatio;
+        /** The recommend value of overlapping ratio. (0 ~ 1.0f) */
+        public final float recommendOverlappingRatio;
+
+        Config(PanoramaJNI.Config config) {
+            this.version = config.version.toString();
+            this.maxSupportedNumImages = config.max_supported_num_images;
+            this.minOverlappingRatio = (float)config.min_overlapping_ratio / (float)100;
+            this.maxOverlappingRatio = (float)config.max_overlapping_ratio / (float)100;
+            this.recommendOverlappingRatio = (float)config.default_overlapping_ratio / (float)100;
+        }
+
+        @Override
+        public String toString() {
+            return "version("+version.toString()+") maxSupportedNumImages("+maxSupportedNumImages+") overlapping_ratio: min("+minOverlappingRatio+")" +
+                   "max("+maxOverlappingRatio+") recommend("+recommendOverlappingRatio+")";
+        }
+    }
 
     /**
      * The enumerated values to specify the panning direction of panoramic stitch.
@@ -65,21 +92,45 @@ public class Panorama {
     }
 
     /**
-     * Get a count that this class can stitch.
-     * @return Supported image count
+     * Get the configure info from Panorama library.
+     * @return Panroama.Config
      */
-    public static int getMaxCountSupported() {
-        if (MAX_SUPPORTED_NUM_IMAGES == -1) {
+    public static Config getConfig() {
+        if (mConfig == null) {
             long instance = PanoramaJNI.create();
             if (instance != 0) {
                 PanoramaJNI.Config config = PanoramaJNI.getConfig(instance);
                 if (config != null) {
-                    MAX_SUPPORTED_NUM_IMAGES = config.max_supported_num_images;
+                    mConfig = new Panorama.Config(config);
+                } else {
+                    mConfig = null;
                 }
                 PanoramaJNI.destroy(instance);
             }
         }
-        return MAX_SUPPORTED_NUM_IMAGES;
+        return mConfig;
+    }
+
+    /**
+     * The recommend angle is returned.<br>
+     * Two input arguments can be got from CameraCharateristics.<br>
+     * - sensorLength: CameraCharacteristics.SENSOR_INFO_PHYSICAL_SIZE<br>
+     * - focalLength: CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS
+     * @param sensorLength If the device is landscape, it should use a physical size width.
+     *                     If the device is portrait, it should use a physical size height.
+     * @param focalLength 
+     * @return recommend angle.(Unit: degree)
+     */
+    public static float getRecommendAngle(float sensorLength, float focalLength) {
+        Config config = getConfig();
+        if (config == null) {
+            Log.e(TAG, "Panorama is not supported.");
+            return Float.NaN;
+        }
+
+        double result = 2 * Math.atan(sensorLength / (2 * focalLength));
+        double degree = Math.toDegrees(result);
+        return (float)degree * (1f - config.recommendOverlappingRatio);
     }
 
     /**
@@ -97,7 +148,6 @@ public class Panorama {
 
     private Panorama() {
         mJNIInstance = PanoramaJNI.create();
-        getMaxCountSupported();
     }
 
     /**
@@ -177,8 +227,13 @@ public class Panorama {
     }
 
     private boolean checkToAddInputImage() {
-        if (mPicIndex >= MAX_SUPPORTED_NUM_IMAGES) {
-            Log.e(TAG, "MAX_SUPPORTED_NUM_IMAGES is " + MAX_SUPPORTED_NUM_IMAGES);
+        Config config = getConfig();
+        if (config == null) {
+            Log.e(TAG, "Panorama is not supported.");
+            return false;
+        }
+        if (mPicIndex >= config.maxSupportedNumImages) {
+            Log.e(TAG, "MAX_SUPPORTED_NUM_IMAGES is " + config.maxSupportedNumImages);
             return false;
         }
         switch(mSetDirection) {

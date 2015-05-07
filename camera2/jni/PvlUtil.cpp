@@ -39,7 +39,7 @@ jobject createIaFrame(JNIEnv* env, pvl_image* src) {
 }
 
 void print(pvl_image *img) {
-    LOGE("data(%08x, %d) size(%dx%d) format(%d)", (uint)img->data, img->size, img->width, img->height, img->format);
+    LOGE("data(%p, %d) size(%dx%d) format(%d)", img->data, img->size, img->width, img->height, img->format);
 }
 
 void dump(char* fileName, pvl_image *image) {

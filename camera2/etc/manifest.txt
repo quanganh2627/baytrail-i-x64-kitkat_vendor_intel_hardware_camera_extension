@@ -1,8 +1,8 @@
 Name: com/intel/camera2/extensions/
 Specification-Title: Camera2 SDK add-ons
-Specification-Version: 0.9
+Specification-Version: 1.0
 Specification-Vendor: Intel
 Implementation-Title: com.intel.camera2.extensions
-Implementation-Version: 3
+Implementation-Version: 1
 Implementation-Vendor: Intel
 

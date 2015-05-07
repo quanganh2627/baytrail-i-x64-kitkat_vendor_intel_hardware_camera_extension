@@ -25,6 +25,7 @@ final class PanoramaJNI {
             System.loadLibrary("pvl_panorama_jni");
             isSupported = true;
         } catch (UnsatisfiedLinkError e) {
+            e.printStackTrace();
             isSupported = false;
         }
     }
@@ -72,6 +73,7 @@ final class PanoramaJNI {
             this.direction = direction;
         }
 
+        @Override
         public String toString() {
             return "overlapping_ratio("+overlapping_ratio+") direction("+direction+")";
         }
@@ -90,8 +92,9 @@ final class PanoramaJNI {
             this.description = description;
         }
 
+        @Override
         public String toString() {
-            return major + "/" + minor + "patch("+patch+") desc("+description+")";
+            return "major("+major+") minor("+minor+") patch("+patch+") desc("+description+")";
         }
     }
 
@@ -116,6 +119,7 @@ final class PanoramaJNI {
             this.default_overlapping_ratio = default_overlapping_ratio;
         }
 
+        @Override
         public String toString() {
             return "version("+version.toString()+") max_supported_num_images("+max_supported_num_images+") overlapping_ratio: min("+min_overlapping_ratio+")" +
                    "max("+max_overlapping_ratio+") default("+default_overlapping_ratio+")";
