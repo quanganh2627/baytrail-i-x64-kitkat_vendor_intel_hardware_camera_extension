@@ -35,6 +35,9 @@ namespace android {
 class AccService : public BnAccService
 {
 public:
+    AccService();
+    virtual ~AccService();
+
     static void instantiate(int logLevel);
 
     virtual int init();
@@ -52,13 +55,17 @@ public:
     virtual int CPUllCompose(const int inImageNum, const acc_ia_frame* inBuf, const acc_ia_frame* inPvBuf, acc_ia_frame* outBuf, acc_ia_frame* outPvBuf, ia_cp_ull_cfg* cfg);
 public:
     AccControl* getAcc() { return mAcc; }
-private:
-    AccService();
-    virtual ~AccService();
 
+// prevent copy constructor and assignment operator
+private:
+    AccService(const AccService& other);
+    AccService& operator=(const AccService& other);
+
+private:
     int mFd;
     AccControl* mAcc;
     Mutex mAccServiceLock;
+
 private:
     typedef struct {
         ia_cp_context* pIaCpContext;

@@ -88,8 +88,8 @@ int BpAccService::init()
 void BpAccService::deInit(int fd)
 {
     Parcel data, reply;
-    data.writeInt32(fd);
     data.writeInterfaceToken(IAccService::getInterfaceDescriptor());
+    data.writeInt32(fd);
     remote()->transact(DEINIT, data, &reply);
 }
 
