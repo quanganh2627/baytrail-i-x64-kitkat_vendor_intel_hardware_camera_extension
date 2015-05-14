@@ -67,12 +67,13 @@ LOCAL_MODULE := libpvl_jni
 
 ifeq ($(MY_BUILD_FLAG),true)
 LOCAL_MODULE_TAGS := optional
-LOCAL_MULTILIB := 32
+LOCAL_MULTILIB := both
 #LOCAL_PRELINK_MODULE := false   # Prevent from prelink error
 LOCAL_CFLAGS := -funsigned-char -Wno-unused-parameter -DPACKAGE="\"com/intel/camera2/extensions\"" -DTAG="\"PVL_JNI\""
 
 LOCAL_SHARED_LIBRARIES := \
     liblog \
+    libdl \
     libjnigraphics \
     libpvl_blink_detection \
     libpvl_eye_detection \

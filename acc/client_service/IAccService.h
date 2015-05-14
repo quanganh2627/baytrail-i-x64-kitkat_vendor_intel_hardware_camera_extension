@@ -75,6 +75,5 @@ public:
                                     uint32_t flags = 0);
 };
 
-}; // namespace android
-
+}
 #endif // IACCSERVICE_H

@@ -44,6 +44,11 @@ public:
     int CPUllUnInit();
 
     // TODO: to add the interfaces for general computing by using GPU.
+// prevent copy constructor and assignment operator
+private:
+    AccClient(const AccClient& other);
+    AccClient& operator=(const AccClient& other);
+
 private:
     // init and deInit the acc service
     int init();

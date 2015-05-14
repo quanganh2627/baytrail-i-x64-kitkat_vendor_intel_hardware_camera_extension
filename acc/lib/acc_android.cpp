@@ -385,6 +385,7 @@ void AccControl::acc_deinit(int fd)
 {
     if (fd >= 0) {
         close(fd);
+        mAccDeviceHandle = -1;
     }
 
     mEventThread.clear();
